@@ -3,7 +3,7 @@ import {
   AuthDetailsActionType,
   AuthDetailsReducer,
   AuthDetailsState,
-} from "../auth/internal";
+} from "../auth/reducers";
 
 export interface Action<T, P> {
   type: T;

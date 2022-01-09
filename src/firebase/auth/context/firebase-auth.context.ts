@@ -1,6 +1,6 @@
 import React from "react";
 import { Auth, GoogleAuthProvider } from "@firebase/auth";
-import { IFirebaseAuthManager } from "../internal/managers/auth-manager";
+import { IFirebaseAuthManager } from "../managers/auth-manager";
 
 export interface IFirebaseAuthContext {
   firebaseAuth: Auth | undefined;

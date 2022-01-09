@@ -1,6 +1,6 @@
 import { RootState, useFirebaseReduxSelector } from "../../redux";
 
-import { useAuthActions } from "../internal";
+import { useAuthActions } from "../reducers";
 
 export const useAuthenticationService = () => {
   const auth = useFirebaseReduxSelector((state: RootState) => state.auth);

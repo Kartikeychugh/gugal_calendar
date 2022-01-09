@@ -11,14 +11,10 @@ export interface IFirebaseAuthManager {
 export const FirebaseAuthManager = (): IFirebaseAuthManager => {
   let authActions = {
     addUser: (_user: User | null) => {
-      throw new Error(
-        "Please ensure FirebaseAuthLayer is wrapped in your application"
-      );
+      throw new Error("Please ensure FirebaseAuthManager is initialised");
     },
     signIn: () => {
-      throw new Error(
-        "Please ensure FirebaseAuthLayer is wrapped in your application"
-      );
+      throw new Error("Please ensure FirebaseAuthManager is initialised");
     },
   };
 

@@ -1,9 +1,8 @@
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 
 import { User } from "@firebase/auth";
-
-import { useFirebaseReduxDispatch } from "../../../../redux";
-import { FirebaseAuthContext } from "../../../context/firebase-auth.context";
+import { useFirebaseReduxDispatch } from "../../../redux";
+import { FirebaseAuthContext } from "../../context";
 
 export const useAuthActions = () => {
   const { firebaseAuthManager } = useContext(FirebaseAuthContext);

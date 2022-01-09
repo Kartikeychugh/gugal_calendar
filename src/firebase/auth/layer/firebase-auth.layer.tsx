@@ -2,13 +2,6 @@ import { PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { Auth, GoogleAuthProvider, getAuth } from "@firebase/auth";
 
 import {
-  FirebaseAuthListener,
-  FirebaseAuthService,
-  authDetailsReducer,
-  initAuthDetailsSaga,
-} from "../internal";
-
-import {
   useAddReducer,
   useAddSaga,
   useFirebaseReduxDispatch,
@@ -18,10 +11,24 @@ import { FirebaseAuthContext } from "../context/firebase-auth.context";
 import {
   FirebaseAuthManager,
   IFirebaseAuthManager,
-} from "../internal/managers/auth-manager";
+} from "../managers/auth-manager";
+import { FirebaseAuthListener } from "../listeners";
+import { authDetailsReducer } from "../reducers";
+import { FirebaseAuthService } from "../services";
+import { initAuthDetailsSaga } from "../sagas";
 
 export const FirebaseAuthLayer = (props: PropsWithChildren<{}>) => {
-  const { firebaseAuth, googleAuthProvider } = useFirebaseAuthContextInit();
+  const { firebaseApp } = useFirebase();
+
+  const firebaseAuth = useMemo(() => getAuth(firebaseApp), [firebaseApp]);
+  const googleAuthProvider = useMemo(() => {
+    const googleAuthProvider = new GoogleAuthProvider();
+    googleAuthProvider.addScope(
+      "https://www.googleapis.com/auth/calendar.readonly"
+    );
+    return googleAuthProvider;
+  }, []);
+
   const firebaseAuthManager = useMemo(() => FirebaseAuthManager(), []);
 
   const { done, error } = useInitialisation({
@@ -80,24 +87,14 @@ const useInitialisation = (props: {
     } catch (e) {
       setError(true);
     }
-  }, [addReducer, addSaga, dispatch, firebaseAuth, googleAuthProvider]);
+  }, [
+    addReducer,
+    addSaga,
+    dispatch,
+    firebaseAuth,
+    googleAuthProvider,
+    firebaseAuthManager,
+  ]);
 
   return { done, error };
 };
-function useFirebaseAuthContextInit() {
-  const { firebaseApp } = useFirebase();
-
-  const firebaseAuth = useMemo(() => getAuth(firebaseApp), []);
-  const googleAuthProvider = useMemo(() => {
-    const googleAuthProvider = new GoogleAuthProvider();
-    googleAuthProvider.addScope(
-      "https://www.googleapis.com/auth/calendar.readonly"
-    );
-    return googleAuthProvider;
-  }, []);
-
-  return {
-    firebaseAuth,
-    googleAuthProvider,
-  };
-}
