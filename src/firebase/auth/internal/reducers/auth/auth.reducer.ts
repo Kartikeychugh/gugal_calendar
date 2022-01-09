@@ -1,5 +1,5 @@
+import { User } from "@firebase/auth";
 import { AuthDetailsReducer } from "./auth.types";
-import { User } from "firebase/auth";
 
 const INITIAL_STATE = {
   user: undefined,

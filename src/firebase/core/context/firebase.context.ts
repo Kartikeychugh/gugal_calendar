@@ -1,14 +1,11 @@
-import { Auth, GoogleAuthProvider } from "firebase/auth";
+import React from "react";
 
 import { FirebaseApp } from "@firebase/app";
-import { Firestore } from "firebase/firestore";
-import React from "react";
+import { Firestore } from "@firebase/firestore";
 
 export interface IFirebaseContext {
   firebaseApp: FirebaseApp;
-  firebaseAuth?: Auth;
   firebaseStore?: Firestore;
-  googleAuthProvider?: GoogleAuthProvider;
 }
 
 export const FirebaseContext = React.createContext<IFirebaseContext>(

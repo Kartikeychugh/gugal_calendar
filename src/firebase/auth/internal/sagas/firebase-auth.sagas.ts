@@ -1,5 +1,6 @@
-import { IFirebaseAuthService } from "../services";
 import { takeLeading } from "redux-saga/effects";
+
+import { IFirebaseAuthService } from "../services";
 
 export const initAuthDetailsSaga = (
   firebaseAuthService: IFirebaseAuthService

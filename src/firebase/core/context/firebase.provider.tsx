@@ -1,8 +1,7 @@
 import { FirebaseOptions, initializeApp } from "@firebase/app";
 
 import { FirebaseContext } from "./firebase.context";
-import { Provider } from "react-redux";
-import { createReduxStore } from "../redux/store";
+import { FirebaseReduxLayer } from "../../redux";
 
 export const FirebaseProvider = (
   props: React.PropsWithChildren<{ firebaseOptions: FirebaseOptions }>
@@ -12,7 +11,7 @@ export const FirebaseProvider = (
   return (
     <FirebaseContext.Provider
       value={{ firebaseApp: initializeApp(firebaseOptions) }}>
-      <Provider store={createReduxStore()}>{children}</Provider>
+      <FirebaseReduxLayer>{children}</FirebaseReduxLayer>
     </FirebaseContext.Provider>
   );
 };

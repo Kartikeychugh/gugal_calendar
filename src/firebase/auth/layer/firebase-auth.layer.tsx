@@ -1,58 +1,103 @@
-import { FirebaseContext, useFirebase } from "../../context";
-import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import { PropsWithChildren, useEffect, useMemo, useState } from "react";
+import { Auth, GoogleAuthProvider, getAuth } from "@firebase/auth";
 
-import { FirebaseAuthListener } from "../internal/listeners";
-import { FirebaseAuthService } from "../internal/services";
-import { authDetailsReducer } from "../internal/reducers";
-import { initAuthDetailsSaga } from "../internal/sagas";
-import { useFirebaseReduxStore } from "../../effects/use-firebase-redux-store";
+import {
+  FirebaseAuthListener,
+  FirebaseAuthService,
+  authDetailsReducer,
+  initAuthDetailsSaga,
+} from "../internal";
+
+import {
+  useAddReducer,
+  useAddSaga,
+  useFirebaseReduxDispatch,
+} from "../../redux";
+import { useFirebase } from "../../core";
+import { FirebaseAuthContext } from "../context/firebase-auth.context";
+import {
+  FirebaseAuthManager,
+  IFirebaseAuthManager,
+} from "../internal/managers/auth-manager";
 
 export const FirebaseAuthLayer = (props: PropsWithChildren<{}>) => {
-  const [done, setDone] = useState(false);
-  const [error, setError] = useState(false);
+  const { firebaseAuth, googleAuthProvider } = useFirebaseAuthContextInit();
+  const firebaseAuthManager = useMemo(() => FirebaseAuthManager(), []);
 
-  const store = useFirebaseReduxStore();
-  const firebaseContext = useFirebase();
-  const firebaseAuth = getAuth(firebaseContext.firebaseApp);
-  const googleAuthProvider = useMemo(() => new GoogleAuthProvider(), []);
-
-  useEffect(() => {
-    function initReducer() {
-      store.addReducer("auth", authDetailsReducer);
-    }
-
-    function initSaga() {
-      const firebaseStoreService = new FirebaseAuthService(
-        firebaseAuth,
-        googleAuthProvider
-      );
-
-      const saga = initAuthDetailsSaga(firebaseStoreService);
-      store.addSaga(saga);
-    }
-
-    try {
-      initReducer();
-      initSaga();
-      setDone(true);
-    } catch (e) {
-      setError(true);
-    }
-  }, [store, firebaseAuth, googleAuthProvider]);
+  const { done, error } = useInitialisation({
+    firebaseAuth,
+    googleAuthProvider,
+    firebaseAuthManager,
+  });
 
   if (error) {
     return <div>Internal Error</div>;
   }
 
   if (!done) {
-    return <div>Initialising app layer</div>;
+    return <>Initialising</>;
   }
 
   return (
-    <FirebaseContext.Provider
-      value={{ ...firebaseContext, firebaseAuth, googleAuthProvider }}>
+    <FirebaseAuthContext.Provider
+      value={{ firebaseAuth, googleAuthProvider, firebaseAuthManager }}>
       <FirebaseAuthListener>{props.children}</FirebaseAuthListener>
-    </FirebaseContext.Provider>
+    </FirebaseAuthContext.Provider>
   );
 };
+
+const useInitialisation = (props: {
+  firebaseAuth: Auth;
+  googleAuthProvider: GoogleAuthProvider;
+  firebaseAuthManager: IFirebaseAuthManager;
+}) => {
+  const { firebaseAuth, googleAuthProvider, firebaseAuthManager } = props;
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState(false);
+  const addSaga = useAddSaga();
+  const addReducer = useAddReducer();
+  const dispatch = useFirebaseReduxDispatch();
+
+  useEffect(() => {
+    function initReducer() {
+      addReducer("auth", authDetailsReducer);
+      dispatch({ type: "" });
+    }
+
+    function initSaga() {
+      addSaga(
+        initAuthDetailsSaga(
+          new FirebaseAuthService(firebaseAuth, googleAuthProvider)
+        )
+      );
+    }
+
+    try {
+      initReducer();
+      initSaga();
+      firebaseAuthManager.initialise();
+      setDone(true);
+    } catch (e) {
+      setError(true);
+    }
+  }, [addReducer, addSaga, dispatch, firebaseAuth, googleAuthProvider]);
+
+  return { done, error };
+};
+function useFirebaseAuthContextInit() {
+  const { firebaseApp } = useFirebase();
+
+  const firebaseAuth = useMemo(() => getAuth(firebaseApp), []);
+  const googleAuthProvider = useMemo(() => {
+    const googleAuthProvider = new GoogleAuthProvider();
+    googleAuthProvider.addScope(
+      "https://www.googleapis.com/auth/calendar.readonly"
+    );
+    return googleAuthProvider;
+  }, []);
+
+  return {
+    firebaseAuth,
+    googleAuthProvider,
+  };
+}

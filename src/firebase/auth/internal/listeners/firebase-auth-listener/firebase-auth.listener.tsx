@@ -1,17 +1,16 @@
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useContext, useEffect } from "react";
 
-import { useAuthenticationServiceInternal } from "../../effects";
-import { useFirebase } from "../../../../index";
+import { FirebaseAuthContext } from "../../../context";
+import { useAuthActions } from "../..";
 
 export const FirebaseAuthListener = (props: PropsWithChildren<{}>) => {
-  const { firebaseAuth } = useFirebase();
-  const { addUser } = useAuthenticationServiceInternal();
+  const { firebaseAuth } = useContext(FirebaseAuthContext);
+  const { addUser } = useAuthActions();
 
   useEffect(() => {
-    firebaseAuth &&
-      firebaseAuth.onAuthStateChanged((user) => {
-        addUser(user);
-      });
+    firebaseAuth!.onAuthStateChanged((user) => {
+      addUser(user);
+    });
   }, [firebaseAuth, addUser]);
 
   return <>{props.children}</>;

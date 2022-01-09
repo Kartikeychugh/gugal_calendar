@@ -1,11 +1,22 @@
-import { User } from "firebase/auth";
-import { getAuthActions } from "./auth.actions";
-import { useDispatch } from "react-redux";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
+
+import { User } from "@firebase/auth";
+
+import { useFirebaseReduxDispatch } from "../../../../redux";
+import { FirebaseAuthContext } from "../../../context/firebase-auth.context";
 
 export const useAuthActions = () => {
-  const dispatch = useDispatch();
-  const { addUser, signIn } = useMemo(() => getAuthActions(), []);
+  const { firebaseAuthManager } = useContext(FirebaseAuthContext);
+  const dispatch = useFirebaseReduxDispatch();
+
+  if (!firebaseAuthManager) {
+    throw new Error(
+      "Please ensure FirebaseAuthLayer is wrapped in your application"
+    );
+  }
+
+  const { addUser, signIn } = firebaseAuthManager.getAuthActions();
+
   return {
     addUser: (user: User | null) => dispatch(addUser(user)),
     signIn: () => {
