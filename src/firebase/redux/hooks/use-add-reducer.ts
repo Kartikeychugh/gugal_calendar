@@ -1,13 +1,6 @@
-import { useContext } from "react";
-import { FirebaseReduxContext } from "../context/firebase-redux-store.context";
+import { useFirebaseReduxManager } from "./use-firebase-redux-manager";
 
 export const useAddReducer = () => {
-  const { firebaseReduxManager } = useContext(FirebaseReduxContext);
-  if (!firebaseReduxManager) {
-    throw new Error(
-      "Please ensure FirebaseReduxLayer is wrapped in your application"
-    );
-  }
-
+  const firebaseReduxManager = useFirebaseReduxManager();
   return firebaseReduxManager.addReducer;
 };

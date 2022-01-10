@@ -1,14 +1,15 @@
 import { useContext } from "react";
-import { useDispatch } from "react-redux";
+import { createFirebaseErrorObj } from "../../utils";
 import { FirebaseReduxContext } from "../context/firebase-redux-store.context";
 
-export const useFirebaseReduxDispatch = () => {
+export const useFirebaseReduxManager = () => {
   const { firebaseReduxManager } = useContext(FirebaseReduxContext);
   if (!firebaseReduxManager) {
-    throw new Error(
+    throw createFirebaseErrorObj(
+      "FirebaseReduxLayer_unwrapped",
       "Please ensure FirebaseReduxLayer is wrapped in your application"
     );
   }
 
-  return useDispatch();
+  return firebaseReduxManager;
 };

@@ -1,11 +1,7 @@
 import { PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { Auth, GoogleAuthProvider, getAuth } from "@firebase/auth";
 
-import {
-  useAddReducer,
-  useAddSaga,
-  useFirebaseReduxDispatch,
-} from "../../redux";
+import { useAddReducer, useAddSaga, useFirebaseRedux } from "../../redux";
 import { useFirebase } from "../../core";
 import { FirebaseAuthContext } from "../context/firebase-auth.context";
 import {
@@ -18,18 +14,8 @@ import { FirebaseAuthService } from "../services";
 import { initAuthDetailsSaga } from "../sagas";
 
 export const FirebaseAuthLayer = (props: PropsWithChildren<{}>) => {
-  const { firebaseApp } = useFirebase();
-
-  const firebaseAuth = useMemo(() => getAuth(firebaseApp), [firebaseApp]);
-  const googleAuthProvider = useMemo(() => {
-    const googleAuthProvider = new GoogleAuthProvider();
-    googleAuthProvider.addScope(
-      "https://www.googleapis.com/auth/calendar.readonly"
-    );
-    return googleAuthProvider;
-  }, []);
-
-  const firebaseAuthManager = useMemo(() => FirebaseAuthManager(), []);
+  const { firebaseAuth, googleAuthProvider, firebaseAuthManager } =
+    useCreateFirebaseAuthContext();
 
   const { done, error } = useInitialisation({
     firebaseAuth,
@@ -58,12 +44,14 @@ const useInitialisation = (props: {
   googleAuthProvider: GoogleAuthProvider;
   firebaseAuthManager: IFirebaseAuthManager;
 }) => {
-  const { firebaseAuth, googleAuthProvider, firebaseAuthManager } = props;
   const [done, setDone] = useState(false);
   const [error, setError] = useState(false);
+
   const addSaga = useAddSaga();
   const addReducer = useAddReducer();
-  const dispatch = useFirebaseReduxDispatch();
+  const { dispatch } = useFirebaseRedux();
+
+  const { firebaseAuth, googleAuthProvider, firebaseAuthManager } = props;
 
   useEffect(() => {
     function initReducer() {
@@ -79,10 +67,14 @@ const useInitialisation = (props: {
       );
     }
 
+    function initManager() {
+      firebaseAuthManager.initialise();
+    }
+
     try {
       initReducer();
       initSaga();
-      firebaseAuthManager.initialise();
+      initManager();
       setDone(true);
     } catch (e) {
       setError(true);
@@ -97,4 +89,19 @@ const useInitialisation = (props: {
   ]);
 
   return { done, error };
+};
+const useCreateFirebaseAuthContext = () => {
+  const { firebaseApp } = useFirebase();
+
+  const firebaseAuth = useMemo(() => getAuth(firebaseApp), [firebaseApp]);
+  const googleAuthProvider = useMemo(() => {
+    const googleAuthProvider = new GoogleAuthProvider();
+    googleAuthProvider.addScope(
+      "https://www.googleapis.com/auth/calendar.readonly"
+    );
+    return googleAuthProvider;
+  }, []);
+
+  const firebaseAuthManager = useMemo(() => FirebaseAuthManager(), []);
+  return { firebaseAuth, googleAuthProvider, firebaseAuthManager };
 };

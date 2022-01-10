@@ -5,4 +5,4 @@ export type {
   AuthDetailsActionPayload,
   AuthDetailsReducer,
 } from "./auth.types";
-export { useAuthActions } from "./use-auth-actions";
+export { useAuthActions } from "../../hooks/use-auth-actions";

@@ -5,68 +5,76 @@ import {
   createStore,
   combineReducers,
 } from "redux";
-import { Reducer, RootAction, RootState } from "../types";
+import { AnyFirebaseReduxReducer, RootAction, RootState } from "../types";
 import createSagaMiddleware, { Saga, SagaMiddleware } from "redux-saga";
+import { createFirebaseErrorObj } from "../../utils";
 
-export type StoreType = Store<
-  CombinedState<{} | RootState> & {},
-  RootAction
-> & {
+export type StoreType = Store<CombinedState<RootState> & {}, RootAction> & {
   dispatch: unknown;
 };
 
 export interface IFirebaseReduxManager {
   initialise: () => void;
   getStore: () => StoreType;
-  addReducer: (key: string, reducer: Reducer<any, any>) => void;
+  addReducer: (key: string, reducer: AnyFirebaseReduxReducer) => void;
   addSaga: (saga: Saga) => void;
   reduce: (
-    state: CombinedState<{} | RootState> | undefined,
+    state: CombinedState<RootState> | undefined,
     action: RootAction
-  ) => CombinedState<{} | RootState>;
+  ) => CombinedState<RootState>;
 }
+
+const uninitializedFn = () => {
+  throw createFirebaseErrorObj(
+    "FirebaseReduxManager_uninitialised",
+    "Please ensure FirebaseReduxManager is initialised"
+  );
+};
 
 export const FirebaseReduxManager = (): IFirebaseReduxManager => {
   let store: StoreType;
   let sagaMiddleware: SagaMiddleware<object>;
-  let reducers: { [key: string]: Reducer<any, any> } = {};
+  let reducers: { [key: string]: AnyFirebaseReduxReducer } = {};
+  let combinedReducers: any;
 
-  let combinedReducers = combineReducers<RootState | {}>({
-    ...reducers,
-  });
-
-  const reduce = (
-    state: CombinedState<{} | RootState> | undefined,
-    action: RootAction
-  ) => {
-    return combinedReducers(state, action);
-  };
-
-  const addReducer = (key: string, reducer: Reducer<any, any>) => {
-    if (!key || reducers[key]) {
-      return;
-    }
-
-    reducers[key] = reducer;
-    combinedReducers = combineReducers({
-      ...reducers,
-    });
-  };
-
-  const addSaga = (saga: Saga) => {
-    sagaMiddleware.run(saga);
-  };
-
-  const getStore = () => store;
+  let reduce: IFirebaseReduxManager["reduce"] = uninitializedFn;
+  let addReducer: IFirebaseReduxManager["addReducer"] = uninitializedFn;
+  let addSaga: IFirebaseReduxManager["addSaga"] = uninitializedFn;
+  let getStore: IFirebaseReduxManager["getStore"] = uninitializedFn;
 
   return {
     initialise: () => {
       sagaMiddleware = createSagaMiddleware();
+      combinedReducers = combineReducers({
+        ...reducers,
+      });
+      reduce = (
+        state: CombinedState<{} | RootState> | undefined,
+        action: RootAction
+      ) => {
+        return combinedReducers(state, action);
+      };
       store = createStore(reduce, applyMiddleware(sagaMiddleware));
+      getStore = () => store;
+      addSaga = (saga: Saga) => {
+        sagaMiddleware.run(saga);
+      };
+      addReducer = (key: string, reducer: AnyFirebaseReduxReducer) => {
+        if (!key || reducers[key]) {
+          return;
+        }
+
+        reducers[key] = reducer;
+        combinedReducers = combineReducers({
+          ...reducers,
+        });
+      };
     },
-    getStore,
-    addSaga,
-    reduce,
-    addReducer,
+    getStore: () => getStore(),
+    addSaga: (saga: Saga) => addSaga(saga),
+    reduce: (state: CombinedState<RootState> | undefined, action: RootAction) =>
+      reduce(state, action),
+    addReducer: (key: string, reducer: AnyFirebaseReduxReducer) =>
+      addReducer(key, reducer),
   };
 };

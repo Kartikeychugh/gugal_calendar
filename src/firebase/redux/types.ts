@@ -16,4 +16,4 @@ export interface RootState extends AuthDetailsState {}
 export type RootActionType = AuthDetailsActionType | "";
 export type RootActionPayload = AuthDetailsActionPayload;
 export type RootAction = Action<RootActionType, RootActionPayload>;
-export type Reducers = AuthDetailsReducer;
+export type AnyFirebaseReduxReducer = AuthDetailsReducer;

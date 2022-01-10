@@ -1,8 +1,8 @@
 import { PropsWithChildren } from "react";
-import { useAuthenticationService } from "../../firebase/auth";
+import { useAuthenticationCommands } from "../../firebase/auth";
 
 export const PrivateRoute = (props: PropsWithChildren<{}>) => {
-  const { getUser, signIn } = useAuthenticationService();
+  const { getUser, signIn } = useAuthenticationCommands();
   const user = getUser();
 
   if (user === undefined) {

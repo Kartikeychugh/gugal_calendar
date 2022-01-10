@@ -1,7 +1,7 @@
-import { useContext } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../types";
-import { FirebaseReduxContext } from "../context/firebase-redux-store.context";
+
+import { useFirebaseReduxManager } from "./use-firebase-redux-manager";
 
 export const useFirebaseReduxSelector = <
   TState = RootState,
@@ -10,12 +10,6 @@ export const useFirebaseReduxSelector = <
   selector: (state: TState) => TSelected,
   equalityFn?: ((left: unknown, right: unknown) => boolean) | undefined
 ) => {
-  const { firebaseReduxManager } = useContext(FirebaseReduxContext);
-  if (!firebaseReduxManager) {
-    throw new Error(
-      "Please ensure FirebaseReduxLayer is wrapped in your application"
-    );
-  }
-
+  useFirebaseReduxManager();
   return useSelector(selector, equalityFn);
 };

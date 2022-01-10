@@ -1,21 +1,28 @@
 import { User } from "@firebase/auth";
+import { createFirebaseErrorObj } from "../../utils";
 
+interface Actions {
+  addUser: (_user: User | null) => { type: string; payload: User | null };
+  signIn: () => { type: string };
+}
 export interface IFirebaseAuthManager {
   initialise: () => void;
-  getAuthActions: () => {
-    addUser: (_user: User | null) => never;
-    signIn: () => never;
-  };
+  getAuthActions: () => Actions;
 }
 
+const uninitializedFn = () => {
+  throw createFirebaseErrorObj(
+    "FirebaseAuthManager_uninitialised",
+    "Please ensure FirebaseAuthManager is initialised"
+  );
+};
 export const FirebaseAuthManager = (): IFirebaseAuthManager => {
-  let authActions = {
-    addUser: (_user: User | null) => {
-      throw new Error("Please ensure FirebaseAuthManager is initialised");
-    },
-    signIn: () => {
-      throw new Error("Please ensure FirebaseAuthManager is initialised");
-    },
+  let authActions: {
+    addUser: Actions["addUser"];
+    signIn: Actions["signIn"];
+  } = {
+    addUser: uninitializedFn,
+    signIn: uninitializedFn,
   };
 
   return {
@@ -32,8 +39,7 @@ export const FirebaseAuthManager = (): IFirebaseAuthManager => {
             type: "SIGN_IN",
           };
         },
-        test: () => {},
-      } as any;
+      };
     },
     getAuthActions: () => authActions,
   };
