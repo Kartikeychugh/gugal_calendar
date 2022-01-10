@@ -6,16 +6,16 @@ import {
 } from "../../redux";
 import { useFirebaseGAPIManager } from "./use-firebase-gapi-manager";
 
-export const useCalendarCommands = () => {
+export const useCalendarColors = () => {
   const firebaseGAPIManager = useFirebaseGAPIManager();
-  const { events } = useFirebaseReduxSelector(
-    (state: RootState) => state.calendarEvents
-  );
   const { dispatch } = useFirebaseRedux();
+  const { colors } = useFirebaseReduxSelector(
+    (state: RootState) => state.calendarColors
+  );
 
   useEffect(() => {
-    dispatch(firebaseGAPIManager.getGapiActions().fetchCalendarEvents());
+    dispatch(firebaseGAPIManager.getGapiActions().fetchColors());
   }, [dispatch, firebaseGAPIManager]);
 
-  return events;
+  return colors;
 };

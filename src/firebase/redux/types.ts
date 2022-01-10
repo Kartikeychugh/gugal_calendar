@@ -1,4 +1,8 @@
 import {
+  CalendarColorsReducer,
+  CalendarColorsState,
+} from "../api/reducers/colors/colors.types";
+import {
   EventsReducer,
   EventsState,
 } from "../api/reducers/events/events.types";
@@ -18,9 +22,14 @@ export type Reducer<S, P> = (state: S, action: P) => S;
 
 export interface RootState {
   auth: AuthDetailsState;
-  calendar: EventsState;
+  calendarEvents: EventsState;
+  calendarColors: CalendarColorsState;
 }
+
 export type RootActionType = AuthDetailsActionType | "";
 export type RootActionPayload = AuthDetailsActionPayload;
 export type RootAction = Action<RootActionType, RootActionPayload>;
-export type AnyFirebaseReduxReducer = AuthDetailsReducer | EventsReducer;
+export type AnyFirebaseReduxReducer =
+  | AuthDetailsReducer
+  | EventsReducer
+  | CalendarColorsReducer;

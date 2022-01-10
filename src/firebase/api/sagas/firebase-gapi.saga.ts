@@ -1,4 +1,4 @@
-import { put, takeLeading } from "redux-saga/effects";
+import { all, put, takeLeading } from "redux-saga/effects";
 import { IFirebaseGAPIService } from "../services/firebase-gapi.service";
 
 export const initFirebaseGAPISaga = (
@@ -20,5 +20,18 @@ export const initFirebaseGAPISaga = (
     yield takeLeading("FETCH_CALENDAR_EVENTS", fetchCalendarEvents);
   }
 
-  return watchFetchCalendarEvents;
+  function* fetchColors() {
+    const result: CalendarColors = yield firebaseGAPIService.getColors();
+    yield put({ type: "SET_CALENDAR_COLORS", payload: result });
+  }
+
+  function* watchFetchColors() {
+    yield takeLeading("FETCH_COLORS", fetchColors);
+  }
+
+  function* rootSaga() {
+    yield all([watchFetchCalendarEvents(), watchFetchColors()]);
+  }
+
+  return rootSaga;
 };

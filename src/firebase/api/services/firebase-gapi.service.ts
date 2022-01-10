@@ -1,5 +1,6 @@
 export interface IFirebaseGAPIService {
   getEvents(start: string, end: string): Promise<CalendarEventItem[]>;
+  getColors(): Promise<CalendarColors>;
 }
 
 export class FirebaseGAPIService implements IFirebaseGAPIService {
@@ -19,12 +20,13 @@ export class FirebaseGAPIService implements IFirebaseGAPIService {
       singleEvents: true,
       orderBy: "startTime",
     });
-    await this.getColors();
+    this.getColors();
+
     return response.result.items;
   }
 
   public async getColors() {
-    const response = await (this.gapi.client.calendar as any).colors.get();
-    return response.result.items;
+    const response = await this.gapi.client.calendar.colors.get();
+    return response.result;
   }
 }

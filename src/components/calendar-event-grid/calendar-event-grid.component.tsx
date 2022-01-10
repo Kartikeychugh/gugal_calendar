@@ -1,22 +1,29 @@
+import { useCalendarColors } from "../../firebase/api/hooks/use-calendar-colors";
 import { useCalendarCommands } from "../../firebase/api/hooks/use-calendar-commands";
 import { EventCard } from "../event-card/event-card.component";
 import "./calendar-event-grid.css";
 
 export const CalendarEventGrid = () => {
   const events = useCalendarCommands();
+  const colors = useCalendarColors();
 
-  if (events.length === 0) {
-    return null;
-  }
-
-  return (
+  return colors ? (
     <div className="calendar-event-grid-container">
       {events.map((event) => {
         const { x, y } = calculateCoordinate(event);
-        return <EventCard x={x} y={y} event={event} />;
+        return (
+          <div
+            className="calendar-event-holder"
+            style={{
+              top: `calc((100vh/12)*${y})`,
+              left: `calc((100vw/7)*${x})`,
+            }}>
+            <EventCard colors={colors} event={event} />
+          </div>
+        );
       })}
     </div>
-  );
+  ) : null;
 };
 
 const calculateCoordinate = (event: CalendarEventItem) => {

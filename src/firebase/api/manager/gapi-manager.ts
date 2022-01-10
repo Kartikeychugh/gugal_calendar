@@ -9,6 +9,7 @@ const uninitializedFn = () => {
 
 interface FirebaseGAPIActions {
   fetchCalendarEvents: () => { type: "FETCH_CALENDAR_EVENTS" };
+  fetchColors: () => { type: "FETCH_COLORS" };
 }
 
 export interface IFirebaseGAPIManager {
@@ -19,6 +20,7 @@ export interface IFirebaseGAPIManager {
 export const FirebaseGAPIManager = (): IFirebaseGAPIManager => {
   let gapiActions: FirebaseGAPIActions = {
     fetchCalendarEvents: uninitializedFn,
+    fetchColors: uninitializedFn,
   };
 
   return {
@@ -27,6 +29,11 @@ export const FirebaseGAPIManager = (): IFirebaseGAPIManager => {
         fetchCalendarEvents: () => {
           return {
             type: "FETCH_CALENDAR_EVENTS",
+          };
+        },
+        fetchColors: () => {
+          return {
+            type: "FETCH_COLORS",
           };
         },
       };

@@ -25,6 +25,9 @@ interface Calendar {
       singleEvents?: boolean;
     }) => Promise<{ result: CalendarEvents }>;
   };
+  colors: {
+    get: () => Promise<{ result: CalendarColors }>;
+  };
 }
 
 interface CalendarEvents {
@@ -190,4 +193,21 @@ interface CalendarEventItem {
     }
   ];
   eventType: string;
+}
+
+interface CalendarColors {
+  kind: "calendar#colors";
+  updated: datetime;
+  calendar: {
+    [key: string]: {
+      background: string;
+      foreground: string;
+    };
+  };
+  event: {
+    [key: string]: {
+      background: string;
+      foreground: string;
+    };
+  };
 }

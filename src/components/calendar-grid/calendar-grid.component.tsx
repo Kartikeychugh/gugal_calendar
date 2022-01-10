@@ -16,14 +16,3 @@ const CalendarColumn = () => {
   }
   return <div className="grid-column">{cells}</div>;
 };
-
-// const calculateCoordinate = (event: CalendarEventItem) => {
-//   const today = new Date();
-//   const l = today.getDate() - today.getDay();
-
-//   const eventDate = new Date(event.start.dateTime);
-//   const x = eventDate.getDay();
-//   const y = eventDate.getHours();
-
-//   return { x: x, y: y };
-// };

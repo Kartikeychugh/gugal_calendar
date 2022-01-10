@@ -3,7 +3,8 @@ import { dynamicScriptLoad } from "../../../utils/dynamic-script-load";
 import { useAddReducer, useAddSaga, useFirebaseRedux } from "../../redux";
 import { FirebaseGAPIContext } from "../context/firebase-gapi.context";
 import { FirebaseGAPIManager } from "../manager";
-import { eventsReducer } from "../reducers";
+import { calendarEventsReducer } from "../reducers";
+import { calendarColorsReducer } from "../reducers/colors/colors.reducer";
 import { initFirebaseGAPISaga } from "../sagas/firebase-gapi.saga";
 import { FirebaseGAPIService } from "../services/firebase-gapi.service";
 
@@ -18,7 +19,9 @@ export const FirebaseGAPILayer = (props: PropsWithChildren<{}>) => {
     dynamicScriptLoad("https://apis.google.com/js/api.js").then(() => {
       addSaga(initFirebaseGAPISaga(new FirebaseGAPIService(gapi)));
 
-      addReducer("calendar", eventsReducer);
+      addReducer("calendarEvents", calendarEventsReducer);
+      addReducer("calendarColors", calendarColorsReducer);
+
       dispatch({ type: "" });
 
       firebaseGAPIManager.initialise();

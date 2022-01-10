@@ -4,7 +4,7 @@ const INITIATE_STATE: EventsState = {
   events: [],
 };
 
-export const eventsReducer: EventsReducer = (
+export const calendarEventsReducer: EventsReducer = (
   state = INITIATE_STATE,
   action
 ) => {
