@@ -1,0 +1,7 @@
+.calendar-container {
+  overflow: hidden;
+  overflow-y: scroll;
+  height: 100vh;
+  position: absolute;
+  width: 100%;
+}

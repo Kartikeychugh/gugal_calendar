@@ -19,6 +19,12 @@ export class FirebaseGAPIService implements IFirebaseGAPIService {
       singleEvents: true,
       orderBy: "startTime",
     });
+    await this.getColors();
+    return response.result.items;
+  }
+
+  public async getColors() {
+    const response = await (this.gapi.client.calendar as any).colors.get();
     return response.result.items;
   }
 }

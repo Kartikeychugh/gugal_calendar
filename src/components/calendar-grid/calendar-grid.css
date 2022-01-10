@@ -1,0 +1,22 @@
+.grid-cell {
+  width: 100%;
+  height: calc(100vh / 12);
+  background: #ffffff;
+  box-shadow: inset -1px -1px 0px #e0e0e0;
+}
+
+.grid-column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.grid {
+  display: flex;
+  position: absolute;
+  width: 100%;
+}
+
+.events {
+  position: absolute;
+}

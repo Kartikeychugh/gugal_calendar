@@ -1,17 +1,13 @@
-import { useCalendarCommands } from "../../firebase/api/hooks/use-calendar-commands";
+import { CalendarEventGrid } from "../calendar-event-grid/calendar-event-grid.component";
+import { CalendarGrid } from "../calendar-grid/calendar-grid.component";
+
+import "./calendar-container.css";
 
 export const CalendarContainer = () => {
-  const events = useCalendarCommands();
   return (
-    <>
-      {events.map((event) => (
-        <div key={event.id}>
-          <h4>
-            {event.start.dateTime} to {event.end.dateTime}
-          </h4>
-          <h3>{event.summary}</h3>
-        </div>
-      ))}
-    </>
+    <div className="calendar-container">
+      <CalendarGrid />
+      <CalendarEventGrid />
+    </div>
   );
 };

@@ -14,6 +14,7 @@ export const useCalendarCommands = () => {
 
   if (events.length === 0) {
     dispatch(firebaseGAPIManager.getGapiActions().fetchCalendarEvents());
+    return [];
   }
 
   return events;

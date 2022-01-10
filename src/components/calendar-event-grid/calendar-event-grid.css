@@ -1,0 +1,4 @@
+.calendar-event-grid-container {
+  display: flex;
+  position: absolute;
+}
