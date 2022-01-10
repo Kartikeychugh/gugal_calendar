@@ -1,4 +1,8 @@
 import {
+  EventsReducer,
+  EventsState,
+} from "../api/reducers/events/events.types";
+import {
   AuthDetailsActionPayload,
   AuthDetailsActionType,
   AuthDetailsReducer,
@@ -7,13 +11,16 @@ import {
 
 export interface Action<T, P> {
   type: T;
-  payload?: P;
+  payload: P;
 }
 
 export type Reducer<S, P> = (state: S, action: P) => S;
 
-export interface RootState extends AuthDetailsState {}
+export interface RootState {
+  auth: AuthDetailsState;
+  calendar: EventsState;
+}
 export type RootActionType = AuthDetailsActionType | "";
 export type RootActionPayload = AuthDetailsActionPayload;
 export type RootAction = Action<RootActionType, RootActionPayload>;
-export type AnyFirebaseReduxReducer = AuthDetailsReducer;
+export type AnyFirebaseReduxReducer = AuthDetailsReducer | EventsReducer;

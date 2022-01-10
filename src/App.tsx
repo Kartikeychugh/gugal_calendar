@@ -2,9 +2,9 @@ import "./App.css";
 
 import { FirebaseAuthLayer } from "./firebase/auth";
 import { FirebaseProvider } from "./firebase";
-import { PrivateRoute } from "./components";
-import { dynamicScriptLoad } from "./utils/dynamic-script-load";
-import { useEffect } from "react";
+import { CalendarContainer, PrivateRoute } from "./components";
+
+import { FirebaseGAPILayer } from "./firebase/api/layer/firebase-gapi.layer";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -22,17 +22,15 @@ const firebaseConfig = {
 };
 
 function App() {
-  useEffect(() => {
-    dynamicScriptLoad("https://apis.google.com/js/api.js");
-  }, []);
-
   return (
     <div className="App">
       <FirebaseProvider firebaseOptions={firebaseConfig}>
         <FirebaseAuthLayer>
-          <PrivateRoute>
-            <div>Welcome</div>
-          </PrivateRoute>
+          <FirebaseGAPILayer>
+            <PrivateRoute>
+              <CalendarContainer />
+            </PrivateRoute>
+          </FirebaseGAPILayer>
         </FirebaseAuthLayer>
       </FirebaseProvider>
     </div>

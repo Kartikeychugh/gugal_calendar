@@ -6,24 +6,15 @@ import { FirebaseReduxContext } from "../context/firebase-redux-store.context";
 
 export const FirebaseReduxLayer = (props: PropsWithChildren<{}>) => {
   const [done, setDone] = useState(false);
-  const [error, setError] = useState(false);
   const firebaseReduxManager = useMemo(() => FirebaseReduxManager(), []);
 
   useEffect(() => {
-    try {
-      firebaseReduxManager.initialise();
-      setDone(true);
-    } catch (e) {
-      setError(true);
-    }
+    firebaseReduxManager.initialise();
+    setDone(true);
   }, [firebaseReduxManager]);
 
-  if (error) {
-    return <div>Internal Error</div>;
-  }
-
   if (!done) {
-    return <div>Loading</div>;
+    return <div>Initialising Redux Layer</div>;
   }
 
   return (

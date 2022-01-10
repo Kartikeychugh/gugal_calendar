@@ -17,18 +17,14 @@ export const FirebaseAuthLayer = (props: PropsWithChildren<{}>) => {
   const { firebaseAuth, googleAuthProvider, firebaseAuthManager } =
     useCreateFirebaseAuthContext();
 
-  const { done, error } = useInitialisation({
+  const { done } = useInitialisation({
     firebaseAuth,
     googleAuthProvider,
     firebaseAuthManager,
   });
 
-  if (error) {
-    return <div>Internal Error</div>;
-  }
-
   if (!done) {
-    return <>Initialising</>;
+    return <>Initialising Auth Layer</>;
   }
 
   return (
@@ -45,7 +41,6 @@ const useInitialisation = (props: {
   firebaseAuthManager: IFirebaseAuthManager;
 }) => {
   const [done, setDone] = useState(false);
-  const [error, setError] = useState(false);
 
   const addSaga = useAddSaga();
   const addReducer = useAddReducer();
@@ -71,14 +66,10 @@ const useInitialisation = (props: {
       firebaseAuthManager.initialise();
     }
 
-    try {
-      initReducer();
-      initSaga();
-      initManager();
-      setDone(true);
-    } catch (e) {
-      setError(true);
-    }
+    initReducer();
+    initSaga();
+    initManager();
+    setDone(true);
   }, [
     addReducer,
     addSaga,
@@ -88,7 +79,7 @@ const useInitialisation = (props: {
     firebaseAuthManager,
   ]);
 
-  return { done, error };
+  return { done };
 };
 const useCreateFirebaseAuthContext = () => {
   const { firebaseApp } = useFirebase();

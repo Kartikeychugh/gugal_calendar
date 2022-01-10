@@ -1,11 +1,11 @@
-declare var gapi: any;
+import { Defer } from "../firebase/utils/defer";
 
 export const dynamicScriptLoad = (url: string) => {
+  const defer = new Defer<void>();
   const script = document.createElement("script");
   script.setAttribute("src", url);
   script.setAttribute("id", "gapi");
   script.onload = () => {
-    console.log("Script loaded");
     gapi.load("client:auth2", () => {
       gapi.client
         .init({
@@ -18,13 +18,11 @@ export const dynamicScriptLoad = (url: string) => {
           ],
         })
         .then(() => {
-          console.log(
-            "hello world",
-            gapi.auth2.getAuthInstance().isSignedIn.get()
-          );
+          defer.resolve();
         });
     });
   };
 
   document.body.appendChild(script);
+  return defer.promise;
 };

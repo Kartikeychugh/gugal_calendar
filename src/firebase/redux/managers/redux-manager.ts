@@ -8,8 +8,9 @@ import {
 import { AnyFirebaseReduxReducer, RootAction, RootState } from "../types";
 import createSagaMiddleware, { Saga, SagaMiddleware } from "redux-saga";
 import { createFirebaseErrorObj } from "../../utils";
+import { Reducer } from "react";
 
-export type StoreType = Store<CombinedState<RootState> & {}, RootAction> & {
+export type StoreType = Store<CombinedState<RootState>, RootAction> & {
   dispatch: unknown;
 };
 
@@ -18,10 +19,7 @@ export interface IFirebaseReduxManager {
   getStore: () => StoreType;
   addReducer: (key: string, reducer: AnyFirebaseReduxReducer) => void;
   addSaga: (saga: Saga) => void;
-  reduce: (
-    state: CombinedState<RootState> | undefined,
-    action: RootAction
-  ) => CombinedState<RootState>;
+  reduce: Reducer<any, any>;
 }
 
 const uninitializedFn = () => {
@@ -48,10 +46,7 @@ export const FirebaseReduxManager = (): IFirebaseReduxManager => {
       combinedReducers = combineReducers({
         ...reducers,
       });
-      reduce = (
-        state: CombinedState<{} | RootState> | undefined,
-        action: RootAction
-      ) => {
+      reduce = (state: CombinedState<RootState>, action: RootAction) => {
         return combinedReducers(state, action);
       };
       store = createStore(reduce, applyMiddleware(sagaMiddleware));
@@ -72,7 +67,7 @@ export const FirebaseReduxManager = (): IFirebaseReduxManager => {
     },
     getStore: () => getStore(),
     addSaga: (saga: Saga) => addSaga(saga),
-    reduce: (state: CombinedState<RootState> | undefined, action: RootAction) =>
+    reduce: (state: CombinedState<RootState>, action: RootAction) =>
       reduce(state, action),
     addReducer: (key: string, reducer: AnyFirebaseReduxReducer) =>
       addReducer(key, reducer),

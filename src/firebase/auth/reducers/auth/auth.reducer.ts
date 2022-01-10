@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 };
 
 export interface AuthDetailsState {
-  auth: { user: User | null | undefined };
+  user: User | null | undefined;
 }
 
 export const authDetailsReducer: AuthDetailsReducer = (

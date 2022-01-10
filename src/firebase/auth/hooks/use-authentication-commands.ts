@@ -8,7 +8,7 @@ export const useAuthenticationCommands = () => {
 
   return {
     getUser: () => {
-      return auth ? auth.user : undefined;
+      return auth.user;
     },
     signIn: () => {
       signIn();
