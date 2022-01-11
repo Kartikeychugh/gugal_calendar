@@ -1,7 +1,7 @@
 import { EventsReducer, EventsState } from "./events.types";
 
 const INITIATE_STATE: EventsState = {
-  events: [],
+  events: undefined,
 };
 
 export const calendarEventsReducer: EventsReducer = (
@@ -9,7 +9,7 @@ export const calendarEventsReducer: EventsReducer = (
   action
 ) => {
   switch (action.type) {
-    case "SET_CALENDAR_EVENTS":
+    case "CACHE_CALENDAR_EVENTS":
       return { ...state, events: action.payload };
     default:
       return state;

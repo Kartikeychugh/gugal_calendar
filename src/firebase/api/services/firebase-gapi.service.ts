@@ -20,7 +20,6 @@ export class FirebaseGAPIService implements IFirebaseGAPIService {
       singleEvents: true,
       orderBy: "startTime",
     });
-    this.getColors();
 
     return response.result.items;
   }

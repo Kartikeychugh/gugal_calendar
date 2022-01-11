@@ -9,7 +9,7 @@ export const calendarColorsReducer: CalendarColorsReducer = (
   action
 ) => {
   switch (action.type) {
-    case "SET_CALENDAR_COLORS":
+    case "CACHE_CALENDAR_COLORS":
       return { ...state, colors: action.payload };
     default:
       return state;

@@ -5,7 +5,10 @@ import { FirebaseGAPIContext } from "../context/firebase-gapi.context";
 import { FirebaseGAPIManager } from "../manager";
 import { calendarEventsReducer } from "../reducers";
 import { calendarColorsReducer } from "../reducers/colors/colors.reducer";
-import { initFirebaseGAPISaga } from "../sagas/firebase-gapi.saga";
+import {
+  initCalendarColorsSaga,
+  initFirebaseGAPISaga,
+} from "../sagas/firebase-gapi.saga";
 import { FirebaseGAPIService } from "../services/firebase-gapi.service";
 
 export const FirebaseGAPILayer = (props: PropsWithChildren<{}>) => {
@@ -17,12 +20,15 @@ export const FirebaseGAPILayer = (props: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     dynamicScriptLoad("https://apis.google.com/js/api.js").then(() => {
-      addSaga(initFirebaseGAPISaga(new FirebaseGAPIService(gapi)));
+      const firebaseGAPIService = new FirebaseGAPIService(gapi);
+      addSaga(initFirebaseGAPISaga(firebaseGAPIService));
+      addSaga(initCalendarColorsSaga(firebaseGAPIService));
 
       addReducer("calendarEvents", calendarEventsReducer);
       addReducer("calendarColors", calendarColorsReducer);
 
-      dispatch({ type: "" });
+      dispatch({ type: "REHYDRATE_CALENDAR_COLORS" });
+      dispatch({ type: "REHYDRATE_CALENDAR_EVENTS" });
 
       firebaseGAPIManager.initialise();
 
