@@ -8,16 +8,32 @@
 .grid-column {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  min-width: 150px;
+  width: 20%;
 }
 
 .grid {
   display: flex;
-  position: absolute;
+
   width: 100%;
 }
 
 .events {
-  position: absolute;
+}
+
+.grid-time-cell {
+  display: flex;
+  width: 100%;
+  /* height: calc(100vh / 12); */
+  height: calc(100vh / 12);
+  box-shadow: inset -1px -1px 0px #e0e0e0;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-time-container {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  min-width: 100px;
 }

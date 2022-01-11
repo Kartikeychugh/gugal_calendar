@@ -1,12 +1,18 @@
+import { CalendarGridTime } from "./calendar-grid-time";
 import "./calendar-grid.css";
 
 export const CalendarGrid = () => {
   const rows = [];
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 5; i++) {
     rows.push(<CalendarColumn key={i} />);
   }
-  return <div className="grid"> {rows}</div>;
+  return (
+    <div className="grid">
+      <CalendarGridTime />
+      {rows}
+    </div>
+  );
 };
 
 const CalendarColumn = () => {
