@@ -4,27 +4,26 @@ import { EventCard } from "../event-card/event-card.component";
 import "./calendar-event-grid.css";
 
 export const CalendarEventGrid = () => {
-  const events = useCalendarEvents();
-  const colors = useCalendarColors();
+  const columns = [];
 
-  return colors ? (
-    <div className="calendar-event-grid-container">
-      {events &&
-        events.map((event) => {
-          const { x, y } = calculateCoordinate(event);
-          return (
-            <div
-              className="calendar-event-holder"
-              style={{
-                top: `calc((100vh/12)*${y})`,
-                left: `calc((100vw/7)*${x})`,
-              }}>
-              <EventCard colors={colors} event={event} />
-            </div>
-          );
-        })}
+  for (let i = 0; i < 5; i++) {
+    columns.push(<div className="event-grid-column"></div>);
+  }
+
+  return <div className="event-grid-container">{columns}</div>;
+};
+
+export const CalendarEventColumn = () => {
+  const events = useCalendarEvents();
+  return (
+    <div className="event-grid-column">
+      {events?.length ? (
+        <>
+          <EventCard event={events[0]} />
+        </>
+      ) : null}
     </div>
-  ) : null;
+  );
 };
 
 const calculateCoordinate = (event: CalendarEventItem) => {
@@ -34,3 +33,20 @@ const calculateCoordinate = (event: CalendarEventItem) => {
 
   return { x: x, y: y };
 };
+
+// const events = useCalendarEvents();
+// const colors = useCalendarColors();
+
+// return colors ? (
+//   <div className="calendar-event-grid-container">
+//     {events &&
+//       events.map((event) => {
+//         const { x, y } = calculateCoordinate(event);
+//         return (
+//           <div className="calendar-event-holder">
+//             <EventCard colors={colors} event={event} />
+//           </div>
+//         );
+//       })}
+//   </div>
+// ) : null;

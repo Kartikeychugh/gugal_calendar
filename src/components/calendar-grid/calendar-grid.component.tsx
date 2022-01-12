@@ -1,21 +1,38 @@
+import {
+  CalendarEventColumn,
+  CalendarEventGrid,
+} from "../calendar-event-grid/calendar-event-grid.component";
 import { CalendarGridTime } from "./calendar-grid-time";
 import "./calendar-grid.css";
 
 export const CalendarGrid = () => {
-  const rows = [];
+  const columns = [];
 
   for (let i = 0; i < 5; i++) {
-    rows.push(<CalendarColumn key={i} />);
+    columns.push(<CalendarGridColumnHolder key={i} />);
   }
   return (
-    <div className="grid">
+    <div style={{ position: "absolute", width: "100%", display: "flex" }}>
       <CalendarGridTime />
-      {rows}
+      <div className="grid">{columns}</div>
     </div>
   );
 };
 
-const CalendarColumn = () => {
+const CalendarGridColumnHolder = () => {
+  // const gridColumn = [];
+  // for (let i = 0; i < 24; i++) {
+  //   gridColumn.push(<CalendarGridColumn key={i} />);
+  // }
+  return (
+    <div className="grid-column-holders">
+      <CalendarEventColumn />
+      <CalendarGridColumn />
+    </div>
+  );
+};
+
+const CalendarGridColumn = () => {
   const cells = [];
   for (let i = 0; i < 24; i++) {
     cells.push(<div key={i} className="grid-cell"></div>);

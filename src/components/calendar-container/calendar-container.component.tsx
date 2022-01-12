@@ -1,4 +1,5 @@
 import { CalendarEventGrid } from "../calendar-event-grid/calendar-event-grid.component";
+import { CalendarGridTime } from "../calendar-grid/calendar-grid-time";
 import { CalendarGrid } from "../calendar-grid/calendar-grid.component";
 import { CalendarHeader } from "../calendar-header/calendar-header.component";
 

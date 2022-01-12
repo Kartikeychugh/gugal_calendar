@@ -1,16 +1,19 @@
 .calendar-container {
   width: 100%;
   height: 100%;
+  position: absolute;
 }
 
 .calendar-surface {
   width: 80%;
   height: 80%;
+  position: absolute;
 }
 
 .scrollable-grid {
   overflow: hidden;
   overflow-y: scroll;
   width: 100%;
+  position: absolute;
   height: 100%;
 }

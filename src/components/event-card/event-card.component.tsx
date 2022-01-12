@@ -3,7 +3,7 @@ import VideoCallIcon from "@mui/icons-material/VideoCall";
 
 export const EventCard = (props: {
   event: CalendarEventItem;
-  colors: CalendarColors;
+  colors?: CalendarColors;
 }) => {
   const { event } = props;
 

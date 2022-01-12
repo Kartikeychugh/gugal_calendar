@@ -8,7 +8,7 @@
 .grid-column {
   display: flex;
   flex-direction: column;
-  width: 20%;
+  width: 100%;
 }
 
 .grid {
@@ -36,4 +36,10 @@
   flex-direction: column;
   width: 100px;
   min-width: 100px;
+}
+
+.grid-column-holders {
+  width: 20%;
+  /* position: absolute; */
+  height: 100%;
 }
