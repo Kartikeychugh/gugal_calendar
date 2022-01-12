@@ -8,7 +8,9 @@ const uninitializedFn = () => {
 };
 
 interface FirebaseGAPIActions {
-  fetchCalendarEvents: () => { type: "FETCH_CALENDAR_EVENTS" };
+  fetchCalendarEvents: () => {
+    type: "FETCH_CALENDAR_EVENTS";
+  };
   fetchColors: () => { type: "FETCH_COLORS" };
 }
 

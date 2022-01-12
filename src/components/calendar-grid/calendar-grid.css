@@ -1,6 +1,6 @@
 .grid-cell {
   width: 100%;
-  height: calc(100vh / 12);
+  height: 60px;
   background: #ffffff;
   box-shadow: inset -1px -1px 0px #e0e0e0;
 }
@@ -23,12 +23,10 @@
 .grid-time-cell {
   display: flex;
   width: 100%;
-  /* height: calc(100vh / 12); */
-  height: calc(100vh / 12);
-  box-shadow: inset -1px -1px 0px #e0e0e0;
+  height: 60px;
+  /* box-shadow: inset -1px -1px 0px #e0e0e0; */
 
   justify-content: center;
-  align-items: center;
 }
 
 .grid-time-container {
@@ -42,4 +40,15 @@
   width: 20%;
   /* position: absolute; */
   height: 100%;
+}
+
+.grid-time-cell-first-line {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+
+  /* gray/500 */
+
+  color: #71717a;
 }

@@ -27,7 +27,9 @@ export const EventCard = (props: {
   }
 
   return (
-    <div className="event-card-container">
+    <div
+      className="event-card-container"
+      style={{ top: `calc(60*${hours}px)` }}>
       <div className="event-card-bar"></div>
       <div
         className="event-card-summary"

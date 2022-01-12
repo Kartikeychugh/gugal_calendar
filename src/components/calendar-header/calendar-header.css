@@ -8,10 +8,31 @@
   box-shadow: inset -1px -1px 0px #e0e0e0;
   height: 100%;
   width: 20%;
+  padding: 4px 8px 4px 8px;
 }
 
 .header-gutter {
   width: 100px;
   min-width: 100px;
-  box-shadow: inset -1px -1px 0px #e0e0e0;
+}
+
+.header-cell-first-line {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 12px;
+
+  /* gray/500 */
+
+  color: #71717a;
+}
+
+.header-cell-second-line {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 32px;
+  /* identical to box height, or 145% */
+
+  color: #000000;
 }

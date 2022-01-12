@@ -1,25 +1,21 @@
-import { all, put, takeLeading } from "redux-saga/effects";
+import { all, put, takeEvery, takeLeading } from "redux-saga/effects";
 import { IFirebaseGAPIService } from "../services/firebase-gapi.service";
 
 export const initFirebaseGAPISaga = (
   firebaseGAPIService: IFirebaseGAPIService
 ) => {
-  function* fetchCalendarEvents() {
-    const today = new Date();
-    const lastDayOfTheWeek = new Date();
-    lastDayOfTheWeek.setDate(lastDayOfTheWeek.getDate() + 7);
-
-    const result: CalendarEventItem[] = yield firebaseGAPIService.getEvents(
-      today.toISOString(),
-      lastDayOfTheWeek.toISOString()
-    );
+  function* fetchCalendarEvents(action: {
+    type: string;
+    payload: { datetime: number };
+  }) {
+    const result: CalendarEventItem[] = yield firebaseGAPIService.getEvents();
     localStorage.setItem("calendarEvents", JSON.stringify(result));
 
     yield put({ type: "CACHE_CALENDAR_EVENTS", payload: result });
   }
 
   function* watchFetchCalendarEvents() {
-    yield takeLeading("FETCH_CALENDAR_EVENTS", fetchCalendarEvents);
+    yield takeEvery("FETCH_CALENDAR_EVENTS", fetchCalendarEvents);
   }
 
   function* hydrateCalendarEvents() {

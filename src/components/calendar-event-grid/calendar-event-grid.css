@@ -6,7 +6,7 @@
 }
 
 .event-grid-column {
-  width: calc(20% - 20px);
+  width: calc(20% - 30px);
   height: 100%;
   position: absolute;
 }
