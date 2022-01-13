@@ -2,7 +2,7 @@ import "./App.css";
 
 import { FirebaseAuthLayer } from "./firebase/auth";
 import { FirebaseProvider } from "./firebase";
-import { CalendarContainer, PrivateRoute } from "./components";
+import { Calendar, PrivateRoute } from "./components";
 
 import { FirebaseGAPILayer } from "./firebase/api/layer/firebase-gapi.layer";
 
@@ -28,7 +28,7 @@ function App() {
         <FirebaseAuthLayer>
           <FirebaseGAPILayer>
             <PrivateRoute>
-              <CalendarContainer />
+              <Calendar />
             </PrivateRoute>
           </FirebaseGAPILayer>
         </FirebaseAuthLayer>

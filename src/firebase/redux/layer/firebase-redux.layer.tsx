@@ -14,7 +14,7 @@ export const FirebaseReduxLayer = (props: PropsWithChildren<{}>) => {
   }, [firebaseReduxManager]);
 
   if (!done) {
-    return <div>Initialising Redux Layer</div>;
+    return null;
   }
 
   return (

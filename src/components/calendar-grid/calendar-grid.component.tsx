@@ -1,11 +1,11 @@
-import {
-  CalendarEventColumn,
-} from "../calendar-event-grid/calendar-event-grid.component";
+import { useCalendarEvents } from "../../firebase/api/hooks/use-calendar-events";
+import { CalendarEventColumn } from "../calendar-event-grid/calendar-event-grid.component";
 import { CalendarGridTime } from "./calendar-grid-time";
 import "./calendar-grid.css";
 
 export const CalendarGrid = () => {
   const columns = [];
+  const events = useCalendarEvents();
 
   for (let i = 0; i < 5; i++) {
     const today = new Date();
@@ -13,8 +13,10 @@ export const CalendarGrid = () => {
     const firstDateOfColumn = today.setDate(
       today.getDate() - dayNumber + 1 + i
     );
+
     columns.push(
       <CalendarGridColumnHolder
+        events={events}
         datetime={firstDateOfColumn}
         colNum={i}
         key={i}
@@ -32,10 +34,11 @@ export const CalendarGrid = () => {
 const CalendarGridColumnHolder = (props: {
   colNum: number;
   datetime: number;
+  events: CalendarEventItem[] | undefined;
 }) => {
   return (
     <div className="grid-column-holders">
-      <CalendarEventColumn datetime={props.datetime} />
+      <CalendarEventColumn events={props.events} datetime={props.datetime} />
       <CalendarGridColumn colNum={props.colNum} />
     </div>
   );

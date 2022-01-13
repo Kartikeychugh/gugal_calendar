@@ -4,13 +4,13 @@
   position: absolute;
 }
 
-.calendar-surface {
+.calendar {
   width: 80%;
   height: 80%;
   position: absolute;
 }
 
-.scrollable-grid {
+.calendar-scrollable-grid {
   overflow: hidden;
   overflow-y: scroll;
   width: 100%;

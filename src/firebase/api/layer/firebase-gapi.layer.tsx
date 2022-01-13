@@ -37,7 +37,7 @@ export const FirebaseGAPILayer = (props: PropsWithChildren<{}>) => {
   }, [addSaga, firebaseGAPIManager, addReducer, dispatch]);
 
   if (!done) {
-    return <div>Initialising API layer</div>;
+    return null;
   }
 
   return (

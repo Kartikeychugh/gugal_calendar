@@ -1,4 +1,4 @@
-import { all, put, takeEvery, takeLeading } from "redux-saga/effects";
+import { all, put, takeLeading } from "redux-saga/effects";
 import { IFirebaseGAPIService } from "../services/firebase-gapi.service";
 
 export const initFirebaseGAPISaga = (
@@ -15,7 +15,7 @@ export const initFirebaseGAPISaga = (
   }
 
   function* watchFetchCalendarEvents() {
-    yield takeEvery("FETCH_CALENDAR_EVENTS", fetchCalendarEvents);
+    yield takeLeading("FETCH_CALENDAR_EVENTS", fetchCalendarEvents);
   }
 
   function* hydrateCalendarEvents() {

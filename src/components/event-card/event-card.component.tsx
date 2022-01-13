@@ -1,8 +1,9 @@
 import "./event-card.css";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
+import { ICalendarEventItem } from "../../models/calendar-event-item";
 
 export const EventCard = (props: {
-  event: CalendarEventItem;
+  event: ICalendarEventItem;
   colors?: CalendarColors;
 }) => {
   const { event } = props;
@@ -29,19 +30,14 @@ export const EventCard = (props: {
   return (
     <div
       className="event-card-container"
-      style={{ top: `calc(60*${hours}px)` }}>
+      style={{
+        top: event.layout.top,
+        height: event.layout.height,
+        width: event.layout.width,
+        left: event.layout.left,
+      }}>
       <div className="event-card-bar"></div>
-      <div
-        className="event-card-summary"
-        // style={{
-        //   background: !event.colorId
-        //     ? "#0ea5e91a"
-        //     : props.colors.event[event.colorId].background,
-        //   color: !event.colorId
-        //     ? "#0369a1"
-        //     : props.colors.event[event.colorId].foreground,
-        // }}
-      >
+      <div className="event-card-summary">
         <div className="first-line">
           <div className="event-timing">
             {hoursStr}:{minutesStr} {ampm}
