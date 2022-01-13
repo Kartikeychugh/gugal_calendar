@@ -11,7 +11,7 @@
   width: 100%;
 }
 
-.grid {
+.calendar-grid {
   display: flex;
 
   width: 100%;
@@ -29,14 +29,13 @@
 .grid-time-container {
   display: flex;
   flex-direction: column;
-  width: 100px;
-  min-width: 100px;
+  min-width: 75px;
 }
 
 .grid-column-holders {
-  width: 20%;
   /* position: absolute; */
   height: 100%;
+  width: 100%;
 }
 
 .grid-time-cell-first-line {
@@ -48,4 +47,17 @@
   /* gray/500 */
 
   color: #71717a;
+}
+
+.time-marker-container {
+  position: absolute;
+  display: flex;
+  width: calc(100% - 75px);
+}
+.solid-time-marker {
+  border-top: 2px lightcoral solid;
+}
+
+.dotted-time-marker {
+  border-top: 2px lightcoral dotted;
 }

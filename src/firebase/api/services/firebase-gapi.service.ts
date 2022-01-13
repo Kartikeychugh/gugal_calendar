@@ -1,3 +1,5 @@
+import { normaliseDate } from "../../../utils/get-current-week-dates";
+
 export interface IFirebaseGAPIService {
   getEvents(): Promise<CalendarEventItem[]>;
   getColors(): Promise<CalendarColors>;
@@ -12,13 +14,17 @@ export class FirebaseGAPIService implements IFirebaseGAPIService {
 
   public async getEvents() {
     var start = new Date();
+    start = normaliseDate(start);
     start.setDate(start.getDate() - start.getDay() + 1);
 
     var end = new Date();
-    end.setDate(end.getDate() - end.getDay() + 6);
+    end = normaliseDate(end);
+    end.setDate(end.getDate() - end.getDay() + 7);
+    end.setHours(23);
+    end.setMinutes(59);
+    end.setSeconds(0);
+    end.setMilliseconds(0);
 
-    var next = new Date();
-    next.setDate(next.getDate() + 7);
     const response = await this.gapi.client.calendar.events.list({
       calendarId: "primary",
       timeMin: start.toISOString(),

@@ -7,13 +7,11 @@
 .header-cell {
   box-shadow: inset -1px -1px 0px #e0e0e0;
   height: 100%;
-  width: 20%;
   padding: 4px 8px 4px 8px;
 }
 
 .header-gutter {
-  width: 100px;
-  min-width: 100px;
+  min-width: 75px;
 }
 
 .header-cell-first-line {
