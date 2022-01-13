@@ -1,4 +1,3 @@
-import { getTabId } from "@mui/material";
 import { useCalendarEvents } from "../../firebase/api/hooks/use-calendar-events";
 import { useCurrentTime } from "../../hooks/use-current-time";
 import {
@@ -45,7 +44,6 @@ const CalendarGrid = (props: { daysToShow: Date[] }) => {
 
 const TimeMarker = (props: { view: number; diff: number }) => {
   const time = useCurrentTime();
-  const today = getToday().getDay();
   let _diff = props.diff < 0 ? 6 : props.diff;
 
   return (
