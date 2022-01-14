@@ -1,0 +1,13 @@
+.calendar-command-bar {
+  display: flex;
+  justify-content: space-between;
+  height: 50px;
+}
+
+.calendar-update {
+  font-weight: 500;
+  font-size: 14px;
+  color: #71717a;
+  display: flex;
+  align-items: center;
+}

@@ -5,6 +5,7 @@ import { FirebaseProvider } from "./firebase";
 import { Calendar, PrivateRoute } from "./components";
 
 import { FirebaseGAPILayer } from "./firebase/api/layer/firebase-gapi.layer";
+import { CalendarReduxProvider } from "./redux/provider/provider";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -26,11 +27,13 @@ function App() {
     <div className="App">
       <FirebaseProvider firebaseOptions={firebaseConfig}>
         <FirebaseAuthLayer>
-          <FirebaseGAPILayer>
-            <PrivateRoute>
+          {/* <FirebaseGAPILayer> */}
+          <PrivateRoute>
+            <CalendarReduxProvider>
               <Calendar />
-            </PrivateRoute>
-          </FirebaseGAPILayer>
+            </CalendarReduxProvider>
+          </PrivateRoute>
+          {/* </FirebaseGAPILayer> */}
         </FirebaseAuthLayer>
       </FirebaseProvider>
     </div>

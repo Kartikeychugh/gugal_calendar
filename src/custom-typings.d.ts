@@ -3,6 +3,7 @@ declare var gapi: GAPI;
 interface GAPI {
   load: (libraryName, callback: () => void) => void;
   client: GAPIClient;
+  auth2: any;
 }
 
 interface GAPIClient {

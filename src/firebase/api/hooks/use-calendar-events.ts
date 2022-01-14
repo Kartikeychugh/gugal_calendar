@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { useDispatch } from "../../../redux/hooks/use-dispatch";
+import { useSelector } from "../../../redux/hooks/use-selector";
 import {
   RootState,
   useFirebaseRedux,
@@ -7,15 +9,12 @@ import {
 import { useFirebaseGAPIManager } from "./use-firebase-gapi-manager";
 
 export const useCalendarEvents = () => {
-  const firebaseGAPIManager = useFirebaseGAPIManager();
-  const { dispatch } = useFirebaseRedux();
-  const { events } = useFirebaseReduxSelector(
-    (state: RootState) => state.calendarEvents
-  );
+  const dispatch = useDispatch();
+  const events = useSelector((state) => state.events);
 
   useEffect(() => {
-    dispatch(firebaseGAPIManager.getGapiActions().fetchCalendarEvents());
-  }, [dispatch, firebaseGAPIManager]);
+    dispatch({ type: "FETCH_CALENDAR_EVENTS" });
+  }, [dispatch]);
 
   return events;
 };

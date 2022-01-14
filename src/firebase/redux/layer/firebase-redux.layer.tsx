@@ -2,7 +2,10 @@ import { PropsWithChildren, useEffect, useMemo, useState } from "react";
 
 import { Provider } from "react-redux";
 import { FirebaseReduxManager } from "../managers/redux-manager";
-import { FirebaseReduxContext } from "../context/firebase-redux-store.context";
+import {
+  FirebaseReduxContext,
+  FirebaseReduxStoreContext,
+} from "../context/firebase-redux-store.context";
 
 export const FirebaseReduxLayer = (props: PropsWithChildren<{}>) => {
   const [done, setDone] = useState(false);
@@ -19,7 +22,9 @@ export const FirebaseReduxLayer = (props: PropsWithChildren<{}>) => {
 
   return (
     <FirebaseReduxContext.Provider value={{ firebaseReduxManager }}>
-      <Provider store={firebaseReduxManager.getStore()}>
+      <Provider
+        context={FirebaseReduxStoreContext}
+        store={firebaseReduxManager.getStore()}>
         {props.children}
       </Provider>
     </FirebaseReduxContext.Provider>

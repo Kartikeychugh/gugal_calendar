@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useCalendarEvents } from "../../firebase/api/hooks/use-calendar-events";
 import { useCurrentTime } from "../../hooks/use-current-time";
 import {
@@ -21,7 +22,6 @@ export const CalendarSurface = (props: { daysToShow: Date[] }) => {
 
 const CalendarGrid = (props: { daysToShow: Date[] }) => {
   const events = useCalendarEvents();
-  console.log({ events });
 
   return (
     <div className="calendar-grid">
@@ -44,10 +44,20 @@ const CalendarGrid = (props: { daysToShow: Date[] }) => {
 
 const TimeMarker = (props: { view: number; diff: number }) => {
   const time = useCurrentTime();
+  const ref: any = useRef(null);
+  useEffect(() => {
+    ref.current.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
+    });
+  }, []);
+
   let _diff = props.diff < 0 ? 6 : props.diff;
 
   return (
     <div
+      ref={ref}
       style={{
         top: `${2 * time}px`,
       }}

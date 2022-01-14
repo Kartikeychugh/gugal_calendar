@@ -9,7 +9,7 @@ export const dynamicScriptLoad = (url: string) => {
     gapi.load("client:auth2", () => {
       gapi.client
         .init({
-          apiKey: "AIzaSyAJNOsXo-vqcU-s0bvEKCgQ13cjJqhS9b8",
+          apiKey: "AIzaSyAHN5KtQh-2bndpL-NAp5iFQwgeT0ByMK0",
           clientId:
             "214292075187-tv75vua1r3afdfud7k4bcfjeocin1it4.apps.googleusercontent.com",
           scope: "https://www.googleapis.com/auth/calendar.readonly",

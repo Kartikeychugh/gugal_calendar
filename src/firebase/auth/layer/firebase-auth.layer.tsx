@@ -24,7 +24,7 @@ export const FirebaseAuthLayer = (props: PropsWithChildren<{}>) => {
   });
 
   if (!done) {
-    return <>{props.children}</>;
+    return <>Initialising Auth Layer</>;
   }
 
   return (

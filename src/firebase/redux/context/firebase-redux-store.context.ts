@@ -7,3 +7,5 @@ export interface IFirebaseReduxContext {
 export const FirebaseReduxContext = React.createContext<IFirebaseReduxContext>({
   firebaseReduxManager: undefined,
 });
+
+export const FirebaseReduxStoreContext = React.createContext<any>(undefined);
