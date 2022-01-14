@@ -4,7 +4,6 @@ import { FirebaseAuthLayer } from "./firebase/auth";
 import { FirebaseProvider } from "./firebase";
 import { Calendar, PrivateRoute } from "./components";
 
-import { FirebaseGAPILayer } from "./firebase/api/layer/firebase-gapi.layer";
 import { CalendarReduxProvider } from "./redux/provider/provider";
 
 // TODO: Add SDKs for Firebase products that you want to use
