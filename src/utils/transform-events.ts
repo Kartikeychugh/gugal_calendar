@@ -14,10 +14,13 @@ export const transformEvents = (events: CalendarEventItem[]) => {
         const endTime = new Date(event.end.dateTime);
 
         (event as ICalendarEventItem).layout = {
-          top: `${120 * startTime.getHours() + 2 * startTime.getMinutes()}px`,
+          top: `${
+            120 * startTime.getHours() + 2 * startTime.getMinutes() + 2
+          }px`,
           height: `${
             120 * (endTime.getHours() - startTime.getHours()) +
-            2 * (endTime.getMinutes() - startTime.getMinutes())
+            2 * (endTime.getMinutes() - startTime.getMinutes()) -
+            4
           }px`,
           left,
           width,

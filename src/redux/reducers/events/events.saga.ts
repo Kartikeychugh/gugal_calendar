@@ -4,14 +4,12 @@ import { IGoogleCalendarService } from "../../../gapi/services/calendar.service"
 export const initFirebaseGAPISaga = (
   googleCalendarService: IGoogleCalendarService
 ) => {
-  function* fetchCalendarEvents(action: {
-    type: string;
-    payload: { datetime: number };
-  }) {
+  function* fetchCalendarEvents() {
+    yield put({ type: "GOOGLE_SYNC_START" });
     const result: CalendarEventItem[] = yield googleCalendarService.getEvents();
     localStorage.setItem("calendarEvents", JSON.stringify(result));
-
     yield put({ type: "SET_EVENTS", payload: result });
+    yield put({ type: "GOOGLE_SYNC_SUCCESS" });
   }
 
   function* watchFetchCalendarEvents() {

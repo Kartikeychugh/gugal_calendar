@@ -12,7 +12,9 @@ export const CalendarEventColumn = (props: {
 
   return (
     <div
-      style={{ width: `calc(${100 / props.view}% - 30px)` }}
+      style={{
+        width: `calc(${100 / props.view}% - ${75 / props.view}px - 30px)`,
+      }}
       className="event-grid-column">
       {transformedEvents.map((event) => (
         <EventCard key={event.id} event={event} />

@@ -52,7 +52,6 @@
 .time-marker-container {
   position: absolute;
   display: flex;
-  width: calc(100% - 75px);
 }
 .solid-time-marker {
   border-top: 2px lightcoral solid;

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useCalendarEvents } from "../../firebase/api/hooks/use-calendar-events";
+import { useCalendarEvents } from "../../hooks/use-calendar-events";
 import { useCurrentTime } from "../../hooks/use-current-time";
 import {
   getToday,
@@ -45,28 +45,51 @@ const CalendarGrid = (props: { daysToShow: Date[] }) => {
 const TimeMarker = (props: { view: number; diff: number }) => {
   const time = useCurrentTime();
   const ref: any = useRef(null);
+
   useEffect(() => {
     ref.current.scrollIntoView({
       behavior: "smooth",
       block: "center",
-      inline: "nearest",
     });
   }, []);
 
+  let totalMarkerLengthFraction;
+  let solidMarrkerLengthFraction;
   let _diff = props.diff < 0 ? 6 : props.diff;
+
+  if (_diff < 0) {
+    _diff = _diff + props.view;
+    totalMarkerLengthFraction = (_diff + 1) / props.view;
+    solidMarrkerLengthFraction = _diff / (_diff + 1);
+  } else if (_diff >= props.view) {
+    totalMarkerLengthFraction = 1;
+    solidMarrkerLengthFraction = 1;
+  } else {
+    totalMarkerLengthFraction = (_diff + 1) / props.view;
+    solidMarrkerLengthFraction = _diff / (_diff + 1);
+  }
+
+  let solidWidth = solidMarrkerLengthFraction * 100;
+  let dottedWiddth = 100 - solidWidth;
 
   return (
     <div
+      onScroll={(e) => {
+        console.log({ e });
+      }}
       ref={ref}
       style={{
         top: `${2 * time}px`,
+        width: `calc(${100 * totalMarkerLengthFraction}% - ${
+          75 * totalMarkerLengthFraction
+        }px)`,
       }}
       className="time-marker-container">
       <div
-        style={{ width: `${(_diff * 100) / props.view}%` }}
+        style={{ width: `${solidWidth}%` }}
         className="solid-time-marker"></div>
       <div
-        style={{ width: `${100 / props.view}%` }}
+        style={{ width: `${dottedWiddth}%` }}
         className="dotted-time-marker"></div>
     </div>
   );
