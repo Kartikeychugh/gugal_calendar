@@ -1,27 +1,33 @@
-import { getWorkWeek } from "../../../utils/get-current-week-dates";
+import {
+  getToday,
+  getWorkWeek,
+  isSameDate,
+} from "../../../utils/get-current-week-dates";
 
 export interface ICalendarViewState {
-  numberOfDays: number;
-  daysToView: string[];
+  dates: string[];
+  title: string;
 }
 
 const INITIAL_STATE: ICalendarViewState = {
-  numberOfDays: 5,
-  daysToView: getWorkWeek(5),
+  dates: getWorkWeek(5),
+  title: "Week",
 };
 
 export const CalendarViewReducer = (
   state = INITIAL_STATE,
-  action: { type: string; payload: number | string[] }
+  action: {
+    type: string;
+    payload: {
+      dates: string[];
+    };
+  }
 ): ICalendarViewState => {
   switch (action.type) {
-    case "SET_NUMBER_OF_DAYS":
-      return { ...state, numberOfDays: action.payload as number };
     case "SET_VIEW":
       return {
         ...state,
-        daysToView: action.payload as string[],
-        numberOfDays: (action.payload as string[]).length,
+        ...action.payload,
       };
     default:
       return state;

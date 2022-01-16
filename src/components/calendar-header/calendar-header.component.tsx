@@ -9,8 +9,8 @@ import "./calendar-header.css";
 export const CalendarHeader = (props: { daysToShow: string[] }) => {
   const today = getToday();
   const dispatch = useDispatch();
-  const setView = (payload: string[]) => {
-    dispatch({ type: "SET_VIEW", payload: payload });
+  const setView = (dates: string[]) => {
+    dispatch({ type: "SET_VIEW", payload: { dates } });
   };
 
   return (

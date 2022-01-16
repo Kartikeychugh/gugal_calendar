@@ -1,6 +1,9 @@
 import { ICalendarEventItem } from "../models/calendar-event-item";
 
-export const transformEvents = (events: CalendarEventItem[]) => {
+export const transformEvents = (
+  events: CalendarEventItem[],
+  cellSize: number
+) => {
   const conflictingGroups = divideIntoConflictingGroups(events);
   conflictingGroups.forEach((conflictingGroup) => {
     const columnsWiseEvents = divideIntoColumns(conflictingGroup);
@@ -15,11 +18,13 @@ export const transformEvents = (events: CalendarEventItem[]) => {
 
         (event as ICalendarEventItem).layout = {
           top: `${
-            120 * startTime.getHours() + 2 * startTime.getMinutes() + 2
+            cellSize * startTime.getHours() +
+            (cellSize / 60) * startTime.getMinutes() +
+            2
           }px`,
           height: `${
-            120 * (endTime.getHours() - startTime.getHours()) +
-            2 * (endTime.getMinutes() - startTime.getMinutes()) -
+            cellSize * (endTime.getHours() - startTime.getHours()) +
+            (cellSize / 60) * (endTime.getMinutes() - startTime.getMinutes()) -
             4
           }px`,
           left,

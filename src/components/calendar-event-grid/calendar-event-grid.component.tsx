@@ -7,9 +7,10 @@ import "./calendar-event-grid.css";
 export const CalendarEventColumn = (props: {
   events: CalendarEventItem[] | undefined;
   view: number;
+  cellSize: number;
 }) => {
   const { events = [] } = props;
-  let transformedEvents = transformEvents(events);
+  let transformedEvents = transformEvents(events, props.cellSize);
 
   return (
     <div

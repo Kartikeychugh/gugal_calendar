@@ -29,7 +29,7 @@ function App() {
           {/* <FirebaseGAPILayer> */}
           <PrivateRoute>
             <CalendarReduxProvider>
-              <Calendar />
+              <Calendar cellSize={60} />
             </CalendarReduxProvider>
           </PrivateRoute>
           {/* </FirebaseGAPILayer> */}

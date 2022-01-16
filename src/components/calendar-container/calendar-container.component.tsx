@@ -5,22 +5,28 @@ import { CalendarCommandBar } from "../calender-command-bar/calendar-command-bar
 
 import "./calendar-container.css";
 
-export const Calendar = () => {
-  const { daysToView } = useSelector((state) => state.view);
+export const Calendar = (props: { cellSize: number }) => {
+  const { dates } = useSelector((state) => state.view);
   return (
     <div className="calendar">
       <CalendarCommandBar />
-      <CalendarContainer daysToShow={daysToView} />
+      <CalendarContainer cellSize={props.cellSize} daysToShow={dates} />
     </div>
   );
 };
 
-const CalendarContainer = (props: { daysToShow: string[] }) => {
+const CalendarContainer = (props: {
+  daysToShow: string[];
+  cellSize: number;
+}) => {
   return (
     <div className="calendar-container">
       <CalendarHeader daysToShow={props.daysToShow} />
       <div className="calendar-scrollable-grid">
-        <CalendarSurface daysToShow={props.daysToShow} />
+        <CalendarSurface
+          cellSize={props.cellSize}
+          daysToShow={props.daysToShow}
+        />
       </div>
     </div>
   );

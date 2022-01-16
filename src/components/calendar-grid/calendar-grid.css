@@ -1,6 +1,5 @@
 .grid-cell {
   width: 100%;
-  height: 120px;
   background: #ffffff;
   box-shadow: inset -1px -1px 0px #e0e0e0;
   transition: 0.1s all ease-in-out;
@@ -33,10 +32,7 @@
 .grid-time-cell {
   display: flex;
   width: 100%;
-  height: 120px;
-  /* box-shadow: inset -1px -1px 0px #e0e0e0; */
-
-  justify-content: center;
+  padding: 4px;
 }
 
 .grid-time-container {
@@ -72,4 +68,16 @@
 
 .dotted-time-marker {
   border-top: 2px lightcoral dotted;
+}
+
+.create-event-holder {
+  border-radius: 5px;
+  background-color: rgb(3, 155, 229);
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  transition: 0.1s top ease;
+  box-shadow: 3px 3px #dcdce0;
+  opacity: 0.5;
+  transition: 0.1 height ease;
 }
