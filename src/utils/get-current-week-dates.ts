@@ -1,14 +1,14 @@
 export const getWorkWeek = (view: number) => {
   if (view === 1) {
-    return [getToday()];
+    return [getToday().toISOString()];
   }
 
   let prev = getStartOfWeek();
-  const workWeek: Date[] = [];
+  const workWeek: string[] = [];
 
   for (let i = 0; i < view; i++) {
     const next = nextDate(prev);
-    workWeek.push(next);
+    workWeek.push(next.toISOString());
     prev = next;
   }
 
@@ -23,7 +23,7 @@ export const nextDate = (date: Date) => {
 
 export const getStartOfWeek = () => {
   const curr = normaliseDate(new Date());
-  curr.setDate(curr.getDate() - curr.getDay());
+  curr.setDate(curr.getDate() - (curr.getDay() ? curr.getDay() : 7));
   return curr;
 };
 

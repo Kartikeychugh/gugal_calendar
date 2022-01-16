@@ -3,6 +3,19 @@
   height: 120px;
   background: #ffffff;
   box-shadow: inset -1px -1px 0px #e0e0e0;
+  transition: 0.1s all ease-in-out;
+}
+
+.grid-cell:hover {
+  background-color: #ebebeb;
+}
+
+.same-day {
+  background-color: #eff6ff;
+}
+
+.weekend {
+  background-color: #f5f5f5;
 }
 
 .grid-column {

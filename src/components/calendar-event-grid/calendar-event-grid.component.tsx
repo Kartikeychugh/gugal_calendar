@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { transformEvents } from "../../utils/transform-events";
 
 import { EventCard } from "../event-card/event-card.component";
@@ -13,6 +14,7 @@ export const CalendarEventColumn = (props: {
   return (
     <div
       style={{
+        pointerEvents: "none",
         width: `calc(${100 / props.view}% - ${75 / props.view}px - 30px)`,
       }}
       className="event-grid-column">

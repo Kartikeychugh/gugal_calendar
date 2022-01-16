@@ -1,6 +1,6 @@
 export const extractEventForDay = (
   events: CalendarEventItem[] | undefined,
-  date: Date
+  date: string
 ) => {
   if (!events) {
     return undefined;

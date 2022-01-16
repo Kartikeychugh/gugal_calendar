@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  justify-content: space-evenly;
-  width: 250px;
+  justify-content: space-between;
+  width: 150px;
 }
 
 .view-pill {

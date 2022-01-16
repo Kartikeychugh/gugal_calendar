@@ -8,12 +8,27 @@ export const initFirebaseGAPISaga = (
     yield put({ type: "GOOGLE_SYNC_START" });
     const result: CalendarEventItem[] = yield googleCalendarService.getEvents();
     localStorage.setItem("calendarEvents", JSON.stringify(result));
-    yield put({ type: "SET_EVENTS", payload: result });
+    yield put({ type: "SET_BACKEND_EVENTS", payload: result });
     yield put({ type: "GOOGLE_SYNC_SUCCESS" });
   }
 
   function* watchFetchCalendarEvents() {
     yield takeLeading("FETCH_CALENDAR_EVENTS", fetchCalendarEvents);
+  }
+
+  function* insertCalendarEvents(action: { type: string; payload: any }) {
+    const result: {} = yield googleCalendarService.createEvent(action.payload);
+
+    yield put({ type: "FETCH_CALENDAR_EVENTS" });
+    // yield put({
+    //   type: "REMOVE_CLIENT_EVENT",
+    //   payload: action.payload.clientId,
+    // });
+    console.log({ result });
+  }
+
+  function* watchInsertCalendarEvents() {
+    yield takeLeading("CREATE_CALENDAR_EVENTS", insertCalendarEvents);
   }
 
   //   function* hydrateCalendarEvents() {
@@ -27,5 +42,5 @@ export const initFirebaseGAPISaga = (
   //     yield takeLeading("REHYDRATE_CALENDAR_EVENTS", hydrateCalendarEvents);
   //   }
 
-  return [watchFetchCalendarEvents()];
+  return [watchFetchCalendarEvents(), watchInsertCalendarEvents()];
 };

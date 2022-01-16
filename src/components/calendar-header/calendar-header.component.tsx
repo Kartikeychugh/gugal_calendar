@@ -1,3 +1,4 @@
+import { useDispatch } from "../../redux/hooks/use-dispatch";
 import {
   getToday,
   isSameDate,
@@ -5,8 +6,12 @@ import {
 } from "../../utils/get-current-week-dates";
 import "./calendar-header.css";
 
-export const CalendarHeader = (props: { daysToShow: Date[] }) => {
+export const CalendarHeader = (props: { daysToShow: string[] }) => {
   const today = getToday();
+  const dispatch = useDispatch();
+  const setView = (payload: string[]) => {
+    dispatch({ type: "SET_VIEW", payload: payload });
+  };
 
   return (
     <div className="header-container">
@@ -14,12 +19,13 @@ export const CalendarHeader = (props: { daysToShow: Date[] }) => {
       {props.daysToShow.map((date, i) => {
         return (
           <div
+            onClick={() => setView([date])}
             key={i}
             style={{
               width: `calc(${100 / props.daysToShow.length}%)`,
-              backgroundColor: isSameDate(date, today)
+              backgroundColor: isSameDate(new Date(date), today)
                 ? "#EFF6FF"
-                : isWeekEnd(date)
+                : isWeekEnd(new Date(date))
                 ? "#f5f5f5"
                 : "white",
               boxShadow:
@@ -29,9 +35,11 @@ export const CalendarHeader = (props: { daysToShow: Date[] }) => {
             }}
             className="header-cell">
             <div className="header-cell-first-line">
-              {date.toLocaleDateString("en-GB", { weekday: "short" })}
+              {new Date(date).toLocaleDateString("en-GB", { weekday: "short" })}
             </div>
-            <div className="header-cell-second-line">{date.getDate()}</div>
+            <div className="header-cell-second-line">
+              {new Date(date).getDate()}
+            </div>
           </div>
         );
       })}

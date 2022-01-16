@@ -29,6 +29,6 @@ export const createReduxStore = (
   }
 
   saga.run(rootSaga);
-
+  (window as any).store = store;
   return { store, persistor };
 };

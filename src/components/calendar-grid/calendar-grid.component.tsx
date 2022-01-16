@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useAddEvent } from "../../hooks/use-add-event";
 import { useCalendarEvents } from "../../hooks/use-calendar-events";
 import { useCurrentTime } from "../../hooks/use-current-time";
 import {
@@ -11,7 +12,7 @@ import { CalendarEventColumn } from "../calendar-event-grid/calendar-event-grid.
 import { CalendarGridTime } from "./calendar-grid-time";
 import "./calendar-grid.css";
 
-export const CalendarSurface = (props: { daysToShow: Date[] }) => {
+export const CalendarSurface = (props: { daysToShow: string[] }) => {
   return (
     <div style={{ position: "absolute", width: "100%", display: "flex" }}>
       <CalendarGridTime />
@@ -20,14 +21,14 @@ export const CalendarSurface = (props: { daysToShow: Date[] }) => {
   );
 };
 
-const CalendarGrid = (props: { daysToShow: Date[] }) => {
+const CalendarGrid = (props: { daysToShow: string[] }) => {
   const events = useCalendarEvents();
 
   return (
     <div className="calendar-grid">
       <TimeMarker
         view={props.daysToShow.length}
-        diff={getToday().getDay() - props.daysToShow[0].getDay()}
+        diff={getToday().getDay() - new Date(props.daysToShow[0]).getDay()}
       />
       {props.daysToShow.map((day, i) => (
         <CalendarColumn
@@ -74,11 +75,9 @@ const TimeMarker = (props: { view: number; diff: number }) => {
 
   return (
     <div
-      onScroll={(e) => {
-        console.log({ e });
-      }}
       ref={ref}
       style={{
+        zIndex: 1,
         top: `${2 * time}px`,
         width: `calc(${100 * totalMarkerLengthFraction}% - ${
           75 * totalMarkerLengthFraction
@@ -96,7 +95,7 @@ const TimeMarker = (props: { view: number; diff: number }) => {
 };
 
 const CalendarColumn = (props: {
-  datetime: Date;
+  datetime: string;
   events: CalendarEventItem[] | undefined;
   lastColumn: boolean;
   view: number;
@@ -108,6 +107,7 @@ const CalendarColumn = (props: {
         events={extractEventForDay(props.events, props.datetime)}
       />
       <CalendarGridColumn
+        view={props.view}
         datetime={props.datetime}
         lastColumn={props.lastColumn}
       />
@@ -115,11 +115,28 @@ const CalendarColumn = (props: {
   );
 };
 
-const CalendarGridColumn = (props: { lastColumn: boolean; datetime: Date }) => {
+const CalendarGridColumn = (props: {
+  lastColumn: boolean;
+  datetime: string;
+  view: number;
+}) => {
   const cells = [];
+  const [yy, setYY] = useState({ y1: 0, y2: 0 });
+  const [capture, setCapture] = useState(false);
+  const addEvent = useAddEvent();
+
+  const upRef = useRef(0);
+  const downRef = useRef(0);
   for (let i = 0; i < 24; i++) {
     cells.push(
       <div
+        onClick={() => {
+          // const start = new Date(props.datetime);
+          // start.setHours(i);
+          // const end = new Date(props.datetime);
+          // end.setHours(i + 1);
+          // addEvent(start, end);
+        }}
         key={i}
         style={{
           boxShadow:
@@ -130,14 +147,72 @@ const CalendarGridColumn = (props: { lastColumn: boolean; datetime: Date }) => {
               : props.lastColumn
               ? "inset 0px -1px 0px #e0e0e0"
               : "inset -1px -1px 0px #e0e0e0",
-          backgroundColor: isSameDate(props.datetime, getToday())
-            ? "#EFF6FF"
-            : isWeekEnd(props.datetime)
-            ? "#f5f5f5"
-            : "white",
         }}
-        className="grid-cell"></div>
+        className={`grid-cell ${
+          isSameDate(new Date(props.datetime), getToday())
+            ? "same-day"
+            : isWeekEnd(new Date(props.datetime))
+            ? "weekend"
+            : ""
+        }`}></div>
     );
   }
-  return <div className="grid-column">{cells}</div>;
+  return (
+    <div
+      className="grid-column"
+      // onMouseMove={(e) => {
+      //   if (capture) {
+      //     downRef.current =
+      //       (e.nativeEvent as any).layerY -
+      //       ((e.nativeEvent as any).layerY % 30);
+      //     setYY({ y1: upRef.current, y2: downRef.current });
+      //   }
+      // }}
+      // onMouseDown={(e) => {
+      //   upRef.current =
+      //     (e.nativeEvent as any).layerY - ((e.nativeEvent as any).layerY % 30);
+
+      //   setCapture(true);
+      // }}
+      // onMouseUp={(e) => {
+      //   setCapture(false);
+
+      //   if (downRef.current - upRef.current < 5) {
+      //   } else {
+      //     setYY({ y1: 0, y2: 0 });
+
+      //     const startTiming = {
+      //       hour: Math.floor(yy.y1 / 120),
+      //       minuutes: (yy.y1 % 120) / 2,
+      //     };
+
+      //     const endTiming = {
+      //       hour: Math.floor(yy.y2 / 120),
+      //       minuutes: (yy.y2 % 120) / 2,
+      //     };
+      //     const start = new Date(props.datetime);
+      //     start.setHours(startTiming.hour);
+      //     start.setMinutes(startTiming.minuutes);
+
+      //     const endd = new Date(props.datetime);
+      //     endd.setHours(endTiming.hour);
+      //     endd.setMinutes(endTiming.minuutes);
+
+      //     addEvent(start, endd);
+      //   }
+      // }}
+    >
+      <div
+        style={{
+          width: `calc(${100 / props.view}% - ${75 / props.view}px)`,
+          zIndex: 1,
+          pointerEvents: "none",
+          backgroundColor: "blueviolet",
+          height: `${yy.y2 - yy.y1}px`,
+          position: "absolute",
+          top: `${yy.y1}px`,
+        }}></div>
+      {cells}
+    </div>
+  );
 };

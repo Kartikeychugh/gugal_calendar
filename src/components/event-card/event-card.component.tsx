@@ -54,7 +54,9 @@ export const EventCard = (props: {
           ) : null}
         </div>
         <div className="second-line">
-          <span>{event.summary}</span>
+          <span>
+            {event.summary} {event.clientLie ? event.clientId : ""}
+          </span>
         </div>
       </div>
     </div>
