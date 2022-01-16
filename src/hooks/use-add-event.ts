@@ -8,14 +8,14 @@ export const useAddEvent = () => {
   return (start: Date, end: Date) => {
     const e = CalendarEvent("test", "test", start, end);
 
-    // dispatch({
-    //   type: "SET_CLIENT_EVENTS",
-    //   payload: e,
-    // });
+    dispatch({
+      type: "SET_CLIENT_EVENTS",
+      payload: e,
+    });
 
-    // dispatch({
-    //   type: "CREATE_CALENDAR_EVENTS",
-    //   payload: e,
-    // });
+    dispatch({
+      type: "CREATE_CALENDAR_EVENTS",
+      payload: e,
+    });
   };
 };

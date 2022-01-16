@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useAddEvent } from "../../hooks/use-add-event";
 import { useCalendarEvents } from "../../hooks/use-calendar-events";
@@ -134,14 +135,17 @@ const CalendarGridColumn = (props: {
   cellSize: number;
 }) => {
   const cells = [];
-  const [pos, setPos] = useState({ from: 0, to: 0 });
-  const [captureMouseMove, setCaptureMouseMove] = useState(false);
-  const [drag, setDrag] = useState(false);
-  const [active, setActive] = useState();
-  const addEvent = useAddEvent();
+  const [state, setState] = useState({
+    dragged: false,
+    captureMouseMove: false,
+    active: false,
+    from: 0,
+    to: 0,
+  });
 
   const fromRef = useRef(0);
   const toRef = useRef(0);
+
   for (let i = 0; i < 24; i++) {
     cells.push(
       <div
@@ -170,112 +174,114 @@ const CalendarGridColumn = (props: {
     <div
       className="grid-column"
       onMouseMove={(e) => {
-        if (captureMouseMove) {
-          setDrag(true);
+        if (state.captureMouseMove) {
           toRef.current = (e.nativeEvent as any).layerY;
 
-          setPos({ from: fromRef.current, to: toRef.current });
+          setState({
+            ...state,
+            dragged: true,
+            from: adjustToNearestInterval(fromRef.current, props.cellSize, 4),
+            to: adjustToNearestInterval(toRef.current, props.cellSize, 4),
+          });
         }
       }}
       onMouseDown={(e) => {
-        if (
-          !isActiveEventHolder(fromRef.current, toRef.current, props.cellSize)
-        ) {
-          fromRef.current = (e.nativeEvent as any).layerY;
-          setCaptureMouseMove(true);
-        }
+        fromRef.current = (e.nativeEvent as any).layerY;
+
+        setState({ ...state, captureMouseMove: true });
       }}
       onMouseUp={(e) => {
-        if (!drag) {
-          if (
-            isActiveEventHolder(fromRef.current, toRef.current, props.cellSize)
-          ) {
-            fromRef.current = 0;
-            toRef.current = 0;
-            setPos({ from: fromRef.current, to: toRef.current });
-          } else {
-            console.log("pure click");
-            fromRef.current = adjustToNearestInterval(
-              (e.nativeEvent as any).layerY,
-              props.cellSize,
-              1
-            );
-            toRef.current = fromRef.current + props.cellSize;
-            setPos({ from: fromRef.current, to: toRef.current });
-          }
-        } else {
-          if (toRef.current - fromRef.current < 5) {
-            if (
-              isActiveEventHolder(
-                fromRef.current,
-                toRef.current,
-                props.cellSize
-              )
-            ) {
-              fromRef.current = 0;
-              toRef.current = 0;
-              setPos({ from: fromRef.current, to: toRef.current });
-            } else {
-              fromRef.current = adjustToNearestInterval(
-                (e.nativeEvent as any).layerY,
-                props.cellSize,
-                1
-              );
-              toRef.current = fromRef.current + props.cellSize;
-              setPos({ from: fromRef.current, to: toRef.current });
-            }
-            console.log("drag click");
-          } else {
-            if (
-              isActiveEventHolder(
-                fromRef.current,
-                toRef.current,
-                props.cellSize
-              )
-            ) {
-              fromRef.current = 0;
-              toRef.current = 0;
-              setPos({ from: fromRef.current, to: toRef.current });
-            }
-            console.log("just a drag");
-          }
-        }
+        toRef.current = (e.nativeEvent as any).layerY;
 
-        setDrag(false);
-        setCaptureMouseMove(false);
+        if (state.active) {
+          console.log("sorry already active!");
+
+          fromRef.current = 0;
+          toRef.current = 0;
+
+          setState({
+            ...state,
+            active: false,
+            captureMouseMove: false,
+            from: fromRef.current,
+            to: toRef.current,
+          });
+        } else if (state.dragged && toRef.current - fromRef.current > 2) {
+          console.log("dragged");
+          setState({
+            ...state,
+            active: true,
+            dragged: false,
+            captureMouseMove: false,
+            from: adjustToNearestInterval(fromRef.current, props.cellSize, 4),
+            to: adjustToNearestInterval(toRef.current, props.cellSize, 4),
+          });
+        } else {
+          console.log("clicked");
+          setState({
+            ...state,
+            active: true,
+            captureMouseMove: false,
+            from: adjustToNearestInterval(fromRef.current, props.cellSize, 1),
+            to:
+              adjustToNearestInterval(toRef.current, props.cellSize, 1) +
+              props.cellSize,
+          });
+        }
       }}>
-      <DragEventHolder
-        cellSize={props.cellSize}
-        to={pos.to}
-        from={pos.from}
-        view={props.view}
-      />
+      {state.active ? (
+        <DragEventHolder
+          datetime={props.datetime}
+          cellSize={props.cellSize}
+          to={state.to}
+          from={state.from}
+          view={props.view}
+        />
+      ) : null}
       {cells}
     </div>
   );
 };
 
-const DragEventHolder = (props: {
-  view: number;
-  from: number;
-  to: number;
-  cellSize: number;
-}) => {
-  const { view, to, from, cellSize } = props;
+const DragEventHolder = React.memo(
+  (props: {
+    view: number;
+    from: number;
+    to: number;
+    cellSize: number;
+    datetime: string;
+  }) => {
+    const { view, to, from, cellSize } = props;
 
-  const y1 = adjustToNearestInterval(from, cellSize, 4);
-  const y2 = adjustToNearestInterval(to, cellSize, 4);
+    const y1 = adjustToNearestInterval(from, cellSize, 4);
+    const y2 = adjustToNearestInterval(to, cellSize, 4);
+    console.log("updated");
 
-  return (
-    <div
-      className="create-event-holder"
-      style={{
-        width: `calc(${100 / view}% - ${75 / view}px)`,
-        height: `${y2 - y1}px`,
-        top: `${y1}px`,
-      }}></div>
-  );
-};
+    let s = Math.floor(y1 / cellSize);
+    const start = new Date(props.datetime);
+    start.setHours(s);
+    s = (y1 % props.cellSize) / (props.cellSize / 60);
+    start.setMinutes(s);
+
+    let t = Math.floor(y2 / cellSize);
+    const end = new Date(props.datetime);
+    end.setHours(t);
+    t = (y2 % props.cellSize) / (props.cellSize / 60);
+    end.setMinutes(t);
+
+    const addEvent = useAddEvent();
+
+    return (
+      <div
+        className="create-event-holder"
+        style={{
+          width: `calc(${100 / view}% - ${75 / view}px)`,
+          height: `${y2 - y1}px`,
+          top: `${y1}px`,
+        }}></div>
+    );
+  }
+);
 
 const adjustToNearestInterval = (
   pos: number,
@@ -285,7 +291,7 @@ const adjustToNearestInterval = (
   return pos - (pos % (cellSize / intervalFactor));
 };
 
-const isActiveEventHolder = (from: number, to: number, cellSize: number) => {
+const convert = (from: number, to: number, cellSize: number) => {
   const y1 = adjustToNearestInterval(from, cellSize, 4);
   const y2 = adjustToNearestInterval(to, cellSize, 4);
 
