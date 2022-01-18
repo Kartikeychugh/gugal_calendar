@@ -1,3 +1,8 @@
+import gw from "date-fns/getWeek";
+
+export const getWeek = (date: Date) => {
+  return gw(date, { firstWeekContainsDate: 7 });
+};
 export const getWorkWeek = (view: number) => {
   if (view === 1) {
     return [getToday().toISOString()];

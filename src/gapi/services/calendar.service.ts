@@ -1,5 +1,4 @@
 import { Defer } from "../../firebase/utils/defer";
-import { CalendarEvent } from "../../models/Events";
 import { dynamicScriptLoad } from "../../utils/dynamic-script-load";
 import { normaliseDate } from "../../utils/get-current-week-dates";
 
@@ -50,6 +49,7 @@ export class GoogleCalendarService implements IGoogleCalendarService {
       const response = await (gapi.client.calendar as any).events.insert({
         calendarId: "primary",
         resource: event,
+        conferenceDataVersion: 1,
       });
       return response.result;
     });

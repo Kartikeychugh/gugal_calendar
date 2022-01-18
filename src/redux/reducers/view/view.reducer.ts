@@ -1,8 +1,4 @@
-import {
-  getToday,
-  getWorkWeek,
-  isSameDate,
-} from "../../../utils/get-current-week-dates";
+import { getWorkWeek } from "../../../utils/get-current-week-dates";
 
 export interface ICalendarViewState {
   dates: string[];

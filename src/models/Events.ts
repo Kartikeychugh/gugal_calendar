@@ -4,7 +4,10 @@ export const CalendarEvent = (
   summary: string,
   description: string,
   start: Date,
-  end: Date
+  end: Date,
+  clientX: number,
+  clientY: number,
+  onlineMeeting = false
 ) => {
   return {
     id: uuidv4().replaceAll("-", ""),
@@ -16,6 +19,20 @@ export const CalendarEvent = (
     end: {
       dateTime: end.toISOString(),
     },
-    clientLie: true,
+    client: {
+      clientLie: true,
+      clientX,
+      clientY,
+    },
+    ...(onlineMeeting && {
+      conferenceData: {
+        createRequest: {
+          requestId: uuidv4().replaceAll("-", ""),
+          conferenceSolutionKey: {
+            type: "hangoutsMeet",
+          },
+        },
+      },
+    }),
   };
 };

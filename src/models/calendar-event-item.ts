@@ -5,6 +5,10 @@ export interface ICalendarEventItem extends CalendarEventItem {
     left: string;
     width: string;
   };
-  clientLie: boolean;
   clientId: number;
+  client: {
+    clientLie: boolean;
+    clientX: number;
+    clientY: number;
+  };
 }

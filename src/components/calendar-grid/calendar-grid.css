@@ -2,11 +2,11 @@
   width: 100%;
   background: #ffffff;
   box-shadow: inset -1px -1px 0px #e0e0e0;
-  transition: 0.1s all ease-in-out;
+  transition: 0.2s all ease-in-out;
 }
 
 .grid-cell:hover {
-  background-color: #ebebeb;
+  background-color: rgba(25, 118, 210, 0.04);
 }
 
 .same-day {
@@ -14,7 +14,7 @@
 }
 
 .weekend {
-  background-color: #f5f5f5;
+  background-color: #f1f3f4;
 }
 
 .grid-column {
@@ -63,18 +63,17 @@
   display: flex;
 }
 .solid-time-marker {
-  border-top: 2px lightcoral solid;
+  border-top: 2px #1976d2 dotted;
 }
 
 .dotted-time-marker {
-  border-top: 2px lightcoral dotted;
+  border-top: 2px #1976d2 solid;
 }
 
 .create-event-holder {
   border-radius: 5px;
   background-color: rgb(3, 155, 229);
   position: absolute;
-  z-index: 1;
 
   transition: 0.1s top ease;
   box-shadow: 3px 3px #dcdce0;

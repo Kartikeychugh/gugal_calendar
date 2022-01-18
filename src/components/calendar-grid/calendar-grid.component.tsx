@@ -1,8 +1,9 @@
-import React from "react";
-import { useEffect, useRef, useState } from "react";
-import { useAddEvent } from "../../hooks/use-add-event";
+import { Box } from "@mui/material";
+import { useEffect, useRef } from "react";
+import { useAddClientEvent } from "../../hooks/use-add-event";
 import { useCalendarEvents } from "../../hooks/use-calendar-events";
 import { useCurrentTime } from "../../hooks/use-current-time";
+import { useSelector } from "../../redux/hooks/use-selector";
 import {
   getToday,
   isSameDate,
@@ -87,7 +88,6 @@ const TimeMarker = (props: {
     <div
       ref={ref}
       style={{
-        zIndex: 1,
         top: `${(props.cellSize / 60) * time}px`,
         width: `calc(${100 * totalMarkerLengthFraction}% - ${
           75 * totalMarkerLengthFraction
@@ -135,20 +135,26 @@ const CalendarGridColumn = (props: {
   cellSize: number;
 }) => {
   const cells = [];
-  const [state, setState] = useState({
-    dragged: false,
-    captureMouseMove: false,
-    active: false,
-    from: 0,
-    to: 0,
-  });
-
-  const fromRef = useRef(0);
-  const toRef = useRef(0);
-
+  const addClientEvent = useAddClientEvent();
+  const { client = [] } = useSelector((state) => state.events);
   for (let i = 0; i < 24; i++) {
     cells.push(
-      <div
+      <Box
+        onClick={(e) => {
+          // e.stopPropagation();
+          if (client && client.length) {
+            console.log("already open");
+            return;
+          }
+
+          const start = new Date(props.datetime);
+          const end = new Date(props.datetime);
+          start.setHours(i);
+          end.setHours(i + 1);
+
+          addClientEvent(start, end, (e as any).pageX, (e as any).pageY);
+          console.log(e);
+        }}
         key={i}
         style={{
           height: `${props.cellSize}px`,
@@ -167,133 +173,8 @@ const CalendarGridColumn = (props: {
             : isWeekEnd(new Date(props.datetime))
             ? "weekend"
             : ""
-        }`}></div>
+        }`}></Box>
     );
   }
-  return (
-    <div
-      className="grid-column"
-      onMouseMove={(e) => {
-        if (state.captureMouseMove) {
-          toRef.current = (e.nativeEvent as any).layerY;
-
-          setState({
-            ...state,
-            dragged: true,
-            from: adjustToNearestInterval(fromRef.current, props.cellSize, 4),
-            to: adjustToNearestInterval(toRef.current, props.cellSize, 4),
-          });
-        }
-      }}
-      onMouseDown={(e) => {
-        fromRef.current = (e.nativeEvent as any).layerY;
-
-        setState({ ...state, captureMouseMove: true });
-      }}
-      onMouseUp={(e) => {
-        toRef.current = (e.nativeEvent as any).layerY;
-
-        if (state.active) {
-          console.log("sorry already active!");
-
-          fromRef.current = 0;
-          toRef.current = 0;
-
-          setState({
-            ...state,
-            active: false,
-            captureMouseMove: false,
-            from: fromRef.current,
-            to: toRef.current,
-          });
-        } else if (state.dragged && toRef.current - fromRef.current > 2) {
-          console.log("dragged");
-          setState({
-            ...state,
-            active: true,
-            dragged: false,
-            captureMouseMove: false,
-            from: adjustToNearestInterval(fromRef.current, props.cellSize, 4),
-            to: adjustToNearestInterval(toRef.current, props.cellSize, 4),
-          });
-        } else {
-          console.log("clicked");
-          setState({
-            ...state,
-            active: true,
-            captureMouseMove: false,
-            from: adjustToNearestInterval(fromRef.current, props.cellSize, 1),
-            to:
-              adjustToNearestInterval(toRef.current, props.cellSize, 1) +
-              props.cellSize,
-          });
-        }
-      }}>
-      {state.active ? (
-        <DragEventHolder
-          datetime={props.datetime}
-          cellSize={props.cellSize}
-          to={state.to}
-          from={state.from}
-          view={props.view}
-        />
-      ) : null}
-      {cells}
-    </div>
-  );
-};
-
-const DragEventHolder = React.memo(
-  (props: {
-    view: number;
-    from: number;
-    to: number;
-    cellSize: number;
-    datetime: string;
-  }) => {
-    const { view, to, from, cellSize } = props;
-
-    const y1 = adjustToNearestInterval(from, cellSize, 4);
-    const y2 = adjustToNearestInterval(to, cellSize, 4);
-    console.log("updated");
-
-    let s = Math.floor(y1 / cellSize);
-    const start = new Date(props.datetime);
-    start.setHours(s);
-    s = (y1 % props.cellSize) / (props.cellSize / 60);
-    start.setMinutes(s);
-
-    let t = Math.floor(y2 / cellSize);
-    const end = new Date(props.datetime);
-    end.setHours(t);
-    t = (y2 % props.cellSize) / (props.cellSize / 60);
-    end.setMinutes(t);
-
-    const addEvent = useAddEvent();
-
-    return (
-      <div
-        className="create-event-holder"
-        style={{
-          width: `calc(${100 / view}% - ${75 / view}px)`,
-          height: `${y2 - y1}px`,
-          top: `${y1}px`,
-        }}></div>
-    );
-  }
-);
-
-const adjustToNearestInterval = (
-  pos: number,
-  cellSize: number,
-  intervalFactor: number
-) => {
-  return pos - (pos % (cellSize / intervalFactor));
-};
-
-const convert = (from: number, to: number, cellSize: number) => {
-  const y1 = adjustToNearestInterval(from, cellSize, 4);
-  const y2 = adjustToNearestInterval(to, cellSize, 4);
-
-  return y2 - y1;
+  return <div className="grid-column">{cells}</div>;
 };

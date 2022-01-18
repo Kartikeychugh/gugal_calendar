@@ -22,7 +22,7 @@ export const initFirebaseGAPISaga = (
     yield put({ type: "FETCH_CALENDAR_EVENTS" });
     // yield put({
     //   type: "REMOVE_CLIENT_EVENT",
-    //   payload: action.payload.clientId,
+    //   payload: action.payload.id,
     // });
     console.log({ result });
   }

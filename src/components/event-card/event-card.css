@@ -1,7 +1,6 @@
 .event-card-container {
   display: flex;
   border-radius: 5px;
-  overflow: hidden;
   height: 50px;
   margin: 0px 5px 0px 5px;
   width: 100%;

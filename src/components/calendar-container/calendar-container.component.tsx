@@ -1,4 +1,5 @@
 import { useSelector } from "../../redux/hooks/use-selector";
+import { getWeek } from "../../utils/get-current-week-dates";
 import { CalendarSurface } from "../calendar-grid/calendar-grid.component";
 import { CalendarHeader } from "../calendar-header/calendar-header.component";
 import { CalendarCommandBar } from "../calender-command-bar/calendar-command-bar.component";
@@ -7,6 +8,8 @@ import "./calendar-container.css";
 
 export const Calendar = (props: { cellSize: number }) => {
   const { dates } = useSelector((state) => state.view);
+  console.log({ week: getWeek(new Date(2022, 0, 7)) });
+
   return (
     <div className="calendar">
       <CalendarCommandBar />

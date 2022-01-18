@@ -1,4 +1,3 @@
-import { useState, useRef } from "react";
 import { transformEvents } from "../../utils/transform-events";
 
 import { EventCard } from "../event-card/event-card.component";
