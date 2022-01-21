@@ -13,7 +13,10 @@ import { authDetailsReducer } from "../reducers";
 import { FirebaseAuthService } from "../services";
 import { initAuthDetailsSaga } from "../sagas";
 
-export const FirebaseAuthLayer = (props: PropsWithChildren<{}>) => {
+export const FirebaseAuthLayer = (
+  props: PropsWithChildren<{ loading: () => JSX.Element }>
+) => {
+  const { loading: Loading } = props;
   const { firebaseAuth, googleAuthProvider, firebaseAuthManager } =
     useCreateFirebaseAuthContext();
 
@@ -24,7 +27,7 @@ export const FirebaseAuthLayer = (props: PropsWithChildren<{}>) => {
   });
 
   if (!done) {
-    return <>Initialising Auth Layer</>;
+    return <Loading />;
   }
 
   return (
@@ -87,9 +90,7 @@ const useCreateFirebaseAuthContext = () => {
   const firebaseAuth = useMemo(() => getAuth(firebaseApp), [firebaseApp]);
   const googleAuthProvider = useMemo(() => {
     const googleAuthProvider = new GoogleAuthProvider();
-    googleAuthProvider.addScope(
-      "https://www.googleapis.com/auth/calendar.readonly"
-    );
+    googleAuthProvider.addScope("https://www.googleapis.com/auth/calendar");
     return googleAuthProvider;
   }, []);
 

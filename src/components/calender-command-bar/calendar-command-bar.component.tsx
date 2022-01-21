@@ -1,14 +1,11 @@
-import "./calendar-command-bar.css";
-
 import { Box } from "@mui/material";
-import { useNotification } from "../../hooks/use-notification";
 import { CalendarViewSelector } from "../calendar-view-selector/calendar-view-selector.component";
 
 import { addDays } from "date-fns";
 import { useSelector } from "../../redux/hooks/use-selector";
 import { CalendarViewSlider } from "../calendar-slider/calendar-slider";
 
-export const CalendarCommandBar = () => {
+export const CalendarCommandBar = (props: { timeGridWidth: number }) => {
   const { start } = useSelector((state) => state.window);
   const { fromDay, numberOfDays } = useSelector((state) => state.view);
   const spansAcrossMonth =
@@ -21,7 +18,7 @@ export const CalendarCommandBar = () => {
         display: "flex",
         height: "30px",
         alignItems: "center",
-        mb: "8px",
+        mb: 2,
       }}>
       <Box
         sx={{
@@ -31,7 +28,7 @@ export const CalendarCommandBar = () => {
           color: "black",
           letterSpacing: "1px",
         }}>
-        <CalendarViewSlider />
+        <CalendarViewSlider timeGridWidth={props.timeGridWidth} />
         <Box
           sx={{
             display: "flex",
@@ -59,12 +56,6 @@ export const CalendarCommandBar = () => {
       </Box>
 
       <CalendarViewSelector />
-      <CalendarUpdates />
     </Box>
   );
-};
-
-const CalendarUpdates = () => {
-  const message = useNotification();
-  return <div className="calendar-update">{message}</div>;
 };

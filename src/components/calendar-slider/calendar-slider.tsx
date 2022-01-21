@@ -3,13 +3,13 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSlideView, useSlideToToday } from "../../hooks/use-slide-view";
 
-export const CalendarViewSlider = () => {
+export const CalendarViewSlider = (props: { timeGridWidth: number }) => {
   const slideView = useSlideView();
   const slideToToday = useSlideToToday();
   return (
     <Box
       sx={{
-        ml: "100px",
+        ml: `${props.timeGridWidth}px`,
         display: "flex",
         justifyContent: "flex-start",
         alignItems: "center",

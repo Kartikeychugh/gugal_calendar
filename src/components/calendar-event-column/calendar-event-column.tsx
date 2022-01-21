@@ -1,7 +1,7 @@
+import { Box } from "@mui/material";
 import { transformEvents } from "../../utils/transform-events";
 
 import { EventCard } from "../event-card/event-card.component";
-import "./calendar-event-grid.css";
 
 export const CalendarEventColumn = (props: {
   events: CalendarEventItem[] | undefined;
@@ -12,15 +12,16 @@ export const CalendarEventColumn = (props: {
   let transformedEvents = transformEvents(events, props.cellSize);
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
+        height: "100%",
+        position: "absolute",
         pointerEvents: "none",
         width: `calc(${100 / props.view}% - 20px)`,
-      }}
-      className="event-grid-column">
+      }}>
       {transformedEvents.map((event) => (
         <EventCard key={event.id} event={event} />
       ))}
-    </div>
+    </Box>
   );
 };

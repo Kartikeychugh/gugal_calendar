@@ -1,0 +1,53 @@
+import { Box } from "@mui/material";
+import { useRef, useEffect } from "react";
+import { useCurrentTime } from "../../hooks/use-current-time";
+
+export const CalendarTimeMarker = (props: {
+  view: number;
+  diff: number;
+  cellSize: number;
+}) => {
+  const time = useCurrentTime();
+  const ref: any = useRef(null);
+
+  useEffect(() => {
+    ref.current.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }, []);
+
+  let totalMarkerLengthFraction;
+  let solidMarrkerLengthFraction;
+  let _diff = props.diff < 0 ? 6 : props.diff;
+
+  if (_diff < 0) {
+    _diff = _diff + props.view;
+    totalMarkerLengthFraction = (_diff + 1) / props.view;
+    solidMarrkerLengthFraction = _diff / (_diff + 1);
+  } else if (_diff >= props.view) {
+    totalMarkerLengthFraction = 1;
+    solidMarrkerLengthFraction = 1;
+  } else {
+    totalMarkerLengthFraction = (_diff + 1) / props.view;
+    solidMarrkerLengthFraction = _diff / (_diff + 1);
+  }
+
+  let solidWidth = solidMarrkerLengthFraction * 100;
+  let dottedWiddth = 100 - solidWidth;
+
+  return (
+    <Box
+      sx={{
+        position: "absolute",
+        display: "flex",
+        zIndex: 1,
+        top: `${(props.cellSize / 60) * time}px`,
+        width: `calc(${100 * totalMarkerLengthFraction}%)`,
+      }}
+      ref={ref}>
+      <Box sx={{ borderTop: "2px red dotted", width: `${solidWidth}%` }}></Box>
+      <Box sx={{ borderTop: "2px red solid", width: `${dottedWiddth}%` }}></Box>
+    </Box>
+  );
+};

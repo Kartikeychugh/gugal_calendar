@@ -3,11 +3,13 @@ import { ICalendarEventItem } from "../models/calendar-event-item";
 import { useDispatch } from "../redux/hooks/use-dispatch";
 import { useSelector } from "../redux/hooks/use-selector";
 import { getViewKey } from "../utils/get-view-details";
+import { useCalendarColors } from "./use-calendar-colors";
 
 export const useCalendarEvents = () => {
   const dispatch = useDispatch();
   const { backend, client } = useSelector((state) => state.events);
   const { start } = useSelector((state) => state.window);
+  const colors = useCalendarColors();
   const key = useMemo(() => getViewKey(start), [start]);
   const backendEventsForCurrentStartWindow = useMemo(
     () => backend[`${key}`],
@@ -27,6 +29,10 @@ export const useCalendarEvents = () => {
       clearInterval(intervalID);
     };
   }, [dispatch, start, backendEventsForCurrentStartWindow]);
+
+  if (!colors) {
+    return [];
+  }
 
   let clientEventAlreadySynced = false;
   if (client && backendEventsForCurrentStartWindow) {

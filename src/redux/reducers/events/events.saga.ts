@@ -48,6 +48,19 @@ export const initFirebaseGAPISaga = (
     yield takeLeading("CREATE_CALENDAR_EVENTS", insertCalendarEvents);
   }
 
+  function* fetchCalendarColors() {
+    const result: CalendarColors = yield googleCalendarService.getColors();
+
+    yield put({
+      type: "SET_COLORS",
+      payload: result,
+    });
+  }
+
+  function* watchFetchCalendarColors() {
+    yield takeLeading("FETCH_CALENDAR_COLORS", fetchCalendarColors);
+  }
+
   //   function* hydrateCalendarEvents() {
   //     const result = localStorage.getItem("calendarEvents");
   //     if (result) {
@@ -59,5 +72,9 @@ export const initFirebaseGAPISaga = (
   //     yield takeLeading("REHYDRATE_CALENDAR_EVENTS", hydrateCalendarEvents);
   //   }
 
-  return [watchFetchCalendarEvents(), watchInsertCalendarEvents()];
+  return [
+    watchFetchCalendarEvents(),
+    watchInsertCalendarEvents(),
+    watchFetchCalendarColors(),
+  ];
 };

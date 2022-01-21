@@ -5,6 +5,7 @@ import { FirebaseProvider } from "./firebase";
 import { Calendar, PrivateRoute } from "./components";
 
 import { CalendarReduxProvider } from "./redux/provider/provider";
+import { LoadingScreen } from "./components/loading-screen";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,10 +26,10 @@ function App() {
   return (
     <div className="App">
       <FirebaseProvider firebaseOptions={firebaseConfig}>
-        <FirebaseAuthLayer>
+        <FirebaseAuthLayer loading={() => <LoadingScreen />}>
           <PrivateRoute>
             <CalendarReduxProvider>
-              <Calendar cellSize={60} />
+              <Calendar cellSize={60} timeGridWidth={45} />
             </CalendarReduxProvider>
           </PrivateRoute>
         </FirebaseAuthLayer>
