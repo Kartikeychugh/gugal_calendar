@@ -39,11 +39,11 @@ const CalendarGrid = (props: {
 
   return (
     <div className="calendar-grid">
-      {/* <TimeMarker
+      <TimeMarker
         cellSize={props.cellSize}
         view={numberOfDays}
         diff={startOfToday().getDay() - fromDay}
-      /> */}
+      />
       <Box
         sx={{
           position: "relative",
@@ -104,10 +104,10 @@ const TimeMarker = (props: {
     <div
       ref={ref}
       style={{
+        // top: "0px",
+        // width: "100%",
         top: `${(props.cellSize / 60) * time}px`,
-        width: `calc(${100 * totalMarkerLengthFraction}% - ${
-          100 * totalMarkerLengthFraction
-        }px)`,
+        width: `calc(${100 * totalMarkerLengthFraction}%)`,
       }}
       className="time-marker-container">
       <div

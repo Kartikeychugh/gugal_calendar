@@ -2,9 +2,9 @@
   display: flex;
   border-radius: 5px;
   height: 50px;
-  margin: 0px 5px 0px 5px;
   width: 100%;
   position: absolute;
+  cursor: pointer;
 }
 
 .event-card-bar {
@@ -13,7 +13,6 @@
 }
 
 .event-card-summary {
-  /* background: rgba(14, 165, 233, 0.1); */
   background-color: #e0f2fe;
   padding: 5px;
   width: 100%;

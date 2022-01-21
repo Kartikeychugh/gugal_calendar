@@ -1,17 +1,12 @@
-import {
-  differenceInCalendarDays,
-  isWithinInterval,
-  startOfWeek,
-} from "date-fns";
-import addDays from "date-fns/addDays";
+import { differenceInCalendarDays, startOfWeek } from "date-fns";
 import { useDispatch } from "../redux/hooks/use-dispatch";
 import { useSelector } from "../redux/hooks/use-selector";
+import { useUpdateView } from "./use-update-view";
 
 export const useSetWindowAndView = () => {
   const dispatch = useDispatch();
-  const view = useSelector((state) => state.view);
   const { start } = useSelector((state) => state.window);
-
+  const updateView = useUpdateView();
   return (date: Date) => {
     const newStartOfTheWeek = startOfWeek(date);
     const diffInWeeks = differenceInCalendarDays(newStartOfTheWeek, start);
@@ -23,18 +18,6 @@ export const useSetWindowAndView = () => {
       });
     }
 
-    const isNewDateWithinViewWindow = isWithinInterval(date, {
-      start: addDays(newStartOfTheWeek, view.fromDay),
-      end: addDays(newStartOfTheWeek, view.fromDay + view.numberOfDays - 1),
-    });
-
-    dispatch({
-      type: "SET_VIEW",
-      payload: {
-        ...view,
-        pointer: date.getDay(),
-        ...(!isNewDateWithinViewWindow ? { fromDay: date.getDay() } : {}),
-      },
-    });
+    updateView(date.getDay());
   };
 };

@@ -11,11 +11,7 @@
 }
 
 .same-day {
-  background-color: #eff6ff;
-}
-
-.weekend {
-  background-color: #f1f3f4;
+  background-color: rgb(25, 118, 210, 0.07);
 }
 
 .grid-column {
@@ -26,7 +22,7 @@
 
 .calendar-grid {
   display: flex;
-
+  position: relative;
   width: 100%;
 }
 
@@ -67,11 +63,11 @@
   z-index: 1;
 }
 .solid-time-marker {
-  border-top: 2px #1976d2 dotted;
+  border-top: 2px red dotted;
 }
 
 .dotted-time-marker {
-  border-top: 2px #1976d2 solid;
+  border-top: 2px red solid;
 }
 
 .create-event-holder {

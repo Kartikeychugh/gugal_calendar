@@ -43,7 +43,7 @@ export const CreateEventFormDialog = () => {
         }}>
         <Box>
           <DialogTitle
-            sx={{ backgroundColor: "#f1f3f4" }}
+            sx={{ backgroundColor: "rgb(25, 118, 210, 0.07)" }}
             style={{ cursor: "move" }}
             id="draggable-dialog-title"
           />

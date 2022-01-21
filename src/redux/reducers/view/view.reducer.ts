@@ -1,4 +1,5 @@
 import startOfToday from "date-fns/startOfToday";
+import { getView } from "../../../utils/get-view-details";
 
 export interface ICalendarViewState {
   fromDay: number;
@@ -6,24 +7,16 @@ export interface ICalendarViewState {
   title: string;
   change: number;
   pointer: number;
+  viewId: number;
 }
 
-const INITIAL_STATE: ICalendarViewState = {
-  fromDay: 0,
-  numberOfDays: 7,
-  title: "Week",
-  change: 7,
-  pointer: startOfToday().getDay(),
-};
+const INITIAL_STATE: ICalendarViewState = getView(1, startOfToday().getDay());
 
 export const CalendarViewReducer = (
   state = INITIAL_STATE,
   action: {
     type: string;
-    payload: {
-      fromDay: number;
-      numberOfDays: number;
-    };
+    payload: ICalendarViewState;
   }
 ): ICalendarViewState => {
   switch (action.type) {

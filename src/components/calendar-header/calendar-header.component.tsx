@@ -1,29 +1,17 @@
 import { Box, Button } from "@mui/material";
-import { addDays } from "date-fns/esm";
-import { useDispatch } from "../../redux/hooks/use-dispatch";
+import { isSameDay, addDays, startOfToday } from "date-fns";
+import { useUpdateView } from "../../hooks/use-update-view";
 import { useSelector } from "../../redux/hooks/use-selector";
-import {
-  getToday,
-  isSameDate,
-  isWeekEnd,
-} from "../../utils/get-current-week-dates";
 import { getViewDetails } from "../../utils/get-view-details";
 import "./calendar-header.css";
 
 export const CalendarHeader = () => {
   const { start } = useSelector((state) => state.window);
   const { fromDay, numberOfDays } = useSelector((state) => state.view);
-
+  const updateView = useUpdateView();
   const details = getViewDetails(addDays(start, fromDay), numberOfDays);
 
-  const today = getToday();
-  const dispatch = useDispatch();
-  const setView = (payload: { fromDay: number; numberOfDays: number }) => {
-    dispatch({
-      type: "SET_VIEW",
-      payload: { ...payload, change: 1, title: "Day" },
-    });
-  };
+  const today = startOfToday();
 
   return (
     <Box className="header-container">
@@ -45,17 +33,15 @@ export const CalendarHeader = () => {
             sx={{
               flexDirection: "column",
               width: `calc(${100 / numberOfDays}%)`,
-              backgroundColor: isSameDate(new Date(date), today)
+              backgroundColor: isSameDay(new Date(date), today)
                 ? "#EFF6FF"
-                : isWeekEnd(new Date(date))
-                ? "#f5f5f5"
                 : "white",
               boxShadow:
                 i + 1 === numberOfDays
                   ? "inset 0px -1px 0px #e0e0e0"
                   : "inset -1px -1px 0px #e0e0e0",
             }}
-            onClick={() => setView({ fromDay: date.getDay(), numberOfDays: 1 })}
+            onClick={() => updateView(date.getDay(), 0)}
             key={i}
             className="header-cell">
             <div className="header-cell-first-line">

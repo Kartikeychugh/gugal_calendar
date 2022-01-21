@@ -7,8 +7,6 @@ import { CreateEventFormDialog } from "../create-event-form/create-event-form-di
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 import "./calendar-container.css";
-import { startOfToday } from "date-fns";
-import { useState } from "react";
 import { useSetWindowAndView } from "../../hooks/use-set-window";
 import { useSelector } from "../../redux/hooks/use-selector";
 import addDays from "date-fns/addDays";
@@ -29,17 +27,20 @@ export const Calendar = (props: { cellSize: number }) => {
           minWidth: "300px",
         },
       }}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <CalendarPicker
-          date={addDays(start, pointer)}
-          onChange={(newValue) => {
-            if (!newValue) {
-              return;
-            }
-            setWindowAndView(newValue);
-          }}
-        />
-      </LocalizationProvider>
+      <Box sx={{ backgroundColor: "rgb(25, 118, 210, 0.07)" }}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <CalendarPicker
+            date={addDays(start, pointer)}
+            onChange={(newValue) => {
+              if (!newValue) {
+                return;
+              }
+              setWindowAndView(newValue);
+            }}
+          />
+        </LocalizationProvider>
+      </Box>
+
       <Box sx={{ width: "100%", minWidth: "550px" }}>
         <div className="calendar">
           <CalendarCommandBar />

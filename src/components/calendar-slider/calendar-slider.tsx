@@ -24,7 +24,7 @@ export const CalendarViewSlider = () => {
           alignItems: "center",
           width: "30px",
           height: "30px",
-          backgroundColor: "#F4F4F5",
+          backgroundColor: "rgb(25, 118, 210, 0.07)",
           "& .MuiSvgIcon-root": {
             fill: "black",
             width: "14px",
@@ -39,7 +39,7 @@ export const CalendarViewSlider = () => {
           alignItems: "center",
           height: "30px",
           width: "70px",
-          backgroundColor: "#F4F4F5",
+          backgroundColor: "rgb(25, 118, 210, 0.07)",
           fontSize: "12px",
           color: "#18181B",
           ml: "2px",
@@ -59,7 +59,7 @@ export const CalendarViewSlider = () => {
           alignItems: "center",
           width: "30px",
           height: "30px",
-          backgroundColor: "#F4F4F5",
+          backgroundColor: "rgb(25, 118, 210, 0.07)",
           "& .MuiSvgIcon-root": {
             fill: "black",
             width: "14px",

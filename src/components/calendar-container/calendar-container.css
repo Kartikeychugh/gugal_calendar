@@ -16,5 +16,5 @@
   overflow-y: scroll;
   width: 100%;
   /* position: absolute; */
-  height: calc(100vh - 146px);
+  height: calc(100vh - 138px);
 }

@@ -1,15 +1,42 @@
-import {
-  startOfWeek,
-  startOfToday,
-  addDays,
-  eachDayOfInterval,
-  isMonday,
-  previousMonday,
-} from "date-fns";
+import { startOfWeek, addDays, eachDayOfInterval } from "date-fns";
 
-export const getWeekDetails = () => {
-  const start = startOfWeek(new Date());
-  return getViewDetails(start.valueOf(), 7);
+const views = [
+  {
+    fromDay: 0,
+    numberOfDays: 1,
+    title: "Day",
+    change: 1,
+    pointer: 0,
+    viewId: 0,
+  },
+  {
+    fromDay: 0,
+    numberOfDays: 7,
+    change: 7,
+    title: "Week",
+    pointer: 0,
+    viewId: 1,
+  },
+  {
+    fromDay: 1,
+    numberOfDays: 5,
+    change: 7,
+    title: "Work Week",
+    pointer: 1,
+    viewId: 2,
+  },
+];
+
+export const getView = (viewId: number, pointer: number) => {
+  const view = views[viewId];
+  if (viewId === 0) {
+    view.fromDay = pointer;
+    view.pointer = pointer;
+  } else {
+    view.pointer = pointer;
+  }
+
+  return view;
 };
 
 export const getViewDetails = (
@@ -21,19 +48,6 @@ export const getViewDetails = (
   const week = eachDayOfInterval({ start, end });
 
   return { start, end, week };
-};
-
-export const getWorkWeekDetails = () => {
-  const today = startOfToday();
-  if (isMonday(today)) {
-    return getViewDetails(today.valueOf(), 5);
-  } else {
-    const start = previousMonday(today);
-    const end = addDays(start, 4);
-    const week = eachDayOfInterval({ start, end });
-
-    return { start, end, week };
-  }
 };
 
 export const getViewKey = (date: Date) => {

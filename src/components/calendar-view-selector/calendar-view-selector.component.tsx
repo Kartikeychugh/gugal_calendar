@@ -1,22 +1,16 @@
 import { Button, Box, Menu, MenuItem } from "@mui/material";
 import { useRef, useState } from "react";
-import { useDispatch } from "../../redux/hooks/use-dispatch";
 import { useSelector } from "../../redux/hooks/use-selector";
 import CalendarViewDayIcon from "@mui/icons-material/CalendarViewDay";
 import CalendarViewWeekIcon from "@mui/icons-material/CalendarViewWeek";
 import ViewWeekIcon from "@mui/icons-material/ViewWeek";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { startOfToday } from "date-fns";
+import { useUpdateView } from "../../hooks/use-update-view";
+import { getView } from "../../utils/get-view-details";
 
 export const CalendarViewSelector = () => {
-  const dispatch = useDispatch();
-  const setView = (payload: {
-    fromDay: number;
-    numberOfDays: number;
-    title: string;
-  }) => {
-    dispatch({ type: "SET_VIEW", payload });
-  };
+  const updateView = useUpdateView();
+
   const [state, setState] = useState({ open: false });
   const { title, pointer } = useSelector((state) => state.view);
   const ref = useRef(null);
@@ -30,14 +24,22 @@ export const CalendarViewSelector = () => {
       }}>
       <Button
         sx={{
-          fontSize: "11px",
-          height: "100%",
-          fontWeight: 600,
-          fontStyle: "normal",
-          ml: 1,
-          borderRadius: "10px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "30px",
+          backgroundColor: "rgb(25, 118, 210, 0.07)",
+          fontSize: "12px",
+          color: "#18181B",
+          ml: "2px",
+          mr: "2px",
+          fontWeight: "700",
+          "& .MuiSvgIcon-root": {
+            fill: "black",
+            width: "14px",
+          },
         }}
-        variant="contained"
+        // variant="contained"
         ref={ref}
         id="basic-button"
         aria-controls={state.open ? "basic-menu" : undefined}
@@ -65,52 +67,45 @@ export const CalendarViewSelector = () => {
         {[
           {
             Icon: CalendarViewDayIcon,
-            view: {
-              fromDay: pointer,
-              numberOfDays: 1,
-              title: "Day",
-              change: 1,
-              pointer,
-            },
+            viewId: 0,
           },
           {
             Icon: CalendarViewWeekIcon,
-            view: {
-              fromDay: 0,
-              numberOfDays: 7,
-              change: 7,
-              title: "Week",
-              pointer,
-            },
+            viewId: 1,
           },
           {
             Icon: ViewWeekIcon,
-            view: {
-              fromDay: 1,
-              numberOfDays: 5,
-              change: 7,
-              title: "Work Week",
-              pointer,
-            },
+            viewId: 2,
           },
         ].map((viewDetails, i) => {
-          const { Icon } = viewDetails;
+          const { Icon, viewId } = viewDetails;
+          const view = getView(viewId, pointer);
+
           return (
             <MenuItem
               key={i}
               onClick={() => {
                 setState({ open: false });
-                setView(viewDetails.view);
+                updateView(pointer, viewDetails.viewId);
               }}
               sx={{
+                color: "#18181B",
                 fontSize: "13px",
-                fontWeight: 500,
+                fontWeight: 600,
                 fontStyle: "normal",
-                color: "#0369a1",
+                letterSpacing: "1px",
+                "& .MuiSvgIcon-root": {
+                  fill: "black",
+                  width: "14px",
+                  fontWeight: 500,
+                },
+                "&:hover": {
+                  backgroundColor: "rgb(25, 118, 210, 0.07)",
+                },
               }}>
-              <Icon sx={{ width: "20px", fill: "#1976d2", mr: 1 }} />
+              <Icon sx={{ width: "20px", fill: "#18181B", mr: 1 }} />
 
-              {viewDetails.view.title}
+              {view.title}
             </MenuItem>
           );
         })}

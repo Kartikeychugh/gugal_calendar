@@ -21,7 +21,6 @@ export const CalendarCommandBar = () => {
         display: "flex",
         height: "30px",
         alignItems: "center",
-        mt: "16px",
         mb: "8px",
       }}>
       <Box
