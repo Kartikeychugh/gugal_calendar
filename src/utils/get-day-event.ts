@@ -1,12 +1,11 @@
 export const extractEventForDay = (
   events: CalendarEventItem[] | undefined,
-  date: string
+  date: Date
 ) => {
   if (!events) {
     return undefined;
   }
-  return events.filter(
-    (event) =>
-      new Date(event.start.dateTime).getDate() === new Date(date).getDate()
-  );
+  return events.filter((event) => {
+    return new Date(event.start.dateTime).getDate() === date.getDate();
+  });
 };

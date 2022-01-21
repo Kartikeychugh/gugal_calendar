@@ -1,42 +1,52 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { ICalendarEventItem } from "../models/calendar-event-item";
 import { useDispatch } from "../redux/hooks/use-dispatch";
 import { useSelector } from "../redux/hooks/use-selector";
+import { getViewKey } from "../utils/get-view-details";
 
 export const useCalendarEvents = () => {
   const dispatch = useDispatch();
   const { backend, client } = useSelector((state) => state.events);
+  const { start } = useSelector((state) => state.window);
+  const key = useMemo(() => getViewKey(start), [start]);
+  const backendEventsForCurrentStartWindow = useMemo(
+    () => backend[`${key}`],
+    [backend, key]
+  );
 
   useEffect(() => {
-    dispatch({ type: "FETCH_CALENDAR_EVENTS" });
-    setInterval(() => {
-      dispatch({ type: "FETCH_CALENDAR_EVENTS" });
-    }, 60000);
-  }, [dispatch]);
-
-  const events = [...(backend || [])];
-  const toBeRemoved: any[] = [];
-
-  (client || []).forEach((event1: any) => {
-    const index = backend.findIndex((event2: any) => event1.id === event2.id);
-    if (index === -1) {
-      events.push(event1);
-    } else {
-      toBeRemoved.push(event1);
+    if (!backendEventsForCurrentStartWindow) {
+      dispatch({ type: "FETCH_CALENDAR_EVENTS", payload: { start } });
     }
-  });
 
-  toBeRemoved.forEach((event) => {
-    dispatch({
-      type: "REMOVE_CLIENT_EVENT",
-      payload: event.id,
-    });
-  });
+    const intervalID = setInterval(() => {
+      dispatch({ type: "FETCH_CALENDAR_EVENTS", payload: { start } });
+    }, 60000);
 
-  events.sort((a: any, b: any) => {
+    return () => {
+      clearInterval(intervalID);
+    };
+  }, [dispatch, start, backendEventsForCurrentStartWindow]);
+
+  let clientEventAlreadySynced = false;
+  if (client && backendEventsForCurrentStartWindow) {
+    const index = backendEventsForCurrentStartWindow.findIndex(
+      (event: ICalendarEventItem) => event.id === client.id
+    );
+    if (index !== -1) {
+      clientEventAlreadySynced = true;
+    }
+  }
+
+  return [
+    ...(backendEventsForCurrentStartWindow
+      ? backendEventsForCurrentStartWindow
+      : []),
+    ...(client && !clientEventAlreadySynced ? [client] : []),
+  ].sort((a: any, b: any) => {
     return (
       new Date(a.start.dateTime).getTime() -
       new Date(b.start.dateTime).getTime()
     );
   });
-  return events;
 };

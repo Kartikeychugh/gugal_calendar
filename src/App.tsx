@@ -26,13 +26,11 @@ function App() {
     <div className="App">
       <FirebaseProvider firebaseOptions={firebaseConfig}>
         <FirebaseAuthLayer>
-          {/* <FirebaseGAPILayer> */}
           <PrivateRoute>
             <CalendarReduxProvider>
               <Calendar cellSize={60} />
             </CalendarReduxProvider>
           </PrivateRoute>
-          {/* </FirebaseGAPILayer> */}
         </FirebaseAuthLayer>
       </FirebaseProvider>
     </div>

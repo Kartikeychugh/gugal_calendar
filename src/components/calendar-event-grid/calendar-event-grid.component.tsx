@@ -15,7 +15,7 @@ export const CalendarEventColumn = (props: {
     <div
       style={{
         pointerEvents: "none",
-        width: `calc(${100 / props.view}% - ${75 / props.view}px - 30px)`,
+        width: `calc(${100 / props.view}% - 20px)`,
       }}
       className="event-grid-column">
       {transformedEvents.map((event) => (

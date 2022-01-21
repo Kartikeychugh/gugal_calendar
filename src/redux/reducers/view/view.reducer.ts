@@ -1,13 +1,19 @@
-import { getWorkWeek } from "../../../utils/get-current-week-dates";
+import startOfToday from "date-fns/startOfToday";
 
 export interface ICalendarViewState {
-  dates: string[];
+  fromDay: number;
+  numberOfDays: number;
   title: string;
+  change: number;
+  pointer: number;
 }
 
 const INITIAL_STATE: ICalendarViewState = {
-  dates: getWorkWeek(5),
+  fromDay: 0,
+  numberOfDays: 7,
   title: "Week",
+  change: 7,
+  pointer: startOfToday().getDay(),
 };
 
 export const CalendarViewReducer = (
@@ -15,7 +21,8 @@ export const CalendarViewReducer = (
   action: {
     type: string;
     payload: {
-      dates: string[];
+      fromDay: number;
+      numberOfDays: number;
     };
   }
 ): ICalendarViewState => {

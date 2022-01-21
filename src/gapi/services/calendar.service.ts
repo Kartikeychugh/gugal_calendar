@@ -1,9 +1,9 @@
+import { endOfWeek, startOfWeek } from "date-fns";
 import { Defer } from "../../firebase/utils/defer";
 import { dynamicScriptLoad } from "../../utils/dynamic-script-load";
-import { normaliseDate } from "../../utils/get-current-week-dates";
 
 export interface IGoogleCalendarService {
-  getEvents(): Promise<CalendarEventItem[]>;
+  getEvents(start: Date): Promise<CalendarEventItem[]>;
   createEvent(event: any): Promise<any>;
 }
 
@@ -16,26 +16,29 @@ export class GoogleCalendarService implements IGoogleCalendarService {
     });
   }
 
-  public async getEvents() {
+  public async getEvents(start: Date) {
     return this.defer.promise.then(async () => {
-      var start = new Date();
-      start = normaliseDate(start);
-      start.setDate(
-        start.getDate() - (start.getDay() ? start.getDay() : 7) + 1
-      );
+      // var start = new Date();
+      // start = normaliseDate(start);
+      // start.setDate(
+      //   start.getDate() - (start.getDay() ? start.getDay() : 7) + 1
+      // );
 
-      var end = new Date();
-      end = normaliseDate(end);
-      end.setDate(end.getDate() - (end.getDay() ? end.getDay() : 7) + 7);
-      end.setHours(23);
-      end.setMinutes(59);
-      end.setSeconds(0);
-      end.setMilliseconds(0);
+      // var end = new Date();
+      // end = normaliseDate(end);
+      // end.setDate(end.getDate() - (end.getDay() ? end.getDay() : 7) + 7);
+      // end.setHours(23);
+      // end.setMinutes(59);
+      // end.setSeconds(0);
+      // end.setMilliseconds(0);
+
+      const s = startOfWeek(start);
+      const e = endOfWeek(start);
 
       const response = await gapi.client.calendar.events.list({
         calendarId: "primary",
-        timeMin: start.toISOString(),
-        timeMax: end.toISOString(),
+        timeMin: s.toISOString(),
+        timeMax: e.toISOString(),
         singleEvents: true,
         orderBy: "startTime",
       });

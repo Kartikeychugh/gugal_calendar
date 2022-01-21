@@ -11,7 +11,7 @@
 }
 
 .header-gutter {
-  min-width: 75px;
+  min-width: 100px;
 }
 
 .header-cell-first-line {
@@ -33,4 +33,5 @@
   /* identical to box height, or 145% */
 
   color: #000000;
+  display: flex;
 }

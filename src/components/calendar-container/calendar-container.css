@@ -4,9 +4,9 @@
 }
 
 .calendar {
-  width: 90%;
+  /* width: 90%;
   height: 90%;
-  position: absolute;
+  position: absolute; */
   display: flex;
   flex-direction: column;
 }
@@ -15,6 +15,6 @@
   overflow: hidden;
   overflow-y: scroll;
   width: 100%;
-  position: absolute;
-  height: calc(100% - 140px);
+  /* position: absolute; */
+  height: calc(100vh - 146px);
 }

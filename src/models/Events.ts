@@ -1,18 +1,37 @@
 import { v4 as uuidv4 } from "uuid";
 
+export interface ICalendarClientEvent {
+  conferenceData?: {
+    createRequest: {
+      requestId: string;
+      conferenceSolutionKey: {
+        type: string;
+      };
+    };
+  };
+  id: string;
+  summary: string;
+  description: string;
+  start: {
+    dateTime: string;
+  };
+  end: {
+    dateTime: string;
+  };
+  client: {
+    clientLie: boolean;
+  };
+}
+
 export const CalendarEvent = (
-  summary: string,
-  description: string,
   start: Date,
   end: Date,
-  clientX: number,
-  clientY: number,
   onlineMeeting = false
-) => {
+): ICalendarClientEvent => {
   return {
     id: uuidv4().replaceAll("-", ""),
-    summary,
-    description,
+    summary: "",
+    description: "",
     start: {
       dateTime: start.toISOString(),
     },
@@ -21,8 +40,6 @@ export const CalendarEvent = (
     },
     client: {
       clientLie: true,
-      clientX,
-      clientY,
     },
     ...(onlineMeeting && {
       conferenceData: {

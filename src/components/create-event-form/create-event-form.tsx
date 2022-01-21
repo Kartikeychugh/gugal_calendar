@@ -1,11 +1,14 @@
 import { Box, TextField, Button } from "@mui/material";
 import { useState } from "react";
-import { useAddGoogleEvent } from "../../hooks/use-add-event";
+import {
+  useCreateGoogleEvent,
+  useUpdateClientEvent,
+} from "../../hooks/use-add-event";
 import { ICalendarEventItem } from "../../models/calendar-event-item";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import { LoadingButton, TimePicker } from "@mui/lab";
+import { DatePicker, LoadingButton, TimePicker } from "@mui/lab";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { useDispatch } from "../../redux/hooks/use-dispatch";
@@ -17,11 +20,14 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
   });
   const dispatch = useDispatch();
 
-  const addGoogleEvent = useAddGoogleEvent();
+  const addGoogleEvent = useCreateGoogleEvent();
+  const updateClientEvent = useUpdateClientEvent();
+
   return (
     <Box sx={{ p: 1, "& .MuiSvgIcon-root": { fill: "#1976d2" } }}>
       <Box
         sx={{
+          mt: 1,
           "& .MuiOutlinedInput-notchedOutline": { right: "50px" },
           "& .MuiSvgIcon-root": {
             width: "24px",
@@ -43,31 +49,61 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
           autoComplete="off"
           fullWidth
           id="standard-basic"
-          label="Add meeting title"
+          label="Add title"
           variant="standard"
           value={state.meetingTitle}
           onChange={(e) => {
-            console.log(e.target.value);
             setState({ ...state, meetingTitle: e.target.value });
           }}
         />
       </Box>
       <Box
         sx={{
-          mt: 3,
+          mt: 4,
           "& .MuiFormControl-root": { ml: 3 },
           "& .MuiOutlinedInput-input": { padding: "8px 7px", fontSize: "13px" },
-          // "& .MuiOutlinedInput-notchedOutline": { right: "50px" },
           display: "flex",
           alignItems: "center",
         }}>
         <AccessTimeIcon sx={{ color: "#5f6368", fill: "#5f6368" }} />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DatePicker
+            label="On"
+            value={props.event.start.dateTime}
+            onChange={(newValue: Date | null) => {
+              if (!newValue) {
+                return;
+              }
+
+              const e = { ...props.event };
+              e.start.dateTime = newValue.toISOString();
+              const newEndtime = newValue;
+              newEndtime.setHours(
+                new Date(props.event.end.dateTime).getHours()
+              );
+              newEndtime.setMinutes(
+                new Date(props.event.end.dateTime).getMinutes()
+              );
+              newEndtime.setSeconds(
+                new Date(props.event.end.dateTime).getSeconds()
+              );
+              e.end.dateTime = newEndtime.toISOString();
+              updateClientEvent(e);
+            }}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
           <TimePicker
             label="From"
             value={new Date(props.event.start.dateTime)}
             onChange={(newValue) => {
-              console.log(newValue);
+              if (!newValue) {
+                return;
+              }
+              const e = { ...props.event };
+              e.start.dateTime = newValue.toISOString();
+              updateClientEvent(e);
             }}
             renderInput={(params) => <TextField {...params} />}
           />
@@ -76,7 +112,12 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
             label="To"
             value={new Date(props.event.end.dateTime)}
             onChange={(newValue) => {
-              console.log(newValue);
+              if (!newValue) {
+                return;
+              }
+              const e = { ...props.event };
+              e.end.dateTime = newValue.toISOString();
+              updateClientEvent(e);
             }}
             renderInput={(params) => <TextField {...params} />}
           />
@@ -97,7 +138,7 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
             height: "24px",
             width: "24px",
           },
-          mt: 3,
+          mt: 4,
           "& .MuiFormControl-root": { ml: 3 },
           "& .MuiOutlinedInput-input": { padding: "8px 7px" },
           display: "flex",
@@ -119,6 +160,7 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
       <Box
         sx={{
           mt: 6,
+          mb: 1,
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-end",
@@ -133,7 +175,6 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
           onClick={() => {
             dispatch({
               type: "REMOVE_CLIENT_EVENT",
-              payload: props.event.id,
             });
           }}>
           Cancel

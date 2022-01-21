@@ -1,8 +1,10 @@
 import { Box } from "@mui/material";
+import { addDays, addHours, startOfToday } from "date-fns";
 import { useEffect, useRef } from "react";
-import { useAddClientEvent } from "../../hooks/use-add-event";
+import { useCreateClientEvent } from "../../hooks/use-add-event";
 import { useCalendarEvents } from "../../hooks/use-calendar-events";
 import { useCurrentTime } from "../../hooks/use-current-time";
+import { ICalendarEventItem } from "../../models/calendar-event-item";
 import { useSelector } from "../../redux/hooks/use-selector";
 import {
   getToday,
@@ -10,42 +12,56 @@ import {
   isWeekEnd,
 } from "../../utils/get-current-week-dates";
 import { extractEventForDay } from "../../utils/get-day-event";
+import { getViewDetails } from "../../utils/get-view-details";
 import { CalendarEventColumn } from "../calendar-event-grid/calendar-event-grid.component";
 import { CalendarGridTime } from "./calendar-grid-time";
 import "./calendar-grid.css";
 
-export const CalendarSurface = (props: {
-  cellSize: number;
-  daysToShow: string[];
-}) => {
+export const CalendarSurface = (props: { cellSize: number }) => {
+  const events = useCalendarEvents();
+
   return (
-    <div style={{ position: "absolute", width: "100%", display: "flex" }}>
+    <div style={{ width: "100%", display: "flex" }}>
       <CalendarGridTime cellSize={props.cellSize} />
-      <CalendarGrid cellSize={props.cellSize} daysToShow={props.daysToShow} />
+      <CalendarGrid cellSize={props.cellSize} events={events} />
     </div>
   );
 };
 
-const CalendarGrid = (props: { cellSize: number; daysToShow: string[] }) => {
-  const events = useCalendarEvents();
+const CalendarGrid = (props: {
+  cellSize: number;
+  events: ICalendarEventItem[];
+}) => {
+  const { start } = useSelector((state) => state.window);
+  const { fromDay, numberOfDays } = useSelector((state) => state.view);
+
+  const view = getViewDetails(addDays(start, fromDay), numberOfDays);
 
   return (
     <div className="calendar-grid">
-      <TimeMarker
+      {/* <TimeMarker
         cellSize={props.cellSize}
-        view={props.daysToShow.length}
-        diff={getToday().getDay() - new Date(props.daysToShow[0]).getDay()}
-      />
-      {props.daysToShow.map((day, i) => (
-        <CalendarColumn
-          cellSize={props.cellSize}
-          events={events}
-          lastColumn={i + 1 === props.daysToShow.length}
-          datetime={day}
-          key={i}
-          view={props.daysToShow.length}
-        />
-      ))}
+        view={numberOfDays}
+        diff={startOfToday().getDay() - fromDay}
+      /> */}
+      <Box
+        sx={{
+          position: "relative",
+          height: "100%",
+          width: "100%",
+          display: "flex",
+        }}>
+        {view.week.map((day, i) => (
+          <CalendarColumn
+            cellSize={props.cellSize}
+            events={props.events}
+            lastColumn={i + 1 === numberOfDays}
+            datetime={day}
+            key={i}
+            view={numberOfDays}
+          />
+        ))}
+      </Box>
     </div>
   );
 };
@@ -90,7 +106,7 @@ const TimeMarker = (props: {
       style={{
         top: `${(props.cellSize / 60) * time}px`,
         width: `calc(${100 * totalMarkerLengthFraction}% - ${
-          75 * totalMarkerLengthFraction
+          100 * totalMarkerLengthFraction
         }px)`,
       }}
       className="time-marker-container">
@@ -105,7 +121,7 @@ const TimeMarker = (props: {
 };
 
 const CalendarColumn = (props: {
-  datetime: string;
+  datetime: Date;
   events: CalendarEventItem[] | undefined;
   lastColumn: boolean;
   view: number;
@@ -130,29 +146,20 @@ const CalendarColumn = (props: {
 
 const CalendarGridColumn = (props: {
   lastColumn: boolean;
-  datetime: string;
+  datetime: Date;
   view: number;
   cellSize: number;
 }) => {
   const cells = [];
-  const addClientEvent = useAddClientEvent();
-  const { client = [] } = useSelector((state) => state.events);
+  const createClientEvent = useCreateClientEvent();
   for (let i = 0; i < 24; i++) {
     cells.push(
       <Box
         onClick={(e) => {
-          // e.stopPropagation();
-          if (client && client.length) {
-            console.log("already open");
-            return;
-          }
-
-          const start = new Date(props.datetime);
-          const end = new Date(props.datetime);
-          start.setHours(i);
-          end.setHours(i + 1);
-
-          addClientEvent(start, end, (e as any).pageX, (e as any).pageY);
+          createClientEvent(
+            addHours(props.datetime, i),
+            addHours(props.datetime, i + 1)
+          );
           console.log(e);
         }}
         key={i}
