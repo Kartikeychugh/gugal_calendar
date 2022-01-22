@@ -7,8 +7,6 @@ export const useCalendarColors = (): CalendarColors | null => {
   const colorDetails = useSelector((state) => state.colors);
 
   useEffect(() => {
-    console.log(colorDetails);
-
     if (!colorDetails) {
       dispatch({ type: "FETCH_CALENDAR_COLORS" });
     }

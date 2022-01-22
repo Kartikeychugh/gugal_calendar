@@ -28,7 +28,7 @@ export const EventCard = (props: { event: ICalendarEventItem }) => {
   if (minutes < 10) {
     minutesStr = `0${minutesStr}`;
   }
-  const colorId = event.colorId ? event.colorId : 1;
+  const colorId = event.colorId ? event.colorId : 3;
   return (
     <Box
       key={props.event.id}
@@ -44,9 +44,23 @@ export const EventCard = (props: { event: ICalendarEventItem }) => {
         left: event.layout.left,
         overflow: "hidden",
         borderRadius: "5px",
+        "&:hover": {
+          opacity: "0.8",
+          border: `1px solid ${colors!.calendar[colorId].background}`,
+        },
       }}>
-      <Box sx={{ background: "#0ea5e9", minWidth: "2px" }}></Box>
-      <Box sx={{ backgroundColor: "#e0f2fe", padding: "5px", width: "100%" }}>
+      <Box
+        sx={{
+          background: `${colors!.calendar[colorId].background}`,
+          minWidth: "3px",
+        }}></Box>
+      <Box
+        sx={{
+          backgroundColor: `${colors!.event[colorId].background}`,
+          color: `${colors!.event[colorId].foreground}`,
+          padding: "5px",
+          width: "100%",
+        }}>
         <Box
           sx={{
             height: "16px",
@@ -61,7 +75,6 @@ export const EventCard = (props: { event: ICalendarEventItem }) => {
               fontWeight: "600",
               fontSize: "10px",
               lineHeight: "16px",
-              color: "#0369a1",
             }}>
             {hoursStr}:{minutesStr} {ampm}
           </Box>
@@ -95,7 +108,6 @@ export const EventCard = (props: { event: ICalendarEventItem }) => {
             lineHeight: "16px",
             height: "calc(100% - 16px)",
             overflow: "hidden",
-            color: "#0369a1",
           }}>
           <Box>{event.summary}</Box>
         </Box>

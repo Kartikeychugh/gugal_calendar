@@ -54,6 +54,9 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
           value={state.meetingTitle}
           onChange={(e) => {
             setState({ ...state, meetingTitle: e.target.value });
+            const ev = { ...props.event };
+            ev.summary = e.target.value;
+            updateClientEvent(ev);
           }}
         />
       </Box>
