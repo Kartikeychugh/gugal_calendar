@@ -1,22 +1,23 @@
 import { Box } from "@mui/material";
 import { isSameDay, addHours, startOfToday } from "date-fns";
+import { useContext } from "react";
+import { CalendarDimensionsContext } from "../../contexts";
 import { useCreateClientEvent } from "../../hooks/use-add-event";
 
 export const CalendarGridColumn = (props: {
   lastColumn: boolean;
   datetime: Date;
   view: number;
-  cellSize: number;
 }) => {
   const cells = [];
   const createClientEvent = useCreateClientEvent();
-
+  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
   for (let i = 0; i < 24; i++) {
     cells.push(
       <Box
         key={i}
         sx={{
-          height: `${props.cellSize}px`,
+          height: `${calendarDimensionsValue.cellSize}px`,
           width: "100%",
           backgroundColor: `${
             isSameDay(props.datetime, startOfToday())

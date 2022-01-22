@@ -5,7 +5,7 @@ import { addDays, startOfWeek } from "date-fns";
 import { CalendarViewSlider } from "../calendar-slider/calendar-slider";
 import { useView } from "../../hooks/use-view";
 
-export const CalendarCommandBar = (props: { timeGridWidth: number }) => {
+export const CalendarCommandBar = () => {
   const { fromDay, numberOfDays, selectedDate } = useView();
   const start = startOfWeek(selectedDate);
 
@@ -29,7 +29,7 @@ export const CalendarCommandBar = (props: { timeGridWidth: number }) => {
           color: "black",
           letterSpacing: "1px",
         }}>
-        <CalendarViewSlider timeGridWidth={props.timeGridWidth} />
+        <CalendarViewSlider />
         <Box
           sx={{
             display: "flex",

@@ -1,4 +1,6 @@
 import { Box } from "@mui/material";
+import { useContext } from "react";
+import { CalendarDimensionsContext } from "../../contexts";
 import { transformEvents } from "../../utils/transform-events";
 
 import { EventCard } from "../event-card/event-card.component";
@@ -6,10 +8,14 @@ import { EventCard } from "../event-card/event-card.component";
 export const CalendarEventColumn = (props: {
   events: CalendarEventItem[] | undefined;
   view: number;
-  cellSize: number;
 }) => {
+  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
+
   const { events = [] } = props;
-  let transformedEvents = transformEvents(events, props.cellSize);
+  let transformedEvents = transformEvents(
+    events,
+    calendarDimensionsValue.cellSize
+  );
 
   return (
     <Box

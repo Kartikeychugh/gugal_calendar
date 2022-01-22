@@ -3,10 +3,7 @@ import { CalendarGrid } from "../calendar-grid/calendar-grid.component";
 import { CalendarCommandBar } from "../calender-command-bar/calendar-command-bar.component";
 import { CreateEventFormDialog } from "../create-event-form/create-event-form-dialog";
 
-export const CalendarSurface = (props: {
-  cellSize: number;
-  timeGridWidth: number;
-}) => {
+export const CalendarSurface = () => {
   return (
     <Paper
       elevation={3}
@@ -19,11 +16,8 @@ export const CalendarSurface = (props: {
         ml: 1,
         padding: "16px 16px 16px 16px",
       }}>
-      <CalendarCommandBar timeGridWidth={props.timeGridWidth} />
-      <CalendarGrid
-        cellSize={props.cellSize}
-        timeGridWidth={props.timeGridWidth}
-      />
+      <CalendarCommandBar />
+      <CalendarGrid />
       <CreateEventFormDialog />
     </Paper>
   );

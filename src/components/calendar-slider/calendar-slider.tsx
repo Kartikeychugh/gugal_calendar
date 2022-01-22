@@ -2,14 +2,18 @@ import { Box, Button } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSlideView, useSlideToToday } from "../../hooks/use-slide-view";
+import { useContext } from "react";
+import { CalendarDimensionsContext } from "../../contexts";
 
-export const CalendarViewSlider = (props: { timeGridWidth: number }) => {
+export const CalendarViewSlider = () => {
+  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
+
   const slideView = useSlideView();
   const slideToToday = useSlideToToday();
   return (
     <Box
       sx={{
-        ml: `${props.timeGridWidth}px`,
+        ml: `${calendarDimensionsValue.timeGridWidth}px`,
         display: "flex",
         justifyContent: "flex-start",
         alignItems: "center",

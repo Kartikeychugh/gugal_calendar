@@ -8,22 +8,16 @@ import { CalendarHeader } from "../calendar-header/calendar-header.component";
 import { CalendarTimeMarker } from "../calendar-time-marker";
 import { CalendarGridTime } from "./calendar-grid-time";
 
-export const CalendarGrid = (props: {
-  cellSize: number;
-  timeGridWidth: number;
-}) => {
+export const CalendarGrid = () => {
   return (
     <Box sx={{ flexGrow: 1, height: "100%" }}>
-      <CalendarHeader timeGridWidth={props.timeGridWidth} />
-      <ScrollableGrid
-        cellSize={props.cellSize}
-        timeGridWidth={props.timeGridWidth}
-      />
+      <CalendarHeader />
+      <ScrollableGrid />
     </Box>
   );
 };
 
-const ScrollableGrid = (props: { cellSize: number; timeGridWidth: number }) => {
+const ScrollableGrid = () => {
   return (
     <Box
       sx={{
@@ -32,41 +26,28 @@ const ScrollableGrid = (props: { cellSize: number; timeGridWidth: number }) => {
         width: "100%",
         height: "calc(100vh - 175px)",
       }}>
-      <CalendarSurfaceGrid
-        timeGridWidth={props.timeGridWidth}
-        cellSize={props.cellSize}
-      />
+      <CalendarSurfaceGrid />
     </Box>
   );
 };
 
-export const CalendarSurfaceGrid = (props: {
-  cellSize: number;
-  timeGridWidth: number;
-}) => {
+export const CalendarSurfaceGrid = () => {
   const events = useCalendarEvents();
 
   return (
     <Box sx={{ width: "100%", display: "flex" }}>
-      <CalendarGridTime
-        timeGridWidth={props.timeGridWidth}
-        cellSize={props.cellSize}
-      />
-      <CalendarGridRenderer cellSize={props.cellSize} events={events} />
+      <CalendarGridTime />
+      <CalendarGridRenderer events={events} />
     </Box>
   );
 };
 
-const CalendarGridRenderer = (props: {
-  cellSize: number;
-  events: ICalendarEventItem[];
-}) => {
+const CalendarGridRenderer = (props: { events: ICalendarEventItem[] }) => {
   const { fromDay, numberOfDays } = useView();
 
   return (
     <Box sx={{ display: "flex", position: "relative", width: "100%" }}>
       <CalendarTimeMarker
-        cellSize={props.cellSize}
         view={numberOfDays}
         diff={startOfToday().getDay() - fromDay}
       />

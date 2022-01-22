@@ -1,12 +1,11 @@
 import { Box } from "@mui/material";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useContext } from "react";
+import { CalendarDimensionsContext } from "../../contexts";
 import { useCurrentTime } from "../../hooks/use-current-time";
 
-export const CalendarTimeMarker = (props: {
-  view: number;
-  diff: number;
-  cellSize: number;
-}) => {
+export const CalendarTimeMarker = (props: { view: number; diff: number }) => {
+  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
+
   const time = useCurrentTime();
   const ref: any = useRef(null);
 
@@ -42,7 +41,7 @@ export const CalendarTimeMarker = (props: {
         position: "absolute",
         display: "flex",
         zIndex: 1,
-        top: `${(props.cellSize / 60) * time}px`,
+        top: `${(calendarDimensionsValue.cellSize / 60) * time}px`,
         width: `calc(${100 * totalMarkerLengthFraction}%)`,
       }}
       ref={ref}>

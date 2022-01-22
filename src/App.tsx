@@ -29,7 +29,7 @@ function App() {
         <FirebaseAuthLayer loading={() => <LoadingScreen />}>
           <PrivateRoute>
             <CalendarReduxProvider>
-              <Calendar cellSize={60} timeGridWidth={45} />
+              <Calendar cellSize={60} timeGridWidth={50} />
             </CalendarReduxProvider>
           </PrivateRoute>
         </FirebaseAuthLayer>

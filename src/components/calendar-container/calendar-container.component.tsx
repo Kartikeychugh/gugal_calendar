@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { CalendarDimensionsProvider } from "../../contexts";
 
 import { CalendarDatePicker } from "../calendar-date-picker";
 import { CalendarSurface } from "../calendar-surface";
@@ -8,17 +9,17 @@ export const Calendar = (props: {
   timeGridWidth: number;
 }) => {
   return (
-    <Box
-      sx={{
-        padding: "20px",
-        display: "flex",
-        width: "100%",
-      }}>
-      <CalendarDatePicker />
-      <CalendarSurface
-        timeGridWidth={props.timeGridWidth}
-        cellSize={props.cellSize}
-      />
-    </Box>
+    <CalendarDimensionsProvider
+      value={{ cellSize: props.cellSize, timeGridWidth: props.timeGridWidth }}>
+      <Box
+        sx={{
+          padding: "20px",
+          display: "flex",
+          width: "100%",
+        }}>
+        <CalendarDatePicker />
+        <CalendarSurface />
+      </Box>
+    </CalendarDimensionsProvider>
   );
 };

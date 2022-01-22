@@ -1,11 +1,15 @@
 import { Box, Button } from "@mui/material";
 import { isSameDay, addDays, startOfToday, startOfWeek } from "date-fns";
+import { useContext } from "react";
+import { CalendarDimensionsContext } from "../../contexts";
 import { useUpdateSelectedDate } from "../../hooks/use-set-window";
 import { useUpdateView } from "../../hooks/use-update-view";
 import { useView } from "../../hooks/use-view";
 import { getWeekDetails } from "../../utils/get-view-details";
 
-export const CalendarHeader = (props: { timeGridWidth: number }) => {
+export const CalendarHeader = () => {
+  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
+
   const { selectedDate, fromDay, numberOfDays } = useView();
   const start = startOfWeek(selectedDate);
   const updateView = useUpdateView();
@@ -26,7 +30,7 @@ export const CalendarHeader = (props: { timeGridWidth: number }) => {
           fontWeight: 700,
           padding: "4px",
           flexDirection: "column",
-          minWidth: `${props.timeGridWidth}px`,
+          minWidth: `${calendarDimensionsValue.timeGridWidth}px`,
         }}></Box>
       {weekDetails.week.map((date, i) => {
         return (

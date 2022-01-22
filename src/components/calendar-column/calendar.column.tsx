@@ -8,7 +8,6 @@ import { CalendarEventColumn } from "../calendar-event-column";
 import { CalendarGridColumn } from "../calendar-grid-column";
 
 export const CalendarColumnsRenderer = (props: {
-  cellSize: number;
   events: ICalendarEventItem[];
 }) => {
   const { fromDay, numberOfDays, selectedDate } = useView();
@@ -25,7 +24,6 @@ export const CalendarColumnsRenderer = (props: {
       }}>
       {week.map((day, i) => (
         <CalendarColumn
-          cellSize={props.cellSize}
           events={props.events}
           lastColumn={i + 1 === week.length}
           datetime={day}
@@ -42,17 +40,14 @@ const CalendarColumn = (props: {
   events: CalendarEventItem[] | undefined;
   lastColumn: boolean;
   view: number;
-  cellSize: number;
 }) => {
   return (
     <Box sx={{ height: "100%", width: "100%", minWidth: "64px" }}>
       <CalendarEventColumn
-        cellSize={props.cellSize}
         view={props.view}
         events={extractEventForDay(props.events, props.datetime)}
       />
       <CalendarGridColumn
-        cellSize={props.cellSize}
         view={props.view}
         datetime={props.datetime}
         lastColumn={props.lastColumn}
