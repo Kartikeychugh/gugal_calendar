@@ -46,7 +46,6 @@ const config = {
   key: "view",
   whitelist: ["userView"],
   storage,
-  blacklist: [""],
 };
 
 export const CalendarViewReducer = persistReducer(config, _CalendarViewReducer);
