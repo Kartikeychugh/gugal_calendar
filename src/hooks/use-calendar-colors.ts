@@ -4,7 +4,7 @@ import { useSelector } from "../redux/hooks/use-selector";
 
 export const useCalendarColors = (): CalendarColors | null => {
   const dispatch = useDispatch();
-  const colorDetails = useSelector((state) => state.colors);
+  const { colorDetails } = useSelector((state) => state.colors);
 
   useEffect(() => {
     if (!colorDetails) {

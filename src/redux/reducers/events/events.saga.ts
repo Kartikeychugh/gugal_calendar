@@ -1,3 +1,4 @@
+import startOfWeek from "date-fns/startOfWeek";
 import { put, takeLeading, select } from "redux-saga/effects";
 import { IGoogleCalendarService } from "../../../gapi/services/calendar.service";
 import { getViewKey } from "../../../utils/get-view-details";
@@ -34,11 +35,14 @@ export const initFirebaseGAPISaga = (
 
   function* insertCalendarEvents(action: { type: string; payload: any }) {
     const result: {} = yield googleCalendarService.createEvent(action.payload);
-    const state: { window: { start: number } } = yield select();
+    const state: { view: { selectedDate: number } } = yield select();
 
     yield put({
       type: "FETCH_CALENDAR_EVENTS",
-      payload: { start: state.window.start, removeClient: true },
+      payload: {
+        start: startOfWeek(state.view.selectedDate),
+        removeClient: true,
+      },
     });
 
     console.log({ result });

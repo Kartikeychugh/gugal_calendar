@@ -1,14 +1,17 @@
 import { Box, Button } from "@mui/material";
-import { isSameDay, addDays, startOfToday } from "date-fns";
+import { isSameDay, addDays, startOfToday, startOfWeek } from "date-fns";
+import { useUpdateSelectedDate } from "../../hooks/use-set-window";
 import { useUpdateView } from "../../hooks/use-update-view";
-import { useSelector } from "../../redux/hooks/use-selector";
-import { getViewDetails } from "../../utils/get-view-details";
+import { useView } from "../../hooks/use-view";
+import { getWeekDetails } from "../../utils/get-view-details";
 
 export const CalendarHeader = (props: { timeGridWidth: number }) => {
-  const { start } = useSelector((state) => state.window);
-  const { fromDay, numberOfDays } = useSelector((state) => state.view);
+  const { selectedDate, fromDay, numberOfDays } = useView();
+  const start = startOfWeek(selectedDate);
   const updateView = useUpdateView();
-  const details = getViewDetails(addDays(start, fromDay), numberOfDays);
+  const setWindowAndView = useUpdateSelectedDate();
+
+  const weekDetails = getWeekDetails(addDays(start, fromDay), numberOfDays);
 
   const today = startOfToday();
 
@@ -25,7 +28,7 @@ export const CalendarHeader = (props: { timeGridWidth: number }) => {
           flexDirection: "column",
           minWidth: `${props.timeGridWidth}px`,
         }}></Box>
-      {details.week.map((date, i) => {
+      {weekDetails.week.map((date, i) => {
         return (
           <Button
             variant="text"
@@ -42,7 +45,10 @@ export const CalendarHeader = (props: { timeGridWidth: number }) => {
                   ? "inset 0px -1px 0px #e0e0e0"
                   : "inset -1px -1px 0px #e0e0e0",
             }}
-            onClick={() => updateView(date.getDay(), 0)}
+            onClick={() => {
+              updateView(0);
+              setWindowAndView(date);
+            }}
             key={i}>
             <Box
               sx={{

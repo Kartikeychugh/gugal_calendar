@@ -46,7 +46,6 @@ export const EventCard = (props: { event: ICalendarEventItem }) => {
         borderRadius: "5px",
         "&:hover": {
           opacity: "0.8",
-          border: `1px solid ${colors!.calendar[colorId].background}`,
         },
       }}>
       <Box

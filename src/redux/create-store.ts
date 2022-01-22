@@ -10,7 +10,7 @@ import persistStore from "redux-persist/es/persistStore";
 
 const config = {
   key: "root",
-  whitelist: ["view", "events", "colors", "window"],
+  whitelist: [],
   storage,
 };
 

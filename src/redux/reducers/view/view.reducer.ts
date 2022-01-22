@@ -1,31 +1,52 @@
 import startOfToday from "date-fns/startOfToday";
-import { getView } from "../../../utils/get-view-details";
+import persistReducer from "redux-persist/es/persistReducer";
+import storage from "redux-persist/lib/storage";
 
 export interface ICalendarViewState {
-  fromDay: number;
-  numberOfDays: number;
-  title: string;
-  change: number;
-  pointer: number;
-  viewId: number;
+  userView: { viewId: number };
+  responsiveView: { viewId: number };
+  selectedDate: number;
 }
 
-const INITIAL_STATE: ICalendarViewState = getView(1, startOfToday().getDay());
+const INITIAL_STATE: ICalendarViewState = {
+  userView: { viewId: 1 },
+  responsiveView: { viewId: 0 },
+  selectedDate: startOfToday().valueOf(),
+};
 
-export const CalendarViewReducer = (
+const _CalendarViewReducer = (
   state = INITIAL_STATE,
   action: {
     type: string;
-    payload: ICalendarViewState;
+    payload: number;
   }
 ): ICalendarViewState => {
   switch (action.type) {
-    case "SET_VIEW":
+    case "SET_USER_VIEW":
       return {
         ...state,
-        ...action.payload,
+        userView: { viewId: action.payload },
+      };
+    case "SET_RESPONSIVE_VIEW":
+      return {
+        ...state,
+        responsiveView: { viewId: action.payload },
+      };
+    case "SET_SELECTED_DATE":
+      return {
+        ...state,
+        selectedDate: action.payload,
       };
     default:
       return state;
   }
 };
+
+const config = {
+  key: "view",
+  whitelist: ["userView"],
+  storage,
+  blacklist: [""],
+};
+
+export const CalendarViewReducer = persistReducer(config, _CalendarViewReducer);

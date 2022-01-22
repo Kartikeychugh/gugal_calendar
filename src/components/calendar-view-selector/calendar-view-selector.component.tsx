@@ -1,18 +1,15 @@
 import { Button, Box, Menu, MenuItem } from "@mui/material";
 import { useRef, useState } from "react";
-import { useSelector } from "../../redux/hooks/use-selector";
-import CalendarViewDayIcon from "@mui/icons-material/CalendarViewDay";
-import CalendarViewWeekIcon from "@mui/icons-material/CalendarViewWeek";
-import ViewWeekIcon from "@mui/icons-material/ViewWeek";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { useUpdateView } from "../../hooks/use-update-view";
 import { getView } from "../../utils/get-view-details";
+import { useView } from "../../hooks/use-view";
 
 export const CalendarViewSelector = () => {
   const updateView = useUpdateView();
 
   const [state, setState] = useState({ open: false });
-  const { title, pointer } = useSelector((state) => state.view);
+  const { title, selectedDate } = useView();
   const ref = useRef(null);
 
   return (
@@ -33,7 +30,7 @@ export const CalendarViewSelector = () => {
           color: "#18181B",
           ml: "2px",
           mr: "2px",
-          minWidth: "120px",
+          minWidth: "100px",
           fontWeight: "700",
           "& .MuiSvgIcon-root": {
             fill: "black",
@@ -67,32 +64,31 @@ export const CalendarViewSelector = () => {
         }}>
         {[
           {
-            Icon: CalendarViewDayIcon,
             viewId: 0,
           },
           {
-            Icon: CalendarViewWeekIcon,
             viewId: 1,
           },
           {
-            Icon: ViewWeekIcon,
             viewId: 2,
           },
         ].map((viewDetails, i) => {
-          const { Icon, viewId } = viewDetails;
-          const view = getView(viewId, pointer);
+          const { viewId } = viewDetails;
+          const view = getView(
+            viewId,
+            new Date(selectedDate).getDay().valueOf()
+          );
 
           return (
             <MenuItem
               key={i}
               onClick={() => {
                 setState({ open: false });
-                updateView(pointer, viewDetails.viewId);
+                updateView(viewDetails.viewId);
               }}
               sx={{
                 color: "#18181B",
                 fontSize: "13px",
-                fontWeight: 600,
                 fontStyle: "normal",
                 letterSpacing: "1px",
                 "& .MuiSvgIcon-root": {
@@ -104,8 +100,6 @@ export const CalendarViewSelector = () => {
                   backgroundColor: "rgb(25, 118, 210, 0.07)",
                 },
               }}>
-              <Icon sx={{ width: "20px", fill: "#18181B", mr: 1 }} />
-
               {view.title}
             </MenuItem>
           );

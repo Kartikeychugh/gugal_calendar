@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
-import { addDays } from "date-fns";
+import { addDays, startOfWeek } from "date-fns";
+import { useView } from "../../hooks/use-view";
 import { ICalendarEventItem } from "../../models/calendar-event-item";
-import { useSelector } from "../../redux/hooks/use-selector";
 import { extractEventForDay } from "../../utils/get-day-event";
-import { getViewDetails } from "../../utils/get-view-details";
+import { getWeekDetails } from "../../utils/get-view-details";
 import { CalendarEventColumn } from "../calendar-event-column";
 import { CalendarGridColumn } from "../calendar-grid-column";
 
@@ -11,9 +11,9 @@ export const CalendarColumnsRenderer = (props: {
   cellSize: number;
   events: ICalendarEventItem[];
 }) => {
-  const { start } = useSelector((state) => state.window);
-  const { fromDay, numberOfDays } = useSelector((state) => state.view);
-  const view = getViewDetails(addDays(start, fromDay), numberOfDays);
+  const { fromDay, numberOfDays, selectedDate } = useView();
+  const start = startOfWeek(selectedDate);
+  const { week } = getWeekDetails(addDays(start, fromDay), numberOfDays);
 
   return (
     <Box
@@ -23,11 +23,11 @@ export const CalendarColumnsRenderer = (props: {
         width: "100%",
         display: "flex",
       }}>
-      {view.week.map((day, i) => (
+      {week.map((day, i) => (
         <CalendarColumn
           cellSize={props.cellSize}
           events={props.events}
-          lastColumn={i + 1 === numberOfDays}
+          lastColumn={i + 1 === week.length}
           datetime={day}
           key={i}
           view={numberOfDays}

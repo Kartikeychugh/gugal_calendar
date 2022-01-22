@@ -6,40 +6,33 @@ const views = [
     numberOfDays: 1,
     title: "Day",
     change: 1,
-    pointer: 0,
     viewId: 0,
-  },
-  {
-    fromDay: 0,
-    numberOfDays: 7,
-    change: 7,
-    title: "Week",
-    pointer: 0,
-    viewId: 1,
   },
   {
     fromDay: 1,
     numberOfDays: 5,
     change: 7,
     title: "Work Week",
-    pointer: 1,
+    viewId: 1,
+  },
+  {
+    fromDay: 0,
+    numberOfDays: 7,
+    change: 7,
+    title: "Week",
     viewId: 2,
   },
 ];
 
-export const getView = (viewId: number, pointer: number) => {
+export const getView = (viewId: number, fromDay?: number) => {
   const view = views[viewId];
-  if (viewId === 0) {
-    view.fromDay = pointer;
-    view.pointer = pointer;
-  } else {
-    view.pointer = pointer;
+  if (viewId === 0 && fromDay !== undefined) {
+    view.fromDay = fromDay;
   }
-
   return view;
 };
 
-export const getViewDetails = (
+export const getWeekDetails = (
   _start: number | Date,
   _numberOfDays: number
 ) => {
@@ -47,7 +40,7 @@ export const getViewDetails = (
   const end = addDays(start, _numberOfDays - 1);
   const week = eachDayOfInterval({ start, end });
 
-  return { start, end, week };
+  return { week };
 };
 
 export const getViewKey = (date: Date) => {

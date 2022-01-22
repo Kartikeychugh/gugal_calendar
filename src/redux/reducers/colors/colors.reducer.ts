@@ -1,6 +1,14 @@
-const INITIAL_STATE: CalendarColors | null = null;
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-export const CalendarColorsReducer = (
+export interface ICalendarColorsState {
+  colorDetails: CalendarColors | null;
+}
+const INITIAL_STATE: ICalendarColorsState = {
+  colorDetails: null,
+};
+
+const _CalendarColorsReducer = (
   state = INITIAL_STATE,
   action: {
     type: string;
@@ -9,8 +17,19 @@ export const CalendarColorsReducer = (
 ) => {
   switch (action.type) {
     case "SET_COLORS":
-      return action.payload;
+      return { ...state, colorDetails: action.payload };
     default:
       return state;
   }
 };
+
+const config = {
+  key: "colors",
+  storage,
+  whitelist: ["colorDetails"],
+};
+
+export const CalendarColorsReducer = persistReducer(
+  config,
+  _CalendarColorsReducer
+);

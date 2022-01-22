@@ -1,13 +1,14 @@
 import { Box } from "@mui/material";
 import { CalendarViewSelector } from "../calendar-view-selector/calendar-view-selector.component";
 
-import { addDays } from "date-fns";
-import { useSelector } from "../../redux/hooks/use-selector";
+import { addDays, startOfWeek } from "date-fns";
 import { CalendarViewSlider } from "../calendar-slider/calendar-slider";
+import { useView } from "../../hooks/use-view";
 
 export const CalendarCommandBar = (props: { timeGridWidth: number }) => {
-  const { start } = useSelector((state) => state.window);
-  const { fromDay, numberOfDays } = useSelector((state) => state.view);
+  const { fromDay, numberOfDays, selectedDate } = useView();
+  const start = startOfWeek(selectedDate);
+
   const spansAcrossMonth =
     addDays(new Date(start), fromDay).getMonth() !==
     addDays(new Date(start), fromDay + numberOfDays - 1).getMonth();

@@ -1,3 +1,5 @@
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import { ICalendarEventItem } from "../../../models/calendar-event-item";
 
 export type IEventsState = {
@@ -10,7 +12,7 @@ const INITIAL_STATE: IEventsState = {
   client: null,
 };
 
-export const CalendarEventsReducer = (
+const _CalendarEventsReducer = (
   state = INITIAL_STATE,
   action: {
     type: string;
@@ -36,3 +38,14 @@ export const CalendarEventsReducer = (
       return state;
   }
 };
+
+const config = {
+  key: "events",
+  whitelist: ["backend", "client"],
+  storage,
+};
+
+export const CalendarEventsReducer = persistReducer(
+  config,
+  _CalendarEventsReducer
+);

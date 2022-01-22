@@ -22,7 +22,7 @@ export const CalendarViewSlider = (props: { timeGridWidth: number }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          width: "30px",
+          minWidth: "30px",
           height: "30px",
           backgroundColor: "rgb(25, 118, 210, 0.07)",
           "& .MuiSvgIcon-root": {
@@ -57,7 +57,7 @@ export const CalendarViewSlider = (props: { timeGridWidth: number }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          width: "30px",
+          minWidth: "30px",
           height: "30px",
           backgroundColor: "rgb(25, 118, 210, 0.07)",
           "& .MuiSvgIcon-root": {

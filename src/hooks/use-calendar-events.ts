@@ -1,14 +1,17 @@
+import { startOfWeek } from "date-fns";
 import { useEffect, useMemo } from "react";
 import { ICalendarEventItem } from "../models/calendar-event-item";
 import { useDispatch } from "../redux/hooks/use-dispatch";
 import { useSelector } from "../redux/hooks/use-selector";
 import { getViewKey } from "../utils/get-view-details";
 import { useCalendarColors } from "./use-calendar-colors";
+import { useView } from "./use-view";
 
 export const useCalendarEvents = () => {
   const dispatch = useDispatch();
   const { backend, client } = useSelector((state) => state.events);
-  const { start } = useSelector((state) => state.window);
+  const { selectedDate } = useView();
+  const start = startOfWeek(selectedDate);
   const colors = useCalendarColors();
   const key = useMemo(() => getViewKey(start), [start]);
   const backendEventsForCurrentStartWindow = useMemo(

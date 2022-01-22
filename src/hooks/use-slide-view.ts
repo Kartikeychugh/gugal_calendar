@@ -1,21 +1,19 @@
 import addDays from "date-fns/addDays";
 import startOfToday from "date-fns/startOfToday";
-import { useSelector } from "../redux/hooks/use-selector";
-import { useSetWindowAndView } from "./use-set-window";
+import { useUpdateSelectedDate } from "./use-set-window";
+import { useView } from "./use-view";
 
 export const useSlideView = () => {
-  const { start } = useSelector((state) => state.window);
-  const { fromDay, change } = useSelector((state) => state.view);
-  const setWindowAndView = useSetWindowAndView();
+  const { change, selectedDate } = useView();
+  const setWindowAndView = useUpdateSelectedDate();
 
   return (direction: number) => {
-    let newFromDay = direction * change;
-    setWindowAndView(addDays(addDays(start, fromDay), newFromDay));
+    setWindowAndView(addDays(selectedDate, direction * change));
   };
 };
 
 export const useSlideToToday = () => {
-  const setWindowAndView = useSetWindowAndView();
+  const setWindowAndView = useUpdateSelectedDate();
 
   return () => {
     setWindowAndView(startOfToday());

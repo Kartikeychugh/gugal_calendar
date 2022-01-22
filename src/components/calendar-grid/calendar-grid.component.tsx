@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { startOfToday } from "date-fns";
 import { useCalendarEvents } from "../../hooks/use-calendar-events";
+import { useView } from "../../hooks/use-view";
 import { ICalendarEventItem } from "../../models/calendar-event-item";
-import { useSelector } from "../../redux/hooks/use-selector";
 import { CalendarColumnsRenderer } from "../calendar-column";
 import { CalendarHeader } from "../calendar-header/calendar-header.component";
 import { CalendarTimeMarker } from "../calendar-time-marker";
@@ -61,7 +61,7 @@ const CalendarGridRenderer = (props: {
   cellSize: number;
   events: ICalendarEventItem[];
 }) => {
-  const { fromDay, numberOfDays } = useSelector((state) => state.view);
+  const { fromDay, numberOfDays } = useView();
 
   return (
     <Box sx={{ display: "flex", position: "relative", width: "100%" }}>
