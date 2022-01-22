@@ -33,6 +33,7 @@ export const CalendarViewSelector = () => {
           color: "#18181B",
           ml: "2px",
           mr: "2px",
+          minWidth: "120px",
           fontWeight: "700",
           "& .MuiSvgIcon-root": {
             fill: "black",

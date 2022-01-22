@@ -15,7 +15,7 @@ export const CalendarSurface = (props: {
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        minWidth: "420px",
+        minWidth: "550px",
         ml: 1,
         padding: "16px 16px 16px 16px",
       }}>
