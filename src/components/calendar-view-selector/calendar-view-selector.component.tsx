@@ -4,12 +4,14 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { useUpdateView } from "../../hooks/use-update-view";
 import { getView } from "../../utils/get-view-details";
 import { useView } from "../../hooks/use-view";
+import { useAvailableView } from "../../hooks/use-available-views";
 
 export const CalendarViewSelector = () => {
   const updateView = useUpdateView();
 
   const [state, setState] = useState({ open: false });
   const { title, selectedDate } = useView();
+  const views = useAvailableView();
   const ref = useRef(null);
 
   return (
@@ -62,18 +64,7 @@ export const CalendarViewSelector = () => {
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}>
-        {[
-          {
-            viewId: 0,
-          },
-          {
-            viewId: 1,
-          },
-          {
-            viewId: 2,
-          },
-        ].map((viewDetails, i) => {
-          const { viewId } = viewDetails;
+        {views.map((viewId, i) => {
           const view = getView(
             viewId,
             new Date(selectedDate).getDay().valueOf()
@@ -84,7 +75,7 @@ export const CalendarViewSelector = () => {
               key={i}
               onClick={() => {
                 setState({ open: false });
-                updateView(viewDetails.viewId);
+                updateView(viewId);
               }}
               sx={{
                 color: "#18181B",
