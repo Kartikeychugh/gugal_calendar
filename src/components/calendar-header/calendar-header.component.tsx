@@ -2,18 +2,18 @@ import { Box, Button } from "@mui/material";
 import { isSameDay, addDays, startOfToday, startOfWeek } from "date-fns";
 import { useContext } from "react";
 import { CalendarDimensionsContext } from "../../contexts";
-import { useUpdateSelectedDate } from "../../hooks/use-set-window";
+import { CalendarViewContext } from "../../contexts/calendar-view/calendar-view.context";
 import { useUpdateView } from "../../hooks/use-update-view";
-import { useView } from "../../hooks/use-view";
 import { getWeekDetails } from "../../utils/get-view-details";
 
 export const CalendarHeader = () => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);
+  const { selectedDate, currentView, setCalendarSelectedDate } =
+    useContext(CalendarViewContext);
 
-  const { selectedDate, fromDay, numberOfDays } = useView();
+  const { fromDay, numberOfDays } = currentView;
   const start = startOfWeek(selectedDate);
   const updateView = useUpdateView();
-  const setWindowAndView = useUpdateSelectedDate();
 
   const weekDetails = getWeekDetails(addDays(start, fromDay), numberOfDays);
 
@@ -37,6 +37,7 @@ export const CalendarHeader = () => {
           <Button
             variant="text"
             sx={{
+              minWidth: `${calendarDimensionsValue.columnMinWidth}px`,
               height: "100%",
               padding: "4px 8px 4px 8px",
               flexDirection: "column",
@@ -51,7 +52,7 @@ export const CalendarHeader = () => {
             }}
             onClick={() => {
               updateView(0);
-              setWindowAndView(date);
+              setCalendarSelectedDate(date.valueOf());
             }}
             key={i}>
             <Box

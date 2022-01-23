@@ -1,12 +1,12 @@
 import { LocalizationProvider, CalendarPicker } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { Paper } from "@mui/material";
-import { useUpdateSelectedDate } from "../../hooks/use-set-window";
-import { useView } from "../../hooks/use-view";
+import { useContext } from "react";
+import { CalendarViewContext } from "../../contexts/calendar-view/calendar-view.context";
 
 export const CalendarDatePicker = () => {
-  const { selectedDate } = useView();
-  const setWindowAndView = useUpdateSelectedDate();
+  const { selectedDate, setCalendarSelectedDate } =
+    useContext(CalendarViewContext);
 
   return (
     <Paper
@@ -25,7 +25,7 @@ export const CalendarDatePicker = () => {
             if (!newValue) {
               return;
             }
-            setWindowAndView(newValue);
+            setCalendarSelectedDate(newValue.valueOf());
           }}
         />
       </LocalizationProvider>

@@ -1,6 +1,8 @@
 import { Box } from "@mui/material";
 import { addDays, startOfWeek } from "date-fns";
-import { useView } from "../../hooks/use-view";
+import { useContext } from "react";
+import { CalendarDimensionsContext } from "../../contexts";
+import { CalendarViewContext } from "../../contexts/calendar-view/calendar-view.context";
 import { ICalendarEventItem } from "../../models/calendar-event-item";
 import { extractEventForDay } from "../../utils/get-day-event";
 import { getWeekDetails } from "../../utils/get-view-details";
@@ -10,7 +12,8 @@ import { CalendarGridColumn } from "../calendar-grid-column";
 export const CalendarColumnsRenderer = (props: {
   events: ICalendarEventItem[];
 }) => {
-  const { fromDay, numberOfDays, selectedDate } = useView();
+  const { currentView, selectedDate } = useContext(CalendarViewContext);
+  const { fromDay, numberOfDays } = currentView;
   const start = startOfWeek(selectedDate);
   const { week } = getWeekDetails(addDays(start, fromDay), numberOfDays);
 
@@ -41,8 +44,15 @@ const CalendarColumn = (props: {
   lastColumn: boolean;
   view: number;
 }) => {
+  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
+
   return (
-    <Box sx={{ height: "100%", width: "100%", minWidth: "64px" }}>
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        minWidth: `${calendarDimensionsValue.columnMinWidth}px`,
+      }}>
       <CalendarEventColumn
         view={props.view}
         events={extractEventForDay(props.events, props.datetime)}

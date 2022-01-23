@@ -1,7 +1,7 @@
 import { Paper } from "@mui/material";
 import { CalendarGrid } from "../calendar-grid/calendar-grid.component";
 import { CalendarCommandBar } from "../calender-command-bar/calendar-command-bar.component";
-import { CalendarSurfaceSizeWatcher } from "../core";
+import { CalendarSurfaceSizeWatcher } from "../@core";
 import { CreateEventFormDialog } from "../create-event-form/create-event-form-dialog";
 
 export const CalendarSurface = () => {

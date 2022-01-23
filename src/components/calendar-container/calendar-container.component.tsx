@@ -1,30 +1,35 @@
 import { Box } from "@mui/material";
 import { CalendarDimensionsProvider } from "../../contexts";
+import { CalendarViewProvider } from "../../contexts/calendar-view/calendar-view.context";
 import { CalendarReduxProvider } from "../../redux/provider/provider";
 
 import { CalendarDatePicker } from "../calendar-date-picker";
 import { CalendarSurface } from "../calendar-surface";
 
 export const Calendar = (props: {
-  cellSize: number;
+  columnMinWidth: number;
+  cellHeight: number;
   timeGridWidth: number;
 }) => {
   return (
     <CalendarReduxProvider>
       <CalendarDimensionsProvider
         value={{
-          cellSize: props.cellSize,
+          cellHeight: props.cellHeight,
           timeGridWidth: props.timeGridWidth,
+          columnMinWidth: props.columnMinWidth,
         }}>
-        <Box
-          sx={{
-            padding: "20px",
-            display: "flex",
-            width: "100%",
-          }}>
-          <CalendarDatePicker />
-          <CalendarSurface />
-        </Box>
+        <CalendarViewProvider>
+          <Box
+            sx={{
+              padding: "20px",
+              display: "flex",
+              width: "100%",
+            }}>
+            <CalendarDatePicker />
+            <CalendarSurface />
+          </Box>
+        </CalendarViewProvider>
       </CalendarDimensionsProvider>
     </CalendarReduxProvider>
   );

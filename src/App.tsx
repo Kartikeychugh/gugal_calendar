@@ -27,7 +27,7 @@ function App() {
       <FirebaseProvider firebaseOptions={firebaseConfig}>
         <FirebaseAuthLayer loading={() => <LoadingScreen />}>
           <PrivateRoute>
-            <Calendar cellSize={60} timeGridWidth={50} />
+            <Calendar columnMinWidth={70} cellHeight={60} timeGridWidth={50} />
           </PrivateRoute>
         </FirebaseAuthLayer>
       </FirebaseProvider>

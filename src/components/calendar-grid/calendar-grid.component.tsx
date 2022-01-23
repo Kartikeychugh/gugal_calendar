@@ -1,7 +1,8 @@
 import { Box } from "@mui/material";
 import { startOfToday } from "date-fns";
+import { useContext } from "react";
+import { CalendarViewContext } from "../../contexts/calendar-view/calendar-view.context";
 import { useCalendarEvents } from "../../hooks/use-calendar-events";
-import { useView } from "../../hooks/use-view";
 import { ICalendarEventItem } from "../../models/calendar-event-item";
 import { CalendarColumnsRenderer } from "../calendar-column";
 import { CalendarHeader } from "../calendar-header/calendar-header.component";
@@ -43,7 +44,8 @@ export const CalendarSurfaceGrid = () => {
 };
 
 const CalendarGridRenderer = (props: { events: ICalendarEventItem[] }) => {
-  const { fromDay, numberOfDays } = useView();
+  const { currentView } = useContext(CalendarViewContext);
+  const { fromDay, numberOfDays } = currentView;
 
   return (
     <Box sx={{ display: "flex", position: "relative", width: "100%" }}>

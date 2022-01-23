@@ -1,12 +1,13 @@
 import { startOfWeek, addDays, eachDayOfInterval } from "date-fns";
 
-const views = [
+export const allViews = [
   {
     fromDay: 0,
     numberOfDays: 1,
     title: "Day",
     change: 1,
     viewId: 0,
+    breakpoint: 0,
   },
   {
     fromDay: 1,
@@ -14,6 +15,7 @@ const views = [
     change: 7,
     title: "Work Week",
     viewId: 1,
+    breakpoint: 600,
   },
   {
     fromDay: 0,
@@ -21,11 +23,12 @@ const views = [
     change: 7,
     title: "Week",
     viewId: 2,
+    breakpoint: 900,
   },
 ];
 
 export const getView = (viewId: number, fromDay?: number) => {
-  const view = views[viewId];
+  const view = allViews[viewId];
   if (viewId === 0 && fromDay !== undefined) {
     view.fromDay = fromDay;
   }

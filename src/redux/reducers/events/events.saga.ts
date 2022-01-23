@@ -39,14 +39,9 @@ export const initFirebaseGAPISaga = (
     payload: ICalendarClientEvent;
   }) {
     const result: {} = yield googleCalendarService.createEvent(action.payload);
-    const state: { view: { selectedDate: number } } = yield select();
 
     yield put({
-      type: "FETCH_CALENDAR_EVENTS",
-      payload: {
-        start: startOfWeek(state.view.selectedDate),
-        removeClient: true,
-      },
+      type: "REMOVE_CLIENT_EVENT",
     });
 
     console.log({ result });

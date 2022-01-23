@@ -1,17 +1,15 @@
 import { Button, Box, Menu, MenuItem } from "@mui/material";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { useUpdateView } from "../../hooks/use-update-view";
-import { getView } from "../../utils/get-view-details";
-import { useView } from "../../hooks/use-view";
-import { useAvailableView } from "../../hooks/use-available-views";
+import { CalendarViewContext } from "../../contexts/calendar-view/calendar-view.context";
 
 export const CalendarViewSelector = () => {
   const updateView = useUpdateView();
 
   const [state, setState] = useState({ open: false });
-  const { title, selectedDate } = useView();
-  const views = useAvailableView();
+  const { allViews, currentView, getView } = useContext(CalendarViewContext);
+  const { title } = currentView;
   const ref = useRef(null);
 
   return (
@@ -64,11 +62,8 @@ export const CalendarViewSelector = () => {
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}>
-        {views.map((viewId, i) => {
-          const view = getView(
-            viewId,
-            new Date(selectedDate).getDay().valueOf()
-          );
+        {allViews.map(({ viewId }, i) => {
+          const view = getView(viewId);
 
           return (
             <MenuItem

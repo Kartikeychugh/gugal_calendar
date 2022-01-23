@@ -14,7 +14,7 @@ export const CalendarEventColumn = (props: {
   const { events = [] } = props;
   let transformedEvents = transformEvents(
     events,
-    calendarDimensionsValue.cellSize
+    calendarDimensionsValue.cellHeight
   );
 
   return (
