@@ -1,9 +1,28 @@
+import { compareAsc } from "date-fns";
 import { ICalendarEventItem } from "../models/calendar-event-item";
 
 export const transformEvents = (
   events: CalendarEventItem[],
   cellHeight: number
 ) => {
+  events.sort((_a, _b) => {
+    const aStart = new Date(_a.start.dateTime);
+    const bStart = new Date(_b.start.dateTime);
+    const timeDiff = aStart.getTime() - bStart.getTime();
+
+    if (timeDiff === 0) {
+      const aEnd = new Date(_a.end.dateTime);
+      const bEnd = new Date(_b.end.dateTime);
+
+      const aLen = aEnd.getTime() - aStart.getTime();
+      const bLen = bEnd.getTime() - bStart.getTime();
+
+      return bLen - aLen;
+    } else {
+      return timeDiff;
+    }
+  });
+
   const conflictingGroups = divideIntoConflictingGroups(events);
   conflictingGroups.forEach((conflictingGroup) => {
     const columnsWiseEvents = divideIntoColumns(conflictingGroup);
@@ -39,8 +58,8 @@ export const transformEvents = (
 };
 
 interface IConflictingGroup {
-  start: number;
-  end: number;
+  start: Date;
+  end: Date;
   conflictingEvents: CalendarEventItem[];
 }
 const divideIntoConflictingGroups = (events: CalendarEventItem[]) => {
@@ -53,8 +72,8 @@ const divideIntoConflictingGroups = (events: CalendarEventItem[]) => {
     const endTime = new Date(event.end.dateTime);
 
     const nextGroup: IConflictingGroup = {
-      start: startTime.getHours(),
-      end: endTime.getHours(),
+      start: startTime,
+      end: endTime,
       conflictingEvents: [event],
     };
 
@@ -79,7 +98,7 @@ const isConflictingGroup = (
 ) => {
   const startTime = new Date(event.start.dateTime);
 
-  return currentGroup.end > startTime.getHours();
+  return compareAsc(currentGroup.end, startTime) === 1;
 };
 
 const updateGroup = (
@@ -87,7 +106,11 @@ const updateGroup = (
   event: CalendarEventItem
 ) => {
   const endTime = new Date(event.end.dateTime);
-  currentGroup.end = Math.max(currentGroup.end, endTime.getHours());
+  const flag = compareAsc(currentGroup.end, endTime);
+
+  if (flag === -1) {
+    currentGroup.end = endTime;
+  }
 };
 
 const divideIntoColumns = (conflictGroup: IConflictingGroup) => {
@@ -128,5 +151,5 @@ const isConflictingEvent = (a: CalendarEventItem, b: CalendarEventItem) => {
   const endTime = new Date(a.end.dateTime);
   const startTime = new Date(b.start.dateTime);
 
-  return endTime.getHours() > startTime.getHours();
+  return compareAsc(startTime, endTime) !== 1;
 };
