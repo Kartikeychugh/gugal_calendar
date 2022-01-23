@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
   Paper,
+  PaperProps,
 } from "@mui/material";
 import Draggable from "react-draggable";
 import { useDispatch } from "../../redux/hooks/use-dispatch";
@@ -56,7 +57,7 @@ export const CreateEventFormDialog = () => {
   ) : null;
 };
 
-function PaperComponent(props: any) {
+function PaperComponent(props: PaperProps) {
   return (
     <Draggable
       handle="#draggable-dialog-title"

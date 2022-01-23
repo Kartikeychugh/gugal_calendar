@@ -3,7 +3,7 @@ import storage from "redux-persist/lib/storage";
 import { ICalendarEventItem } from "../../../models/calendar-event-item";
 
 export type IEventsState = {
-  backend: { [key: string]: ICalendarEventItem[] } | null;
+  backend: { [key: string]: ICalendarEventItem[] };
   client: ICalendarEventItem | null;
 };
 

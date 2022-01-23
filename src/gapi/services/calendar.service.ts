@@ -1,10 +1,11 @@
 import { endOfWeek, startOfWeek } from "date-fns";
 import { Defer } from "../../firebase/utils/defer";
+import { ICalendarClientEvent } from "../../models/Events";
 import { dynamicScriptLoad } from "../../utils/dynamic-script-load";
 
 export interface IGoogleCalendarService {
   getEvents(start: Date): Promise<CalendarEventItem[]>;
-  createEvent(event: any): Promise<any>;
+  createEvent(event: ICalendarClientEvent): Promise<any>;
   getColors(): Promise<CalendarColors>;
 }
 
@@ -34,7 +35,7 @@ export class GoogleCalendarService implements IGoogleCalendarService {
     });
   }
 
-  public async createEvent(event: any) {
+  public async createEvent(event: ICalendarClientEvent) {
     return this.defer.promise.then(async () => {
       const response = await (gapi.client.calendar as any).events.insert({
         calendarId: "primary",

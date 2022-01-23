@@ -7,6 +7,7 @@ import { initFirebaseGAPISaga } from "./reducers/events/events.saga";
 import { rootReducer } from "./root-reducer";
 import storage from "redux-persist/lib/storage";
 import persistStore from "redux-persist/es/persistStore";
+import logger from "redux-logger";
 
 const config = {
   key: "root",
@@ -20,7 +21,7 @@ export const createReduxStore = (
   const saga = createSagaMiddleware();
   const store = createStore(
     persistReducer(config, rootReducer),
-    applyMiddleware(...[saga])
+    applyMiddleware(...[saga, logger])
   );
   const persistor = persistStore(store);
 
@@ -29,6 +30,5 @@ export const createReduxStore = (
   }
 
   saga.run(rootSaga);
-  (window as any).store = store;
   return { store, persistor };
 };

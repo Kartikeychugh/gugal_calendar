@@ -4,13 +4,13 @@ import storage from "redux-persist/lib/storage";
 
 export interface ICalendarViewState {
   userView: { viewId: number };
-  responsiveView: { viewId: number };
+  responsiveView: { viewId: number | null };
   selectedDate: number;
 }
 
 const INITIAL_STATE: ICalendarViewState = {
   userView: { viewId: 1 },
-  responsiveView: { viewId: 0 },
+  responsiveView: { viewId: null },
   selectedDate: startOfToday().valueOf(),
 };
 

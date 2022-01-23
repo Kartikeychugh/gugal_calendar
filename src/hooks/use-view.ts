@@ -21,26 +21,35 @@ const setViewId = (
 };
 
 export const useView = () => {
-  const { userView, selectedDate } = useSelector((state) => state.view);
+  const { userView, selectedDate, responsiveView } = useSelector(
+    (state) => state.view
+  );
   const availableViews = useAvailableView();
-  const matchesMinWidth900 = useMediaQuery("(min-width:900px)");
-  const matchesMinWidth1200 = useMediaQuery("(min-width:1200px)");
+  const matchesMinWidth900 = true;
+  const matchesMinWidth1200 = true;
+
+  // const matchesMinWidth900 = useMediaQuery("(min-width:900px)");
+  // const matchesMinWidth1200 = useMediaQuery("(min-width:1200px)");
 
   return useMemo(() => {
     return {
       ...getView(
-        setViewId(
-          userView.viewId,
-          availableViews[availableViews.length - 1],
-          matchesMinWidth900,
-          matchesMinWidth1200
-        ),
+        responsiveView.viewId !== null
+          ? responsiveView.viewId
+          : userView.viewId,
+        // setViewId(
+        //   userView.viewId,
+        //   availableViews[availableViews.length - 1],
+        //   matchesMinWidth900,
+        //   matchesMinWidth1200
+        // ),
         getDay(selectedDate)
       ),
       selectedDate,
     };
   }, [
     userView,
+    responsiveView,
     selectedDate,
     matchesMinWidth900,
     matchesMinWidth1200,

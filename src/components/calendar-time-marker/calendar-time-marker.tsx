@@ -7,13 +7,14 @@ export const CalendarTimeMarker = (props: { view: number; diff: number }) => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);
 
   const time = useCurrentTime();
-  const ref: any = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    ref.current.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+    ref.current &&
+      ref.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
   }, []);
 
   let totalMarkerLengthFraction;

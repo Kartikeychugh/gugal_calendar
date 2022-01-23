@@ -52,7 +52,7 @@ export const useCalendarEvents = () => {
       ? backendEventsForCurrentStartWindow
       : []),
     ...(client && !clientEventAlreadySynced ? [client] : []),
-  ].sort((a: any, b: any) => {
+  ].sort((a: ICalendarEventItem, b: ICalendarEventItem) => {
     return (
       new Date(a.start.dateTime).getTime() -
       new Date(b.start.dateTime).getTime()
