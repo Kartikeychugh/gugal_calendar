@@ -23,13 +23,13 @@ export const useCalendarEvents = () => {
   useEffect(() => {
     dispatch({ type: "FETCH_CALENDAR_EVENTS", payload: { start } });
 
-    // const intervalID = setInterval(() => {
-    //   dispatch({ type: "FETCH_CALENDAR_EVENTS", payload: { start } });
-    // }, 60000);
+    const intervalID = setInterval(() => {
+      dispatch({ type: "FETCH_CALENDAR_EVENTS", payload: { start } });
+    }, 60000);
 
-    // return () => {
-    //   clearInterval(intervalID);
-    // };
+    return () => {
+      clearInterval(intervalID);
+    };
   }, [dispatch, start, client]);
 
   if (!colors) {

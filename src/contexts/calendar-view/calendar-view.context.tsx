@@ -71,19 +71,28 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
   const dimensions = useContext(CalendarDimensionsContext);
 
   let allViews: ICalendarView[] = useMemo(() => {
-    const x = views.map((view) => {
+    const _allViews = views.map((view) => {
       if (view.viewId === 0) {
         view.fromDay = getDay(selectedDate);
       }
       return view as ICalendarView;
     });
 
-    x.forEach((view) => {
-      view.breakpoint = view.numberOfDays * 100 + dimensions.timeGridWidth + 32;
+    _allViews.forEach((view) => {
+      view.breakpoint =
+        view.numberOfDays * dimensions.columnMinWidth +
+        dimensions.timeGridWidth +
+        dimensions.surfacePadding +
+        1;
     });
 
-    return x;
-  }, [dimensions.timeGridWidth, selectedDate]);
+    return _allViews;
+  }, [
+    dimensions.timeGridWidth,
+    selectedDate,
+    dimensions.columnMinWidth,
+    dimensions.surfacePadding,
+  ]);
 
   const currentViewId =
     responsiveViewId !== null ? responsiveViewId : userViewId;

@@ -9,15 +9,15 @@ import { CalendarSurface } from "../calendar-surface";
 export const Calendar = (props: {
   columnMinWidth: number;
   cellHeight: number;
-  timeGridWidth: number;
 }) => {
   return (
     <CalendarReduxProvider>
       <CalendarDimensionsProvider
         value={{
           cellHeight: props.cellHeight,
-          timeGridWidth: props.timeGridWidth,
+          timeGridWidth: 50,
           columnMinWidth: props.columnMinWidth,
+          surfacePadding: 16,
         }}>
         <CalendarViewProvider>
           <Box

@@ -38,14 +38,11 @@ export const transformEvents = (
         (event as ICalendarEventItem).layout = {
           top: `${
             cellHeight * startTime.getHours() +
-            (cellHeight / 60) * startTime.getMinutes() +
-            2
+            (cellHeight / 60) * startTime.getMinutes()
           }px`,
           height: `${
             cellHeight * (endTime.getHours() - startTime.getHours()) +
-            (cellHeight / 60) *
-              (endTime.getMinutes() - startTime.getMinutes()) -
-            4
+            (cellHeight / 60) * (endTime.getMinutes() - startTime.getMinutes())
           }px`,
           left,
           width,

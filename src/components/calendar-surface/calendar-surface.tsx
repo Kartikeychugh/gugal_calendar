@@ -3,8 +3,11 @@ import { CalendarGrid } from "../calendar-grid/calendar-grid.component";
 import { CalendarCommandBar } from "../calender-command-bar/calendar-command-bar.component";
 import { CalendarSurfaceSizeWatcher } from "../@core";
 import { CreateEventFormDialog } from "../create-event-form/create-event-form-dialog";
+import { useContext } from "react";
+import { CalendarDimensionsContext } from "../../contexts";
 
 export const CalendarSurface = () => {
+  const dimensions = useContext(CalendarDimensionsContext);
   return (
     <CalendarSurfaceSizeWatcher>
       <Paper
@@ -14,9 +17,7 @@ export const CalendarSurface = () => {
           display: "flex",
           flexDirection: "column",
           width: "100%",
-          // minWidth: "400px",
-          // ml: 1,
-          padding: "16px 16px 16px 16px",
+          padding: `${dimensions.surfacePadding}px`,
         }}>
         <CalendarCommandBar />
         <CalendarGrid />
