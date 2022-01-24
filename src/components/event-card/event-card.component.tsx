@@ -1,6 +1,6 @@
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { ICalendarEventItem } from "../../models/calendar-event-item";
-import { useEffect, useMemo, useRef } from "react";
+import { useRef } from "react";
 import { Box } from "@mui/material";
 import { useCalendarColors } from "../../hooks/use-calendar-colors";
 
@@ -8,17 +8,7 @@ export const EventCard = (props: { event: ICalendarEventItem }) => {
   const { event } = props;
   const ele = useRef(null);
   const colors = useCalendarColors();
-  // const rsObserve = useMemo(
-  //   () =>
-  //     new ResizeObserver((entries) => {
-  //       console.log(entries);
-  //     }),
-  //   []
-  // );
 
-  // useEffect(() => {
-  //   rsObserve.observe(ele.current!);
-  // }, []);
   const time = new Date(event.start.dateTime);
 
   let hours = time.getHours();
@@ -67,7 +57,7 @@ export const EventCard = (props: { event: ICalendarEventItem }) => {
         sx={{
           backgroundColor: `${colors!.event[colorId].background}`,
           color: `${colors!.event[colorId].foreground}`,
-          padding: "5px",
+          padding: "0px 5px 0px 5px",
           width: "100%",
         }}>
         <Box

@@ -8,7 +8,8 @@ export const CalendarViewSelector = () => {
   const updateView = useUpdateView();
 
   const [state, setState] = useState({ open: false });
-  const { allViews, currentView, getView } = useContext(CalendarViewContext);
+  const { allViews, currentView, getView, availableViews } =
+    useContext(CalendarViewContext);
   const { title } = currentView;
   const ref = useRef(null);
 
@@ -62,7 +63,7 @@ export const CalendarViewSelector = () => {
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}>
-        {allViews.map(({ viewId }, i) => {
+        {availableViews.map(({ viewId }, i) => {
           const view = getView(viewId);
 
           return (
