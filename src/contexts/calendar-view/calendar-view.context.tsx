@@ -10,14 +10,12 @@ export const views: {
   title: string;
   change: number;
   viewId: number;
-  breakpoint: number;
 }[] = [
   {
     numberOfDays: 1,
     title: "Day",
     change: 1,
     viewId: 0,
-    breakpoint: 0,
   },
   {
     fromDay: 1,
@@ -25,7 +23,6 @@ export const views: {
     change: 7,
     title: "Work Week",
     viewId: 1,
-    breakpoint: 600,
   },
   {
     fromDay: 0,
@@ -33,7 +30,6 @@ export const views: {
     change: 7,
     title: "Week",
     viewId: 2,
-    breakpoint: 900,
   },
 ];
 
@@ -54,8 +50,7 @@ export interface ICalendarViewContext {
   currentView: ICalendarView;
   getView: (viewId: number) => ICalendarView;
   setCalendarSelectedDate: (newSelectedDate: number) => void;
-  setBreakAt: (breakAt: number | null) => void;
-  // setCalendarView: (newViewID: number) => void;
+  setAvailableViews: (newAvailableViews: ICalendarView[]) => void;
 }
 
 export const CalendarViewContext = React.createContext<ICalendarViewContext>(
@@ -66,8 +61,7 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
   const [selectedDate, setSelectedDate] = useState<number>(
     startOfToday().valueOf()
   );
-  const [breakAt, setBreakAt] = useState<number | null>(null);
-
+  
   const {
     userView: { viewId: userViewId },
     responsiveView: { viewId: responsiveViewId },
@@ -98,6 +92,8 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
     dimensions.surfacePadding,
   ]);
 
+  const [availableViews, setAvailableViews] = useState<ICalendarView[]>(allViews);
+
   const currentViewId = useMemo(() => {
     return responsiveViewId !== null ? responsiveViewId : userViewId;
   }, [responsiveViewId, userViewId]);
@@ -106,13 +102,6 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
     return allViews[currentViewId];
   }, [allViews, currentViewId]);
 
-  const availableViews = useMemo(() => {
-    if (breakAt === null) {
-      return allViews;
-    }
-
-    return allViews.filter((view) => view.breakpoint < breakAt);
-  }, [allViews, breakAt]);
 
   const getView = (viewId: number) => {
     return allViews[viewId];
@@ -131,8 +120,8 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
         allViews: allViews,
         currentViewId,
         currentView,
-        setBreakAt,
         availableViews,
+        setAvailableViews
       }}>
       {currentView ? props.children : null}
     </CalendarViewContext.Provider>

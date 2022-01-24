@@ -1,5 +1,5 @@
 import { Box, TextField, Button } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   useCreateGoogleEvent,
   useUpdateClientEvent,
@@ -12,6 +12,8 @@ import { DatePicker, LoadingButton, TimePicker } from "@mui/lab";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { useDispatch } from "../../redux/hooks/use-dispatch";
+import { CalendarViewContext } from "../../contexts";
+
 export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
   const [state, setState] = useState({
     onlineMeeting: false,
@@ -19,7 +21,7 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
     loading: false,
   });
   const dispatch = useDispatch();
-
+  const { setCalendarSelectedDate } = useContext(CalendarViewContext);
   const addGoogleEvent = useCreateGoogleEvent();
   const updateClientEvent = useUpdateClientEvent();
 
@@ -42,7 +44,8 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
           "& .MuiInput-root:after": {
             borderBottomColor: "#1976d2",
           },
-        }}>
+        }}
+      >
         <ArticleRoundedIcon />
         <TextField
           sx={{ ml: 3 }}
@@ -67,7 +70,8 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
           "& .MuiOutlinedInput-input": { padding: "8px 7px", fontSize: "13px" },
           display: "flex",
           alignItems: "center",
-        }}>
+        }}
+      >
         <AccessTimeIcon sx={{ color: "#5f6368", fill: "#5f6368" }} />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
@@ -92,6 +96,7 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
               );
               e.end.dateTime = newEndtime.toISOString();
               updateClientEvent(e);
+              setCalendarSelectedDate(newValue.valueOf());
             }}
             renderInput={(params) => <TextField {...params} />}
           />
@@ -146,7 +151,8 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
           "& .MuiOutlinedInput-input": { padding: "8px 7px" },
           display: "flex",
           alignItems: "center",
-        }}>
+        }}
+      >
         <VideoCallIcon />
         <Button
           {...(!state.onlineMeeting
@@ -154,7 +160,8 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
             : { variant: "outlined" })}
           onClick={() => {
             setState({ ...state, onlineMeeting: !state.onlineMeeting });
-          }}>
+          }}
+        >
           {state.onlineMeeting
             ? "Remove Google Meet video conferencing"
             : "Add Google Meet video conferencing"}
@@ -172,14 +179,16 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
             fontSize: "12px",
             fontWeight: "600",
           },
-        }}>
+        }}
+      >
         <Button
           variant="outlined"
           onClick={() => {
             dispatch({
               type: "REMOVE_CLIENT_EVENT",
             });
-          }}>
+          }}
+        >
           Cancel
         </Button>
         <LoadingButton
@@ -193,7 +202,8 @@ export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
               state.meetingTitle,
               state.onlineMeeting
             );
-          }}>
+          }}
+        >
           Save
         </LoadingButton>
       </Box>

@@ -22,11 +22,10 @@ const ScrollableGrid = () => {
   return (
     <Box
       sx={{
-        overflow: "hidden",
-        overflowY: "scroll",
+        overflowY: "overlay",
         width: "100%",
         height: "calc(100vh - 175px)",
-      }}>
+      } as any}>
       <CalendarSurfaceGrid />
     </Box>
   );

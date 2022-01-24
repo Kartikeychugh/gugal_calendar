@@ -12,40 +12,50 @@ import { useDispatch } from "../../../redux/hooks/use-dispatch";
 import { useSelector } from "../../../redux/hooks/use-selector";
 
 export const CalendarSurfaceSizeWatcher = (props: PropsWithChildren<{}>) => {
-  const [width, setWidth] = useState<number | null>(null);
-  const [breakAt, setBreakAt] = useState<number | null>(null);
+  const { allViews, getView, setAvailableViews } =
+    useContext(CalendarViewContext);
+  const [lastBreakAt, setLastBreakAt] = useState<number | null>(null);
+  const [firstUnAvailableViewId, setFirstUnAvailableViewId] = useState<number>(
+    allViews.length
+  );
   const {
     userView: { viewId: userViewId },
   } = useSelector((state) => state.view);
-  const { getView, setBreakAt: _setBreakAt } = useContext(CalendarViewContext);
-  const currentView = getView(userViewId);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
+  const currentUserView = getView(userViewId);
+
+  useEffect(() => {
+    if (firstUnAvailableViewId === -1) {
+      setAvailableViews(allViews);
+    } else {
+      setAvailableViews(allViews.slice(0, firstUnAvailableViewId));
+    }
+  }, [firstUnAvailableViewId, allViews, setAvailableViews]);
 
   const observer = useMemo(() => {
     return new ResizeObserver((entries) => {
-      const newWidth = entries[0].contentRect.width;
-      setWidth(newWidth);
+      const width = entries[0].contentRect.width;
+
+      if (width === null) {
+        return;
+      }
+
+      const index = allViews.findIndex((view) => view.breakpoint > width);
+      setFirstUnAvailableViewId(index);
+
+      if (
+        width < currentUserView.breakpoint &&
+        (lastBreakAt === null || lastBreakAt !== currentUserView.breakpoint)
+      ) {
+        dispatch({ type: "SET_RESPONSIVE_VIEW", payload: 0 });
+        setLastBreakAt(currentUserView.breakpoint);
+      } else if (width >= currentUserView.breakpoint && lastBreakAt !== null) {
+        dispatch({ type: "SET_RESPONSIVE_VIEW", payload: null });
+        setLastBreakAt(null);
+      }
     });
-  }, [setWidth]);
-
-  useEffect(() => {
-    if (width === null) {
-      return;
-    }
-
-    if (width < currentView.breakpoint && breakAt === null) {
-      console.log("Surface:", "Control to responseView");
-      dispatch({ type: "SET_RESPONSIVE_VIEW", payload: 0 });
-      setBreakAt(currentView.breakpoint);
-      _setBreakAt(currentView.breakpoint);
-    } else if (width >= currentView.breakpoint && breakAt !== null) {
-      console.log("Surface:", "Control to userView");
-      dispatch({ type: "SET_RESPONSIVE_VIEW", payload: null });
-      setBreakAt(null);
-      _setBreakAt(null);
-    }
-  }, [dispatch, width, currentView, breakAt, _setBreakAt]);
+  }, [allViews, dispatch, currentUserView, lastBreakAt]);
 
   useEffect(() => {
     if (containerRef.current) {
