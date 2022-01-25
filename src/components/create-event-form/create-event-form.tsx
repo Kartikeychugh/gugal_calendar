@@ -12,7 +12,7 @@ import { DatePicker, LoadingButton, TimePicker } from "@mui/lab";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { useDispatch } from "../../redux/hooks/use-dispatch";
-import { CalendarViewContext } from "../../contexts";
+import { CalendarViewContext } from "../../@core";
 
 export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
   const [state, setState] = useState({

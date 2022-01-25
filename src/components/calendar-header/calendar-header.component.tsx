@@ -1,8 +1,8 @@
 import { Box, Button } from "@mui/material";
 import { isSameDay, addDays, startOfToday, startOfWeek } from "date-fns";
 import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../contexts";
-import { CalendarViewContext } from "../../contexts/calendar-view/calendar-view.context";
+import { CalendarDimensionsContext } from "../../@core";
+import { CalendarViewContext } from "../../@core/providers/calendar-view/calendar-view.context";
 import { useUpdateView } from "../../hooks/use-update-view";
 import { getWeekDetails } from "../../utils/get-view-details";
 
@@ -31,7 +31,8 @@ export const CalendarHeader = () => {
           padding: "4px",
           flexDirection: "column",
           minWidth: `${calendarDimensionsValue.timeGridWidth}px`,
-        }}></Box>
+        }}
+      ></Box>
       {weekDetails.week.map((date, i) => {
         return (
           <Button
@@ -54,7 +55,8 @@ export const CalendarHeader = () => {
               updateView(0);
               setCalendarSelectedDate(date.valueOf());
             }}
-            key={i}>
+            key={i}
+          >
             <Box
               sx={{
                 fontStyle: "normal",
@@ -62,7 +64,8 @@ export const CalendarHeader = () => {
                 fontSize: "10px",
                 lineHeight: "12px",
                 color: "#71717a",
-              }}>
+              }}
+            >
               {new Date(date).toLocaleDateString("en-GB", { weekday: "short" })}
             </Box>
             <Box
@@ -73,7 +76,8 @@ export const CalendarHeader = () => {
                 lineHeight: "32px",
                 color: "#000000",
                 display: "flex",
-              }}>
+              }}
+            >
               <Box> {new Date(date).getDate()}</Box>
             </Box>
           </Button>

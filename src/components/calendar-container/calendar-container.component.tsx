@@ -1,15 +1,11 @@
 import { Box, Paper } from "@mui/material";
-import { useContext } from "react";
-import {
-  CalendarDimensionsContext,
-  CalendarDimensionsProvider,
-} from "../../contexts";
-import { CalendarViewProvider } from "../../contexts/calendar-view/calendar-view.context";
+import { CalendarDimensionsProvider } from "../../@core";
+import { CalendarViewProvider } from "../../@core/providers/calendar-view/calendar-view.context";
 import { CalendarReduxProvider } from "../../redux/provider/provider";
 
-import { CalendarDatePicker } from "../@core/calendar-date-picker";
-import { CalendarSurface } from "../@core/calendar-surface";
-import { CalendarCommandBar } from "../@core/calender-command-bar/calendar-command-bar.component";
+import { CalendarDatePicker } from "../../@core/components/calendar-date-picker";
+import { CalendarSurface } from "../../@core/components/calendar-surface";
+import { CalendarCommandBar } from "../../@core/components/calender-command-bar/calendar-command-bar.component";
 
 export const Calendar = (props: {
   columnMinWidth: number;

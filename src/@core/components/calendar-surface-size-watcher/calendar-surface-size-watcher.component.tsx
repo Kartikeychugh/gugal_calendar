@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { CalendarViewContext } from "../../../contexts/calendar-view/calendar-view.context";
+import { CalendarViewContext } from "../../providers/calendar-view/calendar-view.context";
 import { useDispatch } from "../../../redux/hooks/use-dispatch";
 import { useSelector } from "../../../redux/hooks/use-selector";
 

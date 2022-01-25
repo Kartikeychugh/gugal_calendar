@@ -1,6 +1,6 @@
 import { startOfWeek } from "date-fns";
 import { useContext, useEffect, useMemo } from "react";
-import { CalendarViewContext } from "../contexts/calendar-view/calendar-view.context";
+import { CalendarViewContext } from "../@core/providers/calendar-view/calendar-view.context";
 import { ICalendarEventItem } from "../models/calendar-event-item";
 import { useDispatch } from "../redux/hooks/use-dispatch";
 import { useSelector } from "../redux/hooks/use-selector";

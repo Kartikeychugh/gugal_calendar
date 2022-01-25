@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { isSameDay, addHours, startOfToday } from "date-fns";
 import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../contexts";
+import { CalendarDimensionsContext } from "../../@core";
 import { useCreateClientEvent } from "../../hooks/use-add-event";
 
 export const CalendarGridColumn = (props: {
@@ -43,7 +43,8 @@ export const CalendarGridColumn = (props: {
             addHours(props.datetime, i),
             addHours(props.datetime, i + 1)
           );
-        }}></Box>
+        }}
+      ></Box>
     );
   }
   return (
@@ -52,7 +53,8 @@ export const CalendarGridColumn = (props: {
         display: "flex",
         flexDirection: "column",
         width: "100%",
-      }}>
+      }}
+    >
       {cells}
     </Box>
   );

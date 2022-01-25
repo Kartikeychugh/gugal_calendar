@@ -1,8 +1,8 @@
 import { getDay } from "date-fns";
 import startOfToday from "date-fns/startOfToday";
 import React, { PropsWithChildren, useContext, useMemo, useState } from "react";
-import { CalendarDimensionsContext } from "..";
-import { useSelector } from "../../redux/hooks/use-selector";
+import { CalendarDimensionsContext } from "./../calendar-dimensions";
+import { useSelector } from "../../../redux/hooks/use-selector";
 
 export const views: {
   fromDay?: number;
@@ -61,7 +61,7 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
   const [selectedDate, setSelectedDate] = useState<number>(
     startOfToday().valueOf()
   );
-  
+
   const {
     userView: { viewId: userViewId },
     responsiveView: { viewId: responsiveViewId },
@@ -92,7 +92,8 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
     dimensions.surfacePadding,
   ]);
 
-  const [availableViews, setAvailableViews] = useState<ICalendarView[]>(allViews);
+  const [availableViews, setAvailableViews] =
+    useState<ICalendarView[]>(allViews);
 
   const currentViewId = useMemo(() => {
     return responsiveViewId !== null ? responsiveViewId : userViewId;
@@ -101,7 +102,6 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
   const currentView = useMemo(() => {
     return allViews[currentViewId];
   }, [allViews, currentViewId]);
-
 
   const getView = (viewId: number) => {
     return allViews[viewId];
@@ -121,8 +121,9 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
         currentViewId,
         currentView,
         availableViews,
-        setAvailableViews
-      }}>
+        setAvailableViews,
+      }}
+    >
       {currentView ? props.children : null}
     </CalendarViewContext.Provider>
   );

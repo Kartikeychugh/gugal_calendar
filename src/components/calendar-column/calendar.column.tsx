@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { addDays, startOfWeek } from "date-fns";
 import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../contexts";
-import { CalendarViewContext } from "../../contexts/calendar-view/calendar-view.context";
+import { CalendarDimensionsContext } from "../../@core";
+import { CalendarViewContext } from "../../@core/providers/calendar-view/calendar-view.context";
 import { ICalendarEventItem } from "../../models/calendar-event-item";
 import { extractEventForDay } from "../../utils/get-day-event";
 import { getWeekDetails } from "../../utils/get-view-details";
@@ -24,7 +24,8 @@ export const CalendarColumnsRenderer = (props: {
         height: "100%",
         width: "100%",
         display: "flex",
-      }}>
+      }}
+    >
       {week.map((day, i) => (
         <CalendarColumn
           events={props.events}
@@ -52,7 +53,8 @@ const CalendarColumn = (props: {
         height: "100%",
         width: "100%",
         minWidth: `${calendarDimensionsValue.columnMinWidth}px`,
-      }}>
+      }}
+    >
       <CalendarEventColumn
         view={props.view}
         events={extractEventForDay(props.events, props.datetime)}

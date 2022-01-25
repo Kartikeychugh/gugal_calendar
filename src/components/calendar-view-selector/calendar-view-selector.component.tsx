@@ -2,7 +2,7 @@ import { Button, Box, Menu, MenuItem } from "@mui/material";
 import { useContext, useRef, useState } from "react";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { useUpdateView } from "../../hooks/use-update-view";
-import { CalendarViewContext } from "../../contexts/calendar-view/calendar-view.context";
+import { CalendarViewContext } from "../../@core/providers/calendar-view/calendar-view.context";
 
 export const CalendarViewSelector = () => {
   const updateView = useUpdateView();
@@ -19,7 +19,8 @@ export const CalendarViewSelector = () => {
         display: "flex",
         alignItems: "center",
         height: "100%",
-      }}>
+      }}
+    >
       <Button
         sx={{
           display: "flex",
@@ -46,7 +47,8 @@ export const CalendarViewSelector = () => {
         aria-expanded={state.open ? "true" : undefined}
         onClick={() => {
           setState({ open: !state.open });
-        }}>
+        }}
+      >
         <CalendarTodayIcon sx={{ width: "20px", fill: "white", mr: 1 }} />
         {title}
       </Button>
@@ -62,7 +64,8 @@ export const CalendarViewSelector = () => {
         }}
         MenuListProps={{
           "aria-labelledby": "basic-button",
-        }}>
+        }}
+      >
         {availableViews.map(({ viewId }, i) => {
           const view = getView(viewId);
 
@@ -86,7 +89,8 @@ export const CalendarViewSelector = () => {
                 "&:hover": {
                   backgroundColor: "rgb(25, 118, 210, 0.07)",
                 },
-              }}>
+              }}
+            >
               {view.title}
             </MenuItem>
           );

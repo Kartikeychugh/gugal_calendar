@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../contexts";
+import { CalendarDimensionsContext } from "../../@core";
 
 export const CalendarGridTime = () => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);
@@ -15,7 +15,8 @@ export const CalendarGridTime = () => {
         display: "flex",
         flexDirection: "column",
         minWidth: `${calendarDimensionsValue.timeGridWidth}px`,
-      }}>
+      }}
+    >
       {cells}
     </Box>
   );
@@ -34,7 +35,8 @@ const CalendarGridTimeCell = (props: { hour: number }) => {
         height: `${calendarDimensionsValue.cellHeight}px`,
         padding: "4px",
         // justifyContent: "center",
-      }}>
+      }}
+    >
       <Box
         sx={{
           fontStyle: "normal",
@@ -42,7 +44,8 @@ const CalendarGridTimeCell = (props: { hour: number }) => {
           fontSize: "12px",
           lineHeight: "16px",
           color: "#71717a",
-        }}>
+        }}
+      >
         {hour} {ampm}
       </Box>
     </Box>

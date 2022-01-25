@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { startOfToday } from "date-fns";
 import { useContext } from "react";
-import { CalendarViewContext } from "../../contexts/calendar-view/calendar-view.context";
+import { CalendarViewContext } from "../../@core/providers/calendar-view/calendar-view.context";
 import { useCalendarEvents } from "../../hooks/use-calendar-events";
 import { ICalendarEventItem } from "../../models/calendar-event-item";
 import { CalendarColumnsRenderer } from "../calendar-column";
