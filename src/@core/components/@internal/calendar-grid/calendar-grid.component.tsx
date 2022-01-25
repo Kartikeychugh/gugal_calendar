@@ -1,13 +1,18 @@
 import { Box } from "@mui/material";
 import { startOfToday } from "date-fns";
-import { useContext } from "react";
-import { CalendarViewContext } from "../../../providers";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  CalendarDimensionsContext,
+  CalendarDimensionsProvider,
+  CalendarViewContext,
+} from "../../../providers";
 import { useCalendarEvents } from "../../../../hooks";
 import { ICalendarEventItem } from "../../../../models";
 import { CalendarColumnsRenderer } from "../calendar-column";
 import { CalendarHeader } from "../calendar-header";
 import { CalendarTimeMarker } from "../calendar-time-marker";
 import { CalendarGridTime } from "./calendar-grid-time";
+import { useSizeWatcher } from "../../../hooks";
 
 export const CalendarGrid = () => {
   return (
@@ -26,8 +31,13 @@ export const CalendarGrid = () => {
 };
 
 const ScrollableGrid = () => {
+  const value = useContext(CalendarDimensionsContext);
+  const ref = useRef(null);
+  const width = useSizeWatcher(ref);
+
   return (
     <Box
+      ref={ref}
       sx={
         {
           overflowY: "overlay",
@@ -35,7 +45,17 @@ const ScrollableGrid = () => {
         } as any
       }
     >
-      <CalendarSurfaceGrid />
+      <CalendarDimensionsProvider
+        value={{
+          ...value,
+          minCellHeight:
+            width === 0
+              ? value.minCellHeight
+              : Math.max(width / 12, value.minCellHeight),
+        }}
+      >
+        <CalendarSurfaceGrid />
+      </CalendarDimensionsProvider>
     </Box>
   );
 };

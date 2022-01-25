@@ -1,7 +1,10 @@
 import { Box } from "@mui/material";
 import { addDays, startOfWeek } from "date-fns";
-import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../..";
+import { useContext, useRef } from "react";
+import {
+  CalendarDimensionsContext,
+  CalendarSurfaceSizeWatcher,
+} from "../../..";
 import { CalendarViewContext } from "../../../providers";
 import { ICalendarEventItem } from "../../../../models";
 import { extractEventForDay, getWeekDetails } from "../../../../utils";
@@ -15,26 +18,30 @@ export const CalendarColumnsRenderer = (props: {
   const { fromDay, numberOfDays } = currentView;
   const start = startOfWeek(selectedDate);
   const { week } = getWeekDetails(addDays(start, fromDay), numberOfDays);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <Box
-      sx={{
-        position: "relative",
-        height: "100%",
-        width: "100%",
-        display: "flex",
-      }}
-    >
-      {week.map((day, i) => (
-        <CalendarColumn
-          events={props.events}
-          lastColumn={i + 1 === week.length}
-          datetime={day}
-          key={i}
-          view={numberOfDays}
-        />
-      ))}
-    </Box>
+    <CalendarSurfaceSizeWatcher containerRef={containerRef}>
+      <Box
+        ref={containerRef}
+        sx={{
+          position: "relative",
+          height: "100%",
+          width: "100%",
+          display: "flex",
+        }}
+      >
+        {week.map((day, i) => (
+          <CalendarColumn
+            events={props.events}
+            lastColumn={i + 1 === week.length}
+            datetime={day}
+            key={i}
+            view={numberOfDays}
+          />
+        ))}
+      </Box>
+    </CalendarSurfaceSizeWatcher>
   );
 };
 

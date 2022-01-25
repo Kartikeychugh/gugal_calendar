@@ -42,7 +42,7 @@ export const CalendarTimeMarker = (props: { view: number; diff: number }) => {
         position: "absolute",
         display: "flex",
         zIndex: 1,
-        top: `${(calendarDimensionsValue.cellHeight / 60) * time}px`,
+        top: `${(calendarDimensionsValue.minCellHeight / 60) * time}px`,
         width: `calc(${100 * totalMarkerLengthFraction}%)`,
       }}
       ref={ref}

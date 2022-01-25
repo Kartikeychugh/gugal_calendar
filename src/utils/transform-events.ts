@@ -3,7 +3,7 @@ import { ICalendarEventItem } from "../models";
 
 export const transformEvents = (
   events: CalendarEventItem[],
-  cellHeight: number
+  minCellHeight: number
 ) => {
   events.sort((_a, _b) => {
     const aStart = new Date(_a.start.dateTime);
@@ -37,12 +37,13 @@ export const transformEvents = (
 
         (event as ICalendarEventItem).layout = {
           top: `${
-            cellHeight * startTime.getHours() +
-            (cellHeight / 60) * startTime.getMinutes()
+            minCellHeight * startTime.getHours() +
+            (minCellHeight / 60) * startTime.getMinutes()
           }px`,
           height: `${
-            cellHeight * (endTime.getHours() - startTime.getHours()) +
-            (cellHeight / 60) * (endTime.getMinutes() - startTime.getMinutes())
+            minCellHeight * (endTime.getHours() - startTime.getHours()) +
+            (minCellHeight / 60) *
+              (endTime.getMinutes() - startTime.getMinutes())
           }px`,
           left,
           width,

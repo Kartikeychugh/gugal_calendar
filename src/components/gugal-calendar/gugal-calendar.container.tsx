@@ -8,16 +8,15 @@ import { CalendarContainer } from "../calendar-container";
 
 export const GugalCalendar = (props: {
   columnMinWidth: number;
-  cellHeight: number;
+  minCellHeight: number;
 }) => {
   return (
     <CalendarReduxProvider>
       <CalendarDimensionsProvider
         value={{
-          cellHeight: props.cellHeight,
+          minCellHeight: props.minCellHeight,
           timeGridWidth: 50,
           columnMinWidth: props.columnMinWidth,
-          surfacePadding: 16,
         }}
       >
         <CalendarViewProvider>

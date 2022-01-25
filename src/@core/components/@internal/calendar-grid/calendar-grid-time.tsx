@@ -32,7 +32,7 @@ const CalendarGridTimeCell = (props: { hour: number }) => {
       sx={{
         display: "flex",
         width: "100%",
-        height: `${calendarDimensionsValue.cellHeight}px`,
+        height: `${calendarDimensionsValue.minCellHeight}px`,
         padding: "4px",
         // justifyContent: "center",
       }}

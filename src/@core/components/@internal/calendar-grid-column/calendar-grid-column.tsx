@@ -17,7 +17,7 @@ export const CalendarGridColumn = (props: {
       <Box
         key={i}
         sx={{
-          height: `${calendarDimensionsValue.cellHeight}px`,
+          height: `${calendarDimensionsValue.minCellHeight}px`,
           width: "100%",
           backgroundColor: `${
             isSameDay(props.datetime, startOfToday())

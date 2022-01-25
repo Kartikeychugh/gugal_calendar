@@ -47,12 +47,12 @@ export const CalendarSurfaceSizeWatcher = (
       setFirstUnAvailableViewId(index);
 
       if (
-        width < currentUserView.breakpoint &&
+        width <= currentUserView.breakpoint &&
         (lastBreakAt === null || lastBreakAt !== currentUserView.breakpoint)
       ) {
         dispatch({ type: "SET_RESPONSIVE_VIEW", payload: 0 });
         setLastBreakAt(currentUserView.breakpoint);
-      } else if (width >= currentUserView.breakpoint && lastBreakAt !== null) {
+      } else if (width > currentUserView.breakpoint && lastBreakAt !== null) {
         dispatch({ type: "SET_RESPONSIVE_VIEW", payload: null });
         setLastBreakAt(null);
       }
