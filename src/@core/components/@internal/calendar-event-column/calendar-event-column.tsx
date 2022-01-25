@@ -1,9 +1,8 @@
 import { Box } from "@mui/material";
 import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../..";
-import { transformEvents } from "../../../../utils/transform-events";
-
-import { EventCard } from "../event-card/event-card.component";
+import { transformEvents } from "../../../../utils";
+import { CalendarDimensionsContext } from "../../../providers";
+import { EventCard } from "../event-card";
 
 export const CalendarEventColumn = (props: {
   events: CalendarEventItem[] | undefined;

@@ -1,7 +1,6 @@
-import addDays from "date-fns/addDays";
-import startOfToday from "date-fns/startOfToday";
+import { addDays, startOfToday } from "date-fns";
 import { useContext } from "react";
-import { CalendarViewContext } from "../@core/providers/calendar-view/calendar-view.context";
+import { CalendarViewContext } from "../@core";
 
 export const useSlideView = () => {
   const {

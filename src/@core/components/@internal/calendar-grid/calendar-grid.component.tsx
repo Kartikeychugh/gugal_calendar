@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import { startOfToday } from "date-fns";
 import { useContext } from "react";
-import { CalendarViewContext } from "../../../providers/calendar-view/calendar-view.context";
-import { useCalendarEvents } from "../../../../hooks/use-calendar-events";
-import { ICalendarEventItem } from "../../../../models/calendar-event-item";
+import { CalendarViewContext } from "../../../providers";
+import { useCalendarEvents } from "../../../../hooks";
+import { ICalendarEventItem } from "../../../../models";
 import { CalendarColumnsRenderer } from "../calendar-column";
-import { CalendarHeader } from "../calendar-header/calendar-header.component";
+import { CalendarHeader } from "../calendar-header";
 import { CalendarTimeMarker } from "../calendar-time-marker";
 import { CalendarGridTime } from "./calendar-grid-time";
 

@@ -1,8 +1,8 @@
 import VideoCallIcon from "@mui/icons-material/VideoCall";
-import { ICalendarEventItem } from "../../../../models/calendar-event-item";
+import { ICalendarEventItem } from "../../../../models";
 import { useRef } from "react";
 import { Box } from "@mui/material";
-import { useCalendarColors } from "../../../../hooks/use-calendar-colors";
+import { useCalendarColors } from "../../../../hooks";
 
 export const EventCard = (props: { event: ICalendarEventItem }) => {
   const { event } = props;

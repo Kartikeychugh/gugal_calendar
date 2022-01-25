@@ -1,8 +1,7 @@
-import { getDay } from "date-fns";
-import startOfToday from "date-fns/startOfToday";
+import { getDay, startOfToday } from "date-fns";
 import React, { PropsWithChildren, useContext, useMemo, useState } from "react";
 import { CalendarDimensionsContext } from "./../calendar-dimensions";
-import { useSelector } from "../../../redux/hooks/use-selector";
+import { useSelector } from "../../../redux";
 
 export const views: {
   fromDay?: number;

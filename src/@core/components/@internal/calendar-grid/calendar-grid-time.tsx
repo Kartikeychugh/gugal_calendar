@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../..";
+import { CalendarDimensionsContext } from "../../../providers";
 
 export const CalendarGridTime = () => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);

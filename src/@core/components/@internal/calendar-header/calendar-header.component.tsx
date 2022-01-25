@@ -1,10 +1,12 @@
 import { Box, Button } from "@mui/material";
 import { isSameDay, addDays, startOfToday, startOfWeek } from "date-fns";
 import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../..";
-import { CalendarViewContext } from "../../../providers/calendar-view/calendar-view.context";
-import { useUpdateView } from "../../../../hooks/use-update-view";
-import { getWeekDetails } from "../../../../utils/get-view-details";
+import {
+  CalendarViewContext,
+  CalendarDimensionsContext,
+} from "../../../providers";
+import { useUpdateView } from "../../../../hooks";
+import { getWeekDetails } from "../../../../utils";
 
 export const CalendarHeader = () => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);

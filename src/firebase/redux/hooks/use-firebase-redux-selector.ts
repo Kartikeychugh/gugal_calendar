@@ -1,5 +1,5 @@
 import { createSelectorHook } from "react-redux";
-import { FirebaseReduxStoreContext } from "../context/firebase-redux-store.context";
+import { FirebaseReduxStoreContext } from "../context";
 import { RootState } from "../types";
 
 import { useFirebaseReduxManager } from "./use-firebase-redux-manager";

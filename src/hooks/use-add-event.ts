@@ -1,7 +1,10 @@
-import { CalendarEvent, ICalendarClientEvent } from "../models/Events";
-import { useDispatch } from "../redux/hooks/use-dispatch";
+import {
+  CalendarEvent,
+  ICalendarClientEvent,
+  ICalendarEventItem,
+} from "../models";
+import { useDispatch } from "../redux";
 import { v4 as uuidv4 } from "uuid";
-import { ICalendarEventItem } from "../models/calendar-event-item";
 import { startOfWeek } from "date-fns";
 
 export const useCreateGoogleEvent = () => {

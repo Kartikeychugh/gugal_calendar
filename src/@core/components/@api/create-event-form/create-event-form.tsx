@@ -1,18 +1,15 @@
 import { Box, TextField, Button } from "@mui/material";
 import { useContext, useState } from "react";
-import {
-  useCreateGoogleEvent,
-  useUpdateClientEvent,
-} from "../../../../hooks/use-add-event";
-import { ICalendarEventItem } from "../../../../models/calendar-event-item";
+import { useCreateGoogleEvent, useUpdateClientEvent } from "../../../../hooks";
+import { ICalendarEventItem } from "../../../../models";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { DatePicker, LoadingButton, TimePicker } from "@mui/lab";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
-import { useDispatch } from "../../../../redux/hooks/use-dispatch";
-import { CalendarViewContext } from "../../..";
+import { useDispatch } from "../../../../redux";
+import { CalendarViewContext } from "../../../providers";
 
 export const CreateEventForm = (props: { event: ICalendarEventItem }) => {
   const [state, setState] = useState({

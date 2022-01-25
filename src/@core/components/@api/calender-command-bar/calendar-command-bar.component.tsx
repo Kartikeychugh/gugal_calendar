@@ -1,9 +1,8 @@
 import { Box } from "@mui/material";
-import { CalendarViewSelector } from "../../@internal/calendar-view-selector/calendar-view-selector.component";
-import { CalendarViewContext } from "../../../providers/calendar-view/calendar-view.context";
+import { CalendarViewSelector, CalendarViewSlider } from "../../@internal";
+import { CalendarViewContext } from "../../../providers";
 
 import { addDays, startOfWeek } from "date-fns";
-import { CalendarViewSlider } from "../../@internal/calendar-slider/calendar-slider";
 import { useContext } from "react";
 
 export const CalendarCommandBar = () => {

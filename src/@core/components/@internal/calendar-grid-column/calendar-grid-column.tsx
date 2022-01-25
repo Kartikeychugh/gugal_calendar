@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { isSameDay, addHours, startOfToday } from "date-fns";
 import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../..";
-import { useCreateClientEvent } from "../../../../hooks/use-add-event";
+import { CalendarDimensionsContext } from "../../../providers";
+import { useCreateClientEvent } from "../../../../hooks";
 
 export const CalendarGridColumn = (props: {
   lastColumn: boolean;

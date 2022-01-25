@@ -1,7 +1,7 @@
 import { LocalizationProvider, CalendarPicker } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { useContext } from "react";
-import { CalendarViewContext } from "../../../providers/calendar-view/calendar-view.context";
+import { CalendarViewContext } from "../../../providers";
 
 export const CalendarDatePicker = () => {
   const { selectedDate, setCalendarSelectedDate } =

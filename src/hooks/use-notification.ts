@@ -1,4 +1,4 @@
-import { useSelector } from "../redux/hooks/use-selector";
+import { useSelector } from "../redux";
 
 export const useNotification = () => {
   const { message } = useSelector((state) => state.notification);

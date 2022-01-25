@@ -1,10 +1,9 @@
 import { startOfWeek } from "date-fns";
 import { useContext, useEffect, useMemo } from "react";
-import { CalendarViewContext } from "../@core/providers/calendar-view/calendar-view.context";
-import { ICalendarEventItem } from "../models/calendar-event-item";
-import { useDispatch } from "../redux/hooks/use-dispatch";
-import { useSelector } from "../redux/hooks/use-selector";
-import { getViewKey } from "../utils/get-view-details";
+import { CalendarViewContext } from "../@core";
+import { ICalendarEventItem } from "../models";
+import { useDispatch, useSelector } from "../redux";
+import { getViewKey } from "../utils";
 import { useCalendarColors } from "./use-calendar-colors";
 
 export const useCalendarEvents = () => {

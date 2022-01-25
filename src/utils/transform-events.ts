@@ -1,5 +1,5 @@
 import { compareAsc } from "date-fns";
-import { ICalendarEventItem } from "../models/calendar-event-item";
+import { ICalendarEventItem } from "../models";
 
 export const transformEvents = (
   events: CalendarEventItem[],

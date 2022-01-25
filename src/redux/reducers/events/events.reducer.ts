@@ -1,6 +1,6 @@
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { ICalendarEventItem } from "../../../models/calendar-event-item";
+import { ICalendarEventItem } from "../../../models";
 
 export type IEventsState = {
   backend: { [key: string]: ICalendarEventItem[] };

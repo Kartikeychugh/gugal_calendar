@@ -1,4 +1,4 @@
-import { Defer } from "../../firebase/utils/defer";
+import { Defer } from "../../firebase";
 
 export interface IGoogleAuthenicationService {
   init: () => Promise<void>;

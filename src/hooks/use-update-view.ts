@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useDispatch } from "../redux/hooks/use-dispatch";
+import { useDispatch } from "../redux";
 
 export const useUpdateView = () => {
   const dispatch = useDispatch();

@@ -5,9 +5,8 @@ import {
   useMemo,
   useState,
 } from "react";
-import { CalendarViewContext } from "../../../providers/calendar-view/calendar-view.context";
-import { useDispatch } from "../../../../redux/hooks/use-dispatch";
-import { useSelector } from "../../../../redux/hooks/use-selector";
+import { CalendarViewContext } from "../../../providers";
+import { useDispatch, useSelector } from "../../../../redux";
 
 export const CalendarSurfaceSizeWatcher = (
   props: PropsWithChildren<{

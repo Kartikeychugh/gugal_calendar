@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { GoogleCalendarService } from "../../gapi/services/calendar.service";
+import { GoogleCalendarService } from "../../gapi";
 import { createReduxStore } from "../create-store";
 import { CalendarReduxContext } from "./context";
 

@@ -8,8 +8,7 @@ import {
   PaperProps,
 } from "@mui/material";
 import Draggable from "react-draggable";
-import { useDispatch } from "../../../../redux/hooks/use-dispatch";
-import { useSelector } from "../../../../redux/hooks/use-selector";
+import { useDispatch, useSelector } from "../../../../redux";
 import { CreateEventForm } from "./create-event-form";
 
 export const CreateEventFormDialog = () => {

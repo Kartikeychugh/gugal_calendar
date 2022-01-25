@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { useAuthenticationCommands } from "../../firebase/auth";
+import { useAuthenticationCommands } from "../../firebase";
 import { LoadingScreen } from "../loading-screen";
 
 export const PrivateRoute = (props: PropsWithChildren<{}>) => {

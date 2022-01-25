@@ -2,10 +2,9 @@ import { Box } from "@mui/material";
 import { addDays, startOfWeek } from "date-fns";
 import { useContext } from "react";
 import { CalendarDimensionsContext } from "../../..";
-import { CalendarViewContext } from "../../../providers/calendar-view/calendar-view.context";
-import { ICalendarEventItem } from "../../../../models/calendar-event-item";
-import { extractEventForDay } from "../../../../utils/get-day-event";
-import { getWeekDetails } from "../../../../utils/get-view-details";
+import { CalendarViewContext } from "../../../providers";
+import { ICalendarEventItem } from "../../../../models";
+import { extractEventForDay, getWeekDetails } from "../../../../utils";
 import { CalendarEventColumn } from "../calendar-event-column";
 import { CalendarGridColumn } from "../calendar-grid-column";
 

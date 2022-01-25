@@ -1,7 +1,7 @@
 import { put, takeLeading } from "redux-saga/effects";
-import { IGoogleCalendarService } from "../../../gapi/services/calendar.service";
-import { ICalendarClientEvent } from "../../../models/Events";
-import { getViewKey } from "../../../utils/get-view-details";
+import { IGoogleCalendarService } from "../../../gapi";
+import { ICalendarClientEvent } from "../../../models";
+import { getViewKey } from "../../../utils";
 
 export const initFirebaseGAPISaga = (
   googleCalendarService: IGoogleCalendarService

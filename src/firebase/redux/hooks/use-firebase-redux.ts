@@ -1,5 +1,5 @@
 import { createDispatchHook } from "react-redux";
-import { FirebaseReduxStoreContext } from "../context/firebase-redux-store.context";
+import { FirebaseReduxStoreContext } from "../context";
 import { useFirebaseReduxManager } from "./use-firebase-redux-manager";
 
 const useFirebaseDispatch = createDispatchHook(FirebaseReduxStoreContext);

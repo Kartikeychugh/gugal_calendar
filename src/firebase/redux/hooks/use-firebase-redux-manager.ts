@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { createFirebaseErrorObj } from "../../utils";
-import { FirebaseReduxContext } from "../context/firebase-redux-store.context";
+import { FirebaseReduxContext } from "../context";
 
 export const useFirebaseReduxManager = () => {
   const { firebaseReduxManager } = useContext(FirebaseReduxContext);

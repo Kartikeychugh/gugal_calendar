@@ -1,7 +1,6 @@
-import { CalendarGrid } from "../../@internal/calendar-grid/calendar-grid.component";
-import { CreateEventFormDialog } from "../create-event-form/create-event-form-dialog";
+import { CalendarGrid } from "../../@internal";
 import { useRef } from "react";
-import { CalendarSurfaceSizeWatcher } from "../calendar-surface-size-watcher/calendar-surface-size-watcher.component";
+import { CalendarSurfaceSizeWatcher } from "../calendar-surface-size-watcher";
 
 export const CalendarSurface = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -10,7 +9,6 @@ export const CalendarSurface = () => {
     <div style={{ width: "100%", height: "100%" }} ref={containerRef}>
       <CalendarSurfaceSizeWatcher containerRef={containerRef}>
         <CalendarGrid />
-        <CreateEventFormDialog />
       </CalendarSurfaceSizeWatcher>
     </div>
   );

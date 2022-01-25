@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useRef, useEffect, useContext } from "react";
-import { CalendarDimensionsContext } from "../../..";
-import { useCurrentTime } from "../../../../hooks/use-current-time";
+import { CalendarDimensionsContext } from "../../../providers";
+import { useCurrentTime } from "../../../../hooks";
 
 export const CalendarTimeMarker = (props: { view: number; diff: number }) => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);
