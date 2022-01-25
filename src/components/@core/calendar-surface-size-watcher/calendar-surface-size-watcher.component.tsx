@@ -11,7 +11,12 @@ import { CalendarViewContext } from "../../../contexts/calendar-view/calendar-vi
 import { useDispatch } from "../../../redux/hooks/use-dispatch";
 import { useSelector } from "../../../redux/hooks/use-selector";
 
-export const CalendarSurfaceSizeWatcher = (props: PropsWithChildren<{}>) => {
+export const CalendarSurfaceSizeWatcher = (
+  props: PropsWithChildren<{
+    containerRef: React.MutableRefObject<HTMLDivElement | null>;
+  }>
+) => {
+  const { containerRef } = props;
   const { allViews, getView, setAvailableViews } =
     useContext(CalendarViewContext);
   const [lastBreakAt, setLastBreakAt] = useState<number | null>(null);
@@ -21,7 +26,7 @@ export const CalendarSurfaceSizeWatcher = (props: PropsWithChildren<{}>) => {
   const {
     userView: { viewId: userViewId },
   } = useSelector((state) => state.view);
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  // const containerRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
   const currentUserView = getView(userViewId);
 
@@ -67,9 +72,5 @@ export const CalendarSurfaceSizeWatcher = (props: PropsWithChildren<{}>) => {
     };
   }, [containerRef, observer]);
 
-  return (
-    <Box sx={{ width: "100%", ml: 1 }} ref={containerRef}>
-      {props.children}
-    </Box>
-  );
+  return <>{props.children}</>;
 };

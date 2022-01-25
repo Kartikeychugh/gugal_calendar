@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
-import { CalendarViewSelector } from "../calendar-view-selector/calendar-view-selector.component";
-import { CalendarViewContext } from "../../contexts/calendar-view/calendar-view.context";
+import { CalendarViewSelector } from "../../calendar-view-selector/calendar-view-selector.component";
+import { CalendarViewContext } from "../../../contexts/calendar-view/calendar-view.context";
 
 import { addDays, startOfWeek } from "date-fns";
-import { CalendarViewSlider } from "../calendar-slider/calendar-slider";
+import { CalendarViewSlider } from "../../calendar-slider/calendar-slider";
 import { useContext } from "react";
 
 export const CalendarCommandBar = () => {
@@ -20,9 +20,9 @@ export const CalendarCommandBar = () => {
       sx={{
         display: "flex",
         height: "30px",
-        alignItems: "center",
-        mb: 2,
-      }}>
+        width: "100%",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -30,7 +30,8 @@ export const CalendarCommandBar = () => {
           alignItems: "center",
           color: "black",
           letterSpacing: "1px",
-        }}>
+        }}
+      >
         <CalendarViewSlider />
         <Box
           sx={{
@@ -38,7 +39,8 @@ export const CalendarCommandBar = () => {
             fontWeight: 600,
             ml: "15px",
             fontSize: "12px",
-          }}>
+          }}
+        >
           <Box sx={{ mr: 1 }}>
             {addDays(start, fromDay).toLocaleString("default", {
               month: "long",

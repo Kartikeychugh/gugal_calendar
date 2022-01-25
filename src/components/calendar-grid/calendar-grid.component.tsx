@@ -11,7 +11,14 @@ import { CalendarGridTime } from "./calendar-grid-time";
 
 export const CalendarGrid = () => {
   return (
-    <Box sx={{ flexGrow: 1, height: "100%" }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <CalendarHeader />
       <ScrollableGrid />
     </Box>
@@ -21,11 +28,13 @@ export const CalendarGrid = () => {
 const ScrollableGrid = () => {
   return (
     <Box
-      sx={{
-        overflowY: "overlay",
-        width: "100%",
-        height: "calc(100vh - 175px)",
-      } as any}>
+      sx={
+        {
+          overflowY: "overlay",
+          width: "100%",
+        } as any
+      }
+    >
       <CalendarSurfaceGrid />
     </Box>
   );

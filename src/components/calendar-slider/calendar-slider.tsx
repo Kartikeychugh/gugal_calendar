@@ -13,11 +13,12 @@ export const CalendarViewSlider = () => {
   return (
     <Box
       sx={{
-        ml: `${calendarDimensionsValue.timeGridWidth}px`,
+        // ml: `${calendarDimensionsValue.timeGridWidth}px`,
         display: "flex",
         justifyContent: "flex-start",
         alignItems: "center",
-      }}>
+      }}
+    >
       <Button
         onClick={() => {
           slideView(-1);
@@ -33,7 +34,8 @@ export const CalendarViewSlider = () => {
             fill: "black",
             width: "14px",
           },
-        }}>
+        }}
+      >
         <ArrowBackIosIcon />
       </Button>
       <Button
@@ -50,7 +52,8 @@ export const CalendarViewSlider = () => {
           mr: "2px",
           fontWeight: "700",
         }}
-        onClick={slideToToday}>
+        onClick={slideToToday}
+      >
         Today
       </Button>
       <Button
@@ -68,7 +71,8 @@ export const CalendarViewSlider = () => {
             fill: "black",
             width: "14px",
           },
-        }}>
+        }}
+      >
         <ArrowForwardIosIcon />
       </Button>
     </Box>
