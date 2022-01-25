@@ -2,9 +2,9 @@ import "./App.css";
 
 import { FirebaseAuthLayer } from "./firebase/auth";
 import { FirebaseProvider } from "./firebase";
-import { Calendar, PrivateRoute } from "./components";
-
+import { PrivateRoute } from "./components";
 import { LoadingScreen } from "./components/loading-screen";
+import { GugalCalendar } from "./components/gugal-calendar";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -27,7 +27,7 @@ function App() {
       <FirebaseProvider firebaseOptions={firebaseConfig}>
         <FirebaseAuthLayer loading={() => <LoadingScreen />}>
           <PrivateRoute>
-            <Calendar columnMinWidth={100} cellHeight={60} />
+            <GugalCalendar columnMinWidth={100} cellHeight={60} />
           </PrivateRoute>
         </FirebaseAuthLayer>
       </FirebaseProvider>

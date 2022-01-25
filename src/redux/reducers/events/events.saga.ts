@@ -1,5 +1,4 @@
-import startOfWeek from "date-fns/startOfWeek";
-import { put, takeLeading, select } from "redux-saga/effects";
+import { put, takeLeading } from "redux-saga/effects";
 import { IGoogleCalendarService } from "../../../gapi/services/calendar.service";
 import { ICalendarClientEvent } from "../../../models/Events";
 import { getViewKey } from "../../../utils/get-view-details";

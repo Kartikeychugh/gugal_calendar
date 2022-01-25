@@ -1,2 +1,2 @@
 export * from "./private-route";
-export { Calendar } from "./calendar-container";
+export { CalendarContainer } from "./calendar-container";
