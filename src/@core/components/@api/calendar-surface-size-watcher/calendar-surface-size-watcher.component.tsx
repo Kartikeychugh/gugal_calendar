@@ -2,11 +2,12 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
-  useMemo,
   useState,
+  useMemo,
 } from "react";
 import { CalendarViewContext } from "../../../providers";
 import { useDispatch, useSelector } from "../../../../redux";
+import { useSizeWatcher } from "../../../hooks";
 
 export const CalendarSurfaceSizeWatcher = (
   props: PropsWithChildren<{
@@ -23,9 +24,12 @@ export const CalendarSurfaceSizeWatcher = (
   const {
     userView: { viewId: userViewId },
   } = useSelector((state) => state.view);
-  // const containerRef = useRef<HTMLDivElement | null>(null);
+  const width = useSizeWatcher(containerRef, "width");
   const dispatch = useDispatch();
-  const currentUserView = getView(userViewId);
+  const currentUserView = useMemo(
+    () => getView(userViewId),
+    [userViewId, getView]
+  );
 
   useEffect(() => {
     if (firstUnAvailableViewId === -1) {
@@ -35,39 +39,25 @@ export const CalendarSurfaceSizeWatcher = (
     }
   }, [firstUnAvailableViewId, allViews, setAvailableViews]);
 
-  const observer = useMemo(() => {
-    return new ResizeObserver((entries) => {
-      const width = entries[0].contentRect.width;
-
-      if (width === null) {
-        return;
-      }
-
-      const index = allViews.findIndex((view) => view.breakpoint > width);
-      setFirstUnAvailableViewId(index);
-
-      if (
-        width <= currentUserView.breakpoint &&
-        (lastBreakAt === null || lastBreakAt !== currentUserView.breakpoint)
-      ) {
-        dispatch({ type: "SET_RESPONSIVE_VIEW", payload: 0 });
-        setLastBreakAt(currentUserView.breakpoint);
-      } else if (width > currentUserView.breakpoint && lastBreakAt !== null) {
-        dispatch({ type: "SET_RESPONSIVE_VIEW", payload: null });
-        setLastBreakAt(null);
-      }
-    });
-  }, [allViews, dispatch, currentUserView, lastBreakAt]);
-
   useEffect(() => {
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
+    if (width === null) {
+      return;
     }
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [containerRef, observer]);
+    const index = allViews.findIndex((view) => view.breakpoint > width);
+    setFirstUnAvailableViewId(index);
+
+    if (
+      width <= currentUserView.breakpoint &&
+      (lastBreakAt === null || lastBreakAt !== currentUserView.breakpoint)
+    ) {
+      dispatch({ type: "SET_RESPONSIVE_VIEW", payload: 0 });
+      setLastBreakAt(currentUserView.breakpoint);
+    } else if (width > currentUserView.breakpoint && lastBreakAt !== null) {
+      dispatch({ type: "SET_RESPONSIVE_VIEW", payload: null });
+      setLastBreakAt(null);
+    }
+  }, [allViews, dispatch, currentUserView, lastBreakAt, width]);
 
   return <>{props.children}</>;
 };

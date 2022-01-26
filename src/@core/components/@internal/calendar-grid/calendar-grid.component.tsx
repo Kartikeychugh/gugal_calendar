@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { startOfToday } from "date-fns";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import {
   CalendarDimensionsContext,
   CalendarDimensionsProvider,
@@ -33,7 +33,7 @@ export const CalendarGrid = () => {
 const ScrollableGrid = () => {
   const value = useContext(CalendarDimensionsContext);
   const ref = useRef(null);
-  const width = useSizeWatcher(ref);
+  const width = useSizeWatcher(ref, "height");
 
   return (
     <Box

@@ -27,7 +27,7 @@ function App() {
       <FirebaseProvider firebaseOptions={firebaseConfig}>
         <FirebaseAuthLayer loading={() => <LoadingScreen />}>
           <PrivateRoute>
-            <GugalCalendar columnMinWidth={100} minCellHeight={60} />
+            <GugalCalendar columnMinWidth={60} minCellHeight={60} />
           </PrivateRoute>
         </FirebaseAuthLayer>
       </FirebaseProvider>
