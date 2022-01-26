@@ -12,13 +12,13 @@ import { GugalCalendar } from "./components/gugal-calendar";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyB0AWmTdBUcZFZIbwxSX6sNXxhlWU5zv3s",
-  authDomain: "gugal-calendar.firebaseapp.com",
-  projectId: "gugal-calendar",
-  storageBucket: "gugal-calendar.appspot.com",
-  messagingSenderId: "438284324130",
-  appId: "1:438284324130:web:e9780ad9f4c9cbf505e97b",
-  measurementId: "G-4GMF471CY0",
+  apiKey: process.env.REACT_APP_FIREBASE_apiKey,
+  authDomain: process.env.REACT_APP_FIREBASE_authDomain,
+  projectId: process.env.REACT_APP_FIREBASE_projectId,
+  storageBucket: process.env.REACT_APP_FIREBASE_storageBucket,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_messagingSenderId,
+  appId: process.env.REACT_APP_FIREBASE_appId,
+  measurementId: process.env.REACT_APP_FIREBASE_measurementId,
 };
 
 function App() {
