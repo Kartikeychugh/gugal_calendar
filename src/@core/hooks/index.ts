@@ -1,1 +1,1 @@
-export * from "./size-watcher";
+export * from "./use-size-watcher";

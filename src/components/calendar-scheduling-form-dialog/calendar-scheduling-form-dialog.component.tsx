@@ -8,10 +8,10 @@ import {
   Paper,
 } from "@mui/material";
 import Draggable from "react-draggable";
-import { CreateEventForm } from "../../@core";
+import { CalendarSchedulingForm } from "../../@core";
 import { useDispatch, useSelector } from "../../redux";
 
-export const CalendarSchedulingForm = () => {
+export const CalendarSchedulingFormDialog = () => {
   const dispatch = useDispatch();
   const { client } = useSelector((state) => state.events);
 
@@ -50,7 +50,7 @@ export const CalendarSchedulingForm = () => {
             id="draggable-dialog-title"
           />
           <DialogContent>
-            <CreateEventForm event={client} />
+            <CalendarSchedulingForm event={client} />
           </DialogContent>
         </Box>
       </ClickAwayListener>

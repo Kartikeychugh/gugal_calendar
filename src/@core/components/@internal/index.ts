@@ -1,3 +1,3 @@
-export { CalendarSurfaceRenderer } from "./calendar-grid";
-export { CalendarViewSelector } from "./calendar-view-selector";
-export { CalendarViewSlider } from "./calendar-slider";
+export { CalendarCommandViewSelector } from "./calendar-command-view-selector";
+export { CalendarCommandViewSlider } from "./calendar-command-view-slider";
+export { CalendarSurfaceRenderer } from "./calendar-surface-renderer";

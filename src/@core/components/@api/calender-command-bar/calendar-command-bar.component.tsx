@@ -1,5 +1,8 @@
 import { Box } from "@mui/material";
-import { CalendarViewSelector, CalendarViewSlider } from "../../@internal";
+import {
+  CalendarCommandViewSelector,
+  CalendarCommandViewSlider,
+} from "../../@internal";
 import { CalendarViewContext } from "../../../providers";
 
 import { addDays, startOfWeek } from "date-fns";
@@ -31,7 +34,7 @@ export const CalendarCommandBar = () => {
           letterSpacing: "1px",
         }}
       >
-        <CalendarViewSlider />
+        <CalendarCommandViewSlider />
         <Box
           sx={{
             display: "flex",
@@ -59,7 +62,7 @@ export const CalendarCommandBar = () => {
         </Box>
       </Box>
 
-      <CalendarViewSelector />
+      <CalendarCommandViewSelector />
     </Box>
   );
 };

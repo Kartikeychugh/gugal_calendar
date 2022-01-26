@@ -1,5 +1,5 @@
 export * from "./calendar-date-picker";
 export * from "./calendar-surface";
-export * from "./calendar-surface-size-watcher";
+export * from "../@internal/calendar-surface-size-watcher";
 export * from "./calender-command-bar";
-export * from "./create-event-form";
+export * from "./calendar-scheduling-form";

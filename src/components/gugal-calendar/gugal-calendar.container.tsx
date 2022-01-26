@@ -1,7 +1,7 @@
 import { CalendarDimensionsProvider, CalendarViewProvider } from "../../@core";
 import { CalendarReduxProvider } from "../../redux";
 import { CalendarContainer } from "../calendar-container";
-import { CalendarSchedulingForm } from "../calendar-scheduling-form-dialog";
+import { CalendarSchedulingFormDialog } from "../calendar-scheduling-form-dialog";
 
 export const GugalCalendar = (props: {
   columnMinWidth: number;
@@ -18,7 +18,7 @@ export const GugalCalendar = (props: {
       >
         <CalendarViewProvider>
           <CalendarContainer />
-          <CalendarSchedulingForm />
+          <CalendarSchedulingFormDialog />
         </CalendarViewProvider>
       </CalendarDimensionsProvider>
     </CalendarReduxProvider>

@@ -1,1 +1,1 @@
-export { CalendarSchedulingForm } from "./calendar-scheduling-form-dialog.component";
+export { CalendarSchedulingFormDialog } from "./calendar-scheduling-form-dialog.component";
