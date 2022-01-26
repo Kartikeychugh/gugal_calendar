@@ -8,17 +8,17 @@ import {
 import { useUpdateView } from "../../../../hooks";
 import { getWeekDetails } from "../../../../utils";
 
-export const CalendarHeader = () => {
+export const CalendarSurfaceHeader = () => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);
-  const { selectedDate, currentView, setCalendarSelectedDate } =
-    useContext(CalendarViewContext);
-
-  const { fromDay, numberOfDays } = currentView;
-  const start = startOfWeek(selectedDate);
+  const {
+    selectedDate,
+    currentView: { fromDay, numberOfDays },
+    setCalendarSelectedDate,
+  } = useContext(CalendarViewContext);
   const updateView = useUpdateView();
 
+  const start = startOfWeek(selectedDate);
   const weekDetails = getWeekDetails(addDays(start, fromDay), numberOfDays);
-
   const today = startOfToday();
 
   return (

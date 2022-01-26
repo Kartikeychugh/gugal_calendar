@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useContext } from "react";
 import { CalendarDimensionsContext } from "../../../providers";
 
-export const CalendarGridTime = () => {
+export const CalendarSurfaceGridTime = () => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);
 
   const cells = [];

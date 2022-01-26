@@ -3,7 +3,10 @@ import { useRef, useEffect, useContext } from "react";
 import { CalendarDimensionsContext } from "../../../providers";
 import { useCurrentTime } from "../../../../hooks";
 
-export const CalendarTimeMarker = (props: { view: number; diff: number }) => {
+export const CalendarSurfaceTimeMarker = (props: {
+  view: number;
+  diff: number;
+}) => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);
 
   const time = useCurrentTime();

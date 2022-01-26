@@ -1,1 +1,1 @@
-export { CalendarEventColumn } from "./calendar-event-column";
+export { CalendarSurfaceEventColumn } from "./calendar-event-column";

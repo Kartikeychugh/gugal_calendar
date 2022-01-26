@@ -1,1 +1,1 @@
-export { CalendarGridColumn } from "./calendar-grid-column";
+export { CalendarSurfaceGridColumn } from "./calendar-grid-column";

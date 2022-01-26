@@ -4,7 +4,7 @@ import { transformEvents } from "../../../../utils";
 import { CalendarDimensionsContext } from "../../../providers";
 import { EventCard } from "../event-card";
 
-export const CalendarEventColumn = (props: {
+export const CalendarSurfaceEventColumn = (props: {
   events: CalendarEventItem[] | undefined;
   view: number;
 }) => {
@@ -22,7 +22,7 @@ export const CalendarEventColumn = (props: {
         height: "100%",
         position: "absolute",
         pointerEvents: "none",
-        width: `calc(${100 / props.view}% - 20px)`,
+        width: `calc(${100 / props.view}% - 15px)`,
       }}
     >
       {transformedEvents.map((event) => (

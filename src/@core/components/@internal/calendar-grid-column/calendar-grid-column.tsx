@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { CalendarDimensionsContext } from "../../../providers";
 import { useCreateClientEvent } from "../../../../hooks";
 
-export const CalendarGridColumn = (props: {
+export const CalendarSurfaceGridColumn = (props: {
   lastColumn: boolean;
   datetime: Date;
   view: number;

@@ -8,13 +8,13 @@ import {
 } from "../../../providers";
 import { useCalendarEvents } from "../../../../hooks";
 import { ICalendarEventItem } from "../../../../models";
-import { CalendarColumnsRenderer } from "../calendar-column";
-import { CalendarHeader } from "../calendar-header";
-import { CalendarTimeMarker } from "../calendar-time-marker";
-import { CalendarGridTime } from "./calendar-grid-time";
+import { CalendarSurfaceColumns } from "../calendar-column";
+import { CalendarSurfaceHeader } from "../calendar-header";
+import { CalendarSurfaceTimeMarker } from "../calendar-time-marker";
+import { CalendarSurfaceGridTime } from "./calendar-grid-time";
 import { useSizeWatcher } from "../../../hooks";
 
-export const CalendarGrid = () => {
+export const CalendarSurfaceRenderer = () => {
   return (
     <Box
       sx={{
@@ -24,13 +24,13 @@ export const CalendarGrid = () => {
         flexDirection: "column",
       }}
     >
-      <CalendarHeader />
-      <ScrollableGrid />
+      <CalendarSurfaceHeader />
+      <CalendarSurfaceScrollableGrid />
     </Box>
   );
 };
 
-const ScrollableGrid = () => {
+const CalendarSurfaceScrollableGrid = () => {
   const value = useContext(CalendarDimensionsContext);
   const ref = useRef(null);
   const width = useSizeWatcher(ref, "height");
@@ -60,28 +60,30 @@ const ScrollableGrid = () => {
   );
 };
 
-export const CalendarSurfaceGrid = () => {
+const CalendarSurfaceGrid = () => {
   const events = useCalendarEvents();
 
   return (
     <Box sx={{ width: "100%", display: "flex" }}>
-      <CalendarGridTime />
-      <CalendarGridRenderer events={events} />
+      <CalendarSurfaceGridTime />
+      <CalendarSurfaceGridRenderer events={events} />
     </Box>
   );
 };
 
-const CalendarGridRenderer = (props: { events: ICalendarEventItem[] }) => {
+const CalendarSurfaceGridRenderer = (props: {
+  events: ICalendarEventItem[];
+}) => {
   const { currentView } = useContext(CalendarViewContext);
   const { fromDay, numberOfDays } = currentView;
 
   return (
     <Box sx={{ display: "flex", position: "relative", width: "100%" }}>
-      <CalendarTimeMarker
+      <CalendarSurfaceTimeMarker
         view={numberOfDays}
         diff={startOfToday().getDay() - fromDay}
       />
-      <CalendarColumnsRenderer {...props} />
+      <CalendarSurfaceColumns {...props} />
     </Box>
   );
 };

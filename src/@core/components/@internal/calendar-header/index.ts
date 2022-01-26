@@ -1,1 +1,1 @@
-export { CalendarHeader } from "./calendar-header.component";
+export { CalendarSurfaceHeader } from "./calendar-header.component";

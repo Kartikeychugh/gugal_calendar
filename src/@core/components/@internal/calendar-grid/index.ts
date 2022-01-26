@@ -1,2 +1,2 @@
-export { CalendarGridTime } from "./calendar-grid-time";
-export { CalendarGrid, CalendarSurfaceGrid } from "./calendar-grid.component";
+// export { CalendarSurfaceGridTime } from "./calendar-grid-time";
+export { CalendarSurfaceRenderer } from "./calendar-grid.component";

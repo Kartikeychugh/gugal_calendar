@@ -1,1 +1,1 @@
-export { CalendarColumnsRenderer } from "./calendar.column";
+export { CalendarSurfaceColumns } from "./calendar.column";

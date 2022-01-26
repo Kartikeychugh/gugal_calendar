@@ -8,10 +8,10 @@ import {
 import { CalendarViewContext } from "../../../providers";
 import { ICalendarEventItem } from "../../../../models";
 import { extractEventForDay, getWeekDetails } from "../../../../utils";
-import { CalendarEventColumn } from "../calendar-event-column";
-import { CalendarGridColumn } from "../calendar-grid-column";
+import { CalendarSurfaceEventColumn } from "../calendar-event-column";
+import { CalendarSurfaceGridColumn } from "../calendar-grid-column";
 
-export const CalendarColumnsRenderer = (props: {
+export const CalendarSurfaceColumns = (props: {
   events: ICalendarEventItem[];
 }) => {
   const { currentView, selectedDate } = useContext(CalendarViewContext);
@@ -32,7 +32,7 @@ export const CalendarColumnsRenderer = (props: {
         }}
       >
         {week.map((day, i) => (
-          <CalendarColumn
+          <CalendarSurfaceColumn
             events={props.events}
             lastColumn={i + 1 === week.length}
             datetime={day}
@@ -45,7 +45,7 @@ export const CalendarColumnsRenderer = (props: {
   );
 };
 
-const CalendarColumn = (props: {
+const CalendarSurfaceColumn = (props: {
   datetime: Date;
   events: CalendarEventItem[] | undefined;
   lastColumn: boolean;
@@ -61,11 +61,11 @@ const CalendarColumn = (props: {
         minWidth: `${calendarDimensionsValue.columnMinWidth}px`,
       }}
     >
-      <CalendarEventColumn
+      <CalendarSurfaceEventColumn
         view={props.view}
         events={extractEventForDay(props.events, props.datetime)}
       />
-      <CalendarGridColumn
+      <CalendarSurfaceGridColumn
         view={props.view}
         datetime={props.datetime}
         lastColumn={props.lastColumn}

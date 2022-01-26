@@ -1,1 +1,1 @@
-export { CalendarTimeMarker } from "./calendar-time-marker";
+export { CalendarSurfaceTimeMarker } from "./calendar-time-marker";
