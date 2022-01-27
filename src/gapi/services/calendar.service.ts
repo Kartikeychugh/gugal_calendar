@@ -4,7 +4,7 @@ import { ICalendarClientEvent } from "../../models";
 import { dynamicScriptLoad } from "../../utils";
 
 export interface IGoogleCalendarService {
-  getEvents(start: Date): Promise<CalendarEventItem[]>;
+  getEvents(start: number): Promise<CalendarEventItem[]>;
   createEvent(event: ICalendarClientEvent): Promise<any>;
   getColors(): Promise<CalendarColors>;
 }
@@ -18,7 +18,7 @@ export class GoogleCalendarService implements IGoogleCalendarService {
     });
   }
 
-  public async getEvents(start: Date) {
+  public async getEvents(start: number) {
     return this.defer.promise.then(async () => {
       const s = startOfWeek(start);
       const e = endOfWeek(start);

@@ -1,11 +1,9 @@
 import { Box, Button } from "@mui/material";
 import { isSameDay, startOfToday } from "date-fns";
 import { useContext } from "react";
-import {
-  CalendarViewContext,
-  CalendarDimensionsContext,
-} from "../../../providers";
+import { CalendarDimensionsContext } from "../../../providers";
 import { useUpdateView } from "../../../../hooks";
+import { useCalendarView } from "../../../hooks";
 
 export const CalendarSurfaceHeader = () => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);
@@ -13,7 +11,7 @@ export const CalendarSurfaceHeader = () => {
     currentView: { numberOfDays },
     setCalendarSelectedDate,
     currentDates,
-  } = useContext(CalendarViewContext);
+  } = useCalendarView();
   const updateView = useUpdateView();
 
   const today = startOfToday();

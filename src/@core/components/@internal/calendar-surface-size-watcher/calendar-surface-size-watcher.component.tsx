@@ -1,13 +1,6 @@
-import {
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-} from "react";
-import { CalendarViewContext } from "../../../providers";
+import { PropsWithChildren, useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "../../../../redux";
-import { useSizeWatcher } from "../../../hooks";
+import { useCalendarView, useSizeWatcher } from "../../../hooks";
 
 export const CalendarSurfaceSizeWatcher = (
   props: PropsWithChildren<{
@@ -15,8 +8,7 @@ export const CalendarSurfaceSizeWatcher = (
   }>
 ) => {
   const { containerRef } = props;
-  const { allViews, getView, setAvailableViews } =
-    useContext(CalendarViewContext);
+  const { allViews, getView, setAvailableViews } = useCalendarView();
   const [lastBreakAt, setLastBreakAt] = useState<number | null>(null);
   const [firstUnAvailableViewId, setFirstUnAvailableViewId] = useState<number>(
     allViews.length

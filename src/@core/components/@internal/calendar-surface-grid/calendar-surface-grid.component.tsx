@@ -4,13 +4,12 @@ import { useContext, useRef } from "react";
 import {
   CalendarDimensionsContext,
   CalendarDimensionsProvider,
-  CalendarViewContext,
 } from "../../../providers";
 import { useCalendarEvents } from "../../../../hooks";
 import { ICalendarEventItem } from "../../../../models";
 import { CalendarSurfaceColumns } from "../calendar-surface-column";
 import { CalendarSurfaceTimeMarker } from "../calendar-surface-time-marker";
-import { useSizeWatcher } from "../../../hooks";
+import { useCalendarView, useSizeWatcher } from "../../../hooks";
 import { CalendarSurfaceTimeGrid } from "../calendar-surface-time-grid";
 
 export const CalendarSurfaceScrollableGrid = () => {
@@ -57,7 +56,7 @@ const CalendarSurfaceGrid = () => {
 const CalendarSurfaceGridRenderer = (props: {
   events: ICalendarEventItem[];
 }) => {
-  const { currentView } = useContext(CalendarViewContext);
+  const { currentView } = useCalendarView();
   const { fromDay, numberOfDays } = currentView;
 
   return (

@@ -8,7 +8,7 @@ export const initFirebaseGAPISaga = (
 ) => {
   function* fetchCalendarEvents(action: {
     type: string;
-    payload: { start: Date; removeClient?: boolean };
+    payload: { start: number; removeClient?: boolean };
   }) {
     yield put({ type: "GOOGLE_SYNC_START" });
     const result: CalendarEventItem[] = yield googleCalendarService.getEvents(

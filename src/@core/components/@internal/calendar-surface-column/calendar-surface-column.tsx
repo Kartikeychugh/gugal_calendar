@@ -3,8 +3,8 @@ import { useContext, useRef } from "react";
 import {
   CalendarDimensionsContext,
   CalendarSurfaceSizeWatcher,
+  useCalendarView,
 } from "../../..";
-import { CalendarViewContext } from "../../../providers";
 import { ICalendarEventItem } from "../../../../models";
 import { extractEventForDay } from "../../../../utils";
 import { CalendarSurfaceEventColumn } from "../calendar-surface-event-column";
@@ -16,7 +16,7 @@ export const CalendarSurfaceColumns = (props: {
   const {
     currentView: { numberOfDays },
     currentDates,
-  } = useContext(CalendarViewContext);
+  } = useCalendarView();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 

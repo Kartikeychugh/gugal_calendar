@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { Auth, GoogleAuthProvider, getAuth } from "@firebase/auth";
 
-import { useAddReducer, useAddSaga, useFirebaseRedux } from "../../redux";
+import { useAddSaga, useFirebaseRedux } from "../../redux";
 import { useFirebase } from "../../core";
 import { FirebaseAuthContext } from "../context/firebase-auth.context";
 import {
@@ -9,7 +9,6 @@ import {
   IFirebaseAuthManager,
 } from "../managers/auth-manager";
 import { FirebaseAuthListener } from "../listeners";
-import { authDetailsReducer } from "../reducers";
 import { FirebaseAuthService } from "../services";
 import { initAuthDetailsSaga } from "../sagas";
 
@@ -32,7 +31,8 @@ export const FirebaseAuthLayer = (
 
   return (
     <FirebaseAuthContext.Provider
-      value={{ firebaseAuth, googleAuthProvider, firebaseAuthManager }}>
+      value={{ firebaseAuth, googleAuthProvider, firebaseAuthManager }}
+    >
       <FirebaseAuthListener>{props.children}</FirebaseAuthListener>
     </FirebaseAuthContext.Provider>
   );
@@ -44,19 +44,12 @@ const useInitialisation = (props: {
   firebaseAuthManager: IFirebaseAuthManager;
 }) => {
   const [done, setDone] = useState(false);
-
   const addSaga = useAddSaga();
-  const addReducer = useAddReducer();
   const { dispatch } = useFirebaseRedux();
 
   const { firebaseAuth, googleAuthProvider, firebaseAuthManager } = props;
 
   useEffect(() => {
-    function initReducer() {
-      addReducer("auth", authDetailsReducer);
-      dispatch({ type: "" });
-    }
-
     function initSaga() {
       addSaga(
         initAuthDetailsSaga(
@@ -69,12 +62,10 @@ const useInitialisation = (props: {
       firebaseAuthManager.initialise();
     }
 
-    initReducer();
     initSaga();
     initManager();
     setDone(true);
   }, [
-    addReducer,
     addSaga,
     dispatch,
     firebaseAuth,

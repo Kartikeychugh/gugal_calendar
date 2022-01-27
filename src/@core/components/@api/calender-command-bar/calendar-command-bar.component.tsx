@@ -3,19 +3,22 @@ import {
   CalendarCommandViewSelector,
   CalendarCommandViewSlider,
 } from "../../@internal";
-import { CalendarViewContext } from "../../../providers";
+import { useCalendarView } from "../../../hooks";
 
-import { addDays, startOfWeek } from "date-fns";
-import { useContext } from "react";
+import { addDays } from "date-fns";
 
 export const CalendarCommandBar = () => {
-  const { currentView, selectedDate } = useContext(CalendarViewContext);
-  const { fromDay, numberOfDays } = currentView;
-  const start = startOfWeek(selectedDate);
+  const {
+    currentView: { fromDay, numberOfDays },
+    startOfWeekForSelectedDate,
+  } = useCalendarView();
 
-  const spansAcrossMonth =
-    addDays(new Date(start), fromDay).getMonth() !==
-    addDays(new Date(start), fromDay + numberOfDays - 1).getMonth();
+  const viewStart = addDays(startOfWeekForSelectedDate, fromDay);
+  const viewEnd = addDays(
+    startOfWeekForSelectedDate,
+    fromDay + numberOfDays - 1
+  );
+  const viewSpansAcrossMonth = viewStart.getMonth() !== viewEnd.getMonth();
 
   return (
     <Box
@@ -44,19 +47,16 @@ export const CalendarCommandBar = () => {
           }}
         >
           <Box sx={{ mr: 1 }}>
-            {addDays(start, fromDay).toLocaleString("default", {
+            {viewStart.toLocaleString("default", {
               month: "long",
             })}
           </Box>
-          {spansAcrossMonth ? "-" : null}
-          {spansAcrossMonth ? (
+          {viewSpansAcrossMonth ? "-" : null}
+          {viewSpansAcrossMonth ? (
             <Box sx={{ ml: 1 }}>
-              {addDays(start, fromDay + numberOfDays - 1).toLocaleString(
-                "default",
-                {
-                  month: "long",
-                }
-              )}
+              {viewEnd.toLocaleString("default", {
+                month: "long",
+              })}
             </Box>
           ) : null}
         </Box>

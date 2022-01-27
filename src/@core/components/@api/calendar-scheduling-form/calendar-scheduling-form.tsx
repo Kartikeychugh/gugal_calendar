@@ -1,5 +1,5 @@
 import { Box, TextField, Button } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useCreateGoogleEvent, useUpdateClientEvent } from "../../../../hooks";
 import { ICalendarEventItem } from "../../../../models";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -9,7 +9,7 @@ import { DatePicker, LoadingButton, TimePicker } from "@mui/lab";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { useDispatch } from "../../../../redux";
-import { CalendarViewContext } from "../../../providers";
+import { useCalendarView } from "../../../hooks";
 
 export const CalendarSchedulingForm = (props: {
   event: ICalendarEventItem;
@@ -20,7 +20,7 @@ export const CalendarSchedulingForm = (props: {
     loading: false,
   });
   const dispatch = useDispatch();
-  const { setCalendarSelectedDate } = useContext(CalendarViewContext);
+  const { setCalendarSelectedDate } = useCalendarView();
   const addGoogleEvent = useCreateGoogleEvent();
   const updateClientEvent = useUpdateClientEvent();
 

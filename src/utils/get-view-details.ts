@@ -11,7 +11,7 @@ export const getWeekDetails = (
   return { week };
 };
 
-export const getViewKey = (date: Date) => {
+export const getViewKey = (date: number) => {
   const start = startOfWeek(date);
   return start.valueOf();
 };

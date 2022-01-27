@@ -1,54 +1,60 @@
-import { startOfWeek } from "date-fns";
-import { useContext, useEffect, useMemo } from "react";
-import { CalendarViewContext } from "../@core";
+import { useEffect, useMemo } from "react";
+import { useCalendarView } from "../@core";
 import { ICalendarEventItem } from "../models";
 import { useDispatch, useSelector } from "../redux";
 import { getViewKey } from "../utils";
 import { useCalendarColors } from "./use-calendar-colors";
 
 export const useCalendarEvents = () => {
-  const dispatch = useDispatch();
-  const { selectedDate } = useContext(CalendarViewContext);
-  const { backend, client } = useSelector((state) => state.events);
+  const { startOfWeekForSelectedDate } = useCalendarView();
 
-  const start = useMemo(() => startOfWeek(selectedDate), [selectedDate]);
-  const colors = useCalendarColors();
-  const key = useMemo(() => getViewKey(start), [start]);
-  const backendEventsForCurrentStartWindow = useMemo(
-    () => backend[`${key}`],
-    [backend, key]
-  );
+  useSyncCalendarEvents(startOfWeekForSelectedDate);
+
+  return useResolveCalendarEvents(startOfWeekForSelectedDate);
+};
+
+const useSyncCalendarEvents = (startOfWeekForSelectedDate: number) => {
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({ type: "FETCH_CALENDAR_EVENTS", payload: { start } });
+    dispatch({
+      type: "FETCH_CALENDAR_EVENTS",
+      payload: { startOfWeekForSelectedDate },
+    });
 
     const intervalID = setInterval(() => {
-      dispatch({ type: "FETCH_CALENDAR_EVENTS", payload: { start } });
+      dispatch({
+        type: "FETCH_CALENDAR_EVENTS",
+        payload: { startOfWeekForSelectedDate },
+      });
     }, 60000);
 
     return () => {
       clearInterval(intervalID);
     };
-  }, [dispatch, start, client]);
+  }, [dispatch, startOfWeekForSelectedDate]);
+};
+
+const useResolveCalendarEvents = (startOfWeekForSelectedDate: number) => {
+  const { backend, client } = useSelector((state) => state.events);
+
+  const backendEvents = useMemo(() => {
+    return backend[getViewKey(startOfWeekForSelectedDate)];
+  }, [backend, startOfWeekForSelectedDate]);
+
+  const colors = useCalendarColors();
 
   if (!colors) {
     return [];
   }
 
-  let clientEventAlreadySynced = false;
-  if (client && backendEventsForCurrentStartWindow) {
-    const index = backendEventsForCurrentStartWindow.findIndex(
-      (event: ICalendarEventItem) => event.id === client.id
-    );
-    if (index !== -1) {
-      clientEventAlreadySynced = true;
-    }
-  }
+  const clientEventAlreadySynced = isClientEventAlreadySynced(
+    client,
+    backendEvents
+  );
 
   return [
-    ...(backendEventsForCurrentStartWindow
-      ? backendEventsForCurrentStartWindow
-      : []),
+    ...(backendEvents ? backendEvents : []),
     ...(client && !clientEventAlreadySynced ? [client] : []),
   ].sort((a: ICalendarEventItem, b: ICalendarEventItem) => {
     return (
@@ -56,4 +62,19 @@ export const useCalendarEvents = () => {
       new Date(b.start.dateTime).getTime()
     );
   });
+};
+
+const isClientEventAlreadySynced = (
+  client: ICalendarEventItem | null,
+  backendEvents: ICalendarEventItem[]
+) => {
+  if (client && backendEvents) {
+    const index = backendEvents.findIndex(
+      (event: ICalendarEventItem) => event.id === client.id
+    );
+    if (index !== -1) {
+      return true;
+    }
+  }
+  return false;
 };

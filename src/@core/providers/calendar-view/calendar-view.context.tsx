@@ -45,6 +45,7 @@ export interface ICalendarView {
 export interface ICalendarViewContext {
   currentViewId: number;
   selectedDate: number;
+  startOfWeekForSelectedDate: number;
   allViews: ICalendarView[];
   availableViews: ICalendarView[];
   currentView: ICalendarView;
@@ -109,6 +110,11 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
     currentView.numberOfDays
   );
 
+  const startOfWeekForSelectedDate = useMemo(
+    () => startOfWeek(selectedDate).valueOf(),
+    [selectedDate]
+  );
+
   return (
     <CalendarViewContext.Provider
       value={{
@@ -121,6 +127,7 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
         availableViews,
         setAvailableViews,
         currentDates,
+        startOfWeekForSelectedDate,
       }}
     >
       {currentView ? props.children : null}
