@@ -1,9 +1,9 @@
 import { PropsWithChildren } from "react";
-import { useUser } from "../../firebase/auth/context/firebase-user.context";
+import { useFirebaseUser } from "../../firebase";
 import { LoadingScreen } from "../loading-screen";
 
 export const PrivateRoute = (props: PropsWithChildren<{}>) => {
-  const { user, dispatch: userDispatch } = useUser();
+  const { user, dispatch: userDispatch } = useFirebaseUser();
 
   if (!user) {
     if (user === null) {

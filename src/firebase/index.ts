@@ -1,3 +1,3 @@
-export * from "./core/context";
+export * from "./core/providers";
 export * from "./auth";
 export * from "./utils";

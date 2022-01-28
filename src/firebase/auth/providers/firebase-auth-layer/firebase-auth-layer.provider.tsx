@@ -1,8 +1,8 @@
 import { PropsWithChildren, useMemo } from "react";
 import { GoogleAuthProvider, getAuth } from "@firebase/auth";
-
-import { useFirebase } from "../../core";
-import { FirebaseAuthLayerContext, FirebaseUserProvider } from "../context";
+import { FirebaseAuthLayerContext } from "./firebase-auth-layer.context";
+import { FirebaseUserProvider } from "../firebase-user";
+import { useFirebase } from "../../../core";
 
 export const FirebaseAuthLayer = (
   props: PropsWithChildren<{ loading: () => JSX.Element }>

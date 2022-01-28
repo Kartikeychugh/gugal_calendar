@@ -1,25 +1,8 @@
-import {
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-  createContext,
-  useReducer,
-  useMemo,
-} from "react";
+import { PropsWithChildren, useMemo, useReducer, useEffect } from "react";
+import { IFirebaseUser, FirebaseUserContext } from ".";
+import { useFirebaseAuthLayer } from "../firebase-auth-layer";
+import { FirebaseAuthService, IFirebaseAuthService } from "../../services";
 import { User } from "@firebase/auth";
-import { FirebaseAuthLayerContext } from "./firebase-auth-layer.context";
-import { FirebaseAuthService, IFirebaseAuthService } from "../services";
-
-export interface IFirebaseUser {
-  user: User | null | undefined;
-  dispatch: React.Dispatch<{
-    type: string;
-    payload?: IFirebaseUser["user"];
-  }>;
-}
-
-export const FirebaseUserContext = createContext<IFirebaseUser>(undefined!);
 
 const initReducer = (firebaseAuthService: IFirebaseAuthService) => {
   return (
@@ -39,9 +22,7 @@ const initReducer = (firebaseAuthService: IFirebaseAuthService) => {
 };
 
 export const FirebaseUserProvider = (props: PropsWithChildren<{}>) => {
-  const { firebaseAuth, googleAuthProvider } = useContext(
-    FirebaseAuthLayerContext
-  );
+  const { firebaseAuth, googleAuthProvider } = useFirebaseAuthLayer();
 
   const firebaseAuthService = useMemo(
     () => new FirebaseAuthService(firebaseAuth, googleAuthProvider),
@@ -64,10 +45,6 @@ export const FirebaseUserProvider = (props: PropsWithChildren<{}>) => {
       {props.children}
     </FirebaseUserContext.Provider>
   );
-};
-
-export const useUser = () => {
-  return useContext(FirebaseUserContext);
 };
 
 const googleSignIn = (
