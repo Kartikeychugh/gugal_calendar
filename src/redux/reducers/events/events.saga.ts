@@ -1,5 +1,5 @@
 import { put, takeLeading } from "redux-saga/effects";
-import { IGoogleCalendarService } from "../../../gapi";
+import { IGoogleCalendarService } from "../../../services";
 import { ICalendarClientEvent } from "../../../models";
 import { getViewKey } from "../../../utils";
 

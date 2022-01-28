@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useSlideView, useSlideToToday } from "../../../../hooks";
+import { useSlideView, useSlideToToday } from "../../../hooks";
 
 export const CalendarCommandViewSlider = () => {
   const slideView = useSlideView();

@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from "redux";
 import { persistReducer } from "redux-persist";
 import createSagaMiddleware from "redux-saga";
 import { all } from "redux-saga/effects";
-import { IGoogleCalendarService } from "../gapi";
+import { IGoogleCalendarService } from "../services";
 import { initFirebaseGAPISaga } from "./reducers";
 import { rootReducer } from "./root-reducer";
 import storage from "redux-persist/lib/storage";

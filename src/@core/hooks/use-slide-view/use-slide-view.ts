@@ -1,5 +1,5 @@
 import { addDays, startOfToday } from "date-fns";
-import { useCalendarView } from "../@core";
+import { useCalendarView } from "../use-calendar-view";
 
 export const useSlideView = () => {
   const {
