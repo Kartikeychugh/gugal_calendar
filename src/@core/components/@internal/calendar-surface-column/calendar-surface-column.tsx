@@ -58,7 +58,7 @@ const CalendarSurfaceColumn = (props: {
       sx={{
         height: "100%",
         width: "100%",
-        minWidth: `${calendarDimensionsValue.columnMinWidth}px`,
+        minWidth: `${calendarDimensionsValue.minColumnWidth}px`,
       }}
     >
       <CalendarSurfaceEventColumn

@@ -35,7 +35,7 @@ export const CalendarSurfaceHeader = () => {
           <Button
             variant="text"
             sx={{
-              minWidth: `${calendarDimensionsValue.columnMinWidth}px`,
+              minWidth: `${calendarDimensionsValue.minColumnWidth}px`,
               height: "100%",
               padding: "4px 8px 4px 8px",
               flexDirection: "column",

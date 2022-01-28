@@ -4,7 +4,7 @@ import { CalendarContainer } from "../calendar-container";
 import { CalendarSchedulingFormDialog } from "../calendar-scheduling-form-dialog";
 
 export const GugalCalendar = (props: {
-  columnMinWidth: number;
+  minColumnWidth: number;
   minCellHeight: number;
 }) => {
   return (
@@ -13,7 +13,7 @@ export const GugalCalendar = (props: {
         value={{
           minCellHeight: props.minCellHeight,
           timeGridWidth: 50,
-          columnMinWidth: props.columnMinWidth,
+          minColumnWidth: props.minColumnWidth,
         }}
       >
         <CalendarViewProvider>

@@ -1,7 +1,6 @@
 import { endOfWeek, startOfWeek } from "date-fns";
-import { Defer } from "../../firebase";
 import { ICalendarClientEvent } from "../../models";
-import { dynamicScriptLoad } from "../../utils";
+import { Defer, dynamicScriptLoad } from "../../utils";
 
 export interface IGoogleCalendarService {
   getEvents(start: number): Promise<CalendarEventItem[]>;

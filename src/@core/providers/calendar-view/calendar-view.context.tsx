@@ -78,11 +78,11 @@ export const CalendarViewProvider = (props: PropsWithChildren<{}>) => {
     });
 
     _allViews.forEach((view) => {
-      view.breakpoint = view.numberOfDays * dimensions.columnMinWidth;
+      view.breakpoint = view.numberOfDays * dimensions.minColumnWidth;
     });
 
     return _allViews;
-  }, [selectedDate, dimensions.columnMinWidth]);
+  }, [selectedDate, dimensions.minColumnWidth]);
 
   const [availableViews, setAvailableViews] =
     useState<ICalendarView[]>(allViews);

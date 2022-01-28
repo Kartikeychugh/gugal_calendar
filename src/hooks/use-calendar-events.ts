@@ -7,9 +7,7 @@ import { useCalendarColors } from "./use-calendar-colors";
 
 export const useCalendarEvents = () => {
   const { startOfWeekForSelectedDate } = useCalendarView();
-
   useSyncCalendarEvents(startOfWeekForSelectedDate);
-
   return useResolveCalendarEvents(startOfWeekForSelectedDate);
 };
 
@@ -19,13 +17,13 @@ const useSyncCalendarEvents = (startOfWeekForSelectedDate: number) => {
   useEffect(() => {
     dispatch({
       type: "FETCH_CALENDAR_EVENTS",
-      payload: { startOfWeekForSelectedDate },
+      payload: { start: startOfWeekForSelectedDate },
     });
 
     const intervalID = setInterval(() => {
       dispatch({
         type: "FETCH_CALENDAR_EVENTS",
-        payload: { startOfWeekForSelectedDate },
+        payload: { start: startOfWeekForSelectedDate },
       });
     }, 60000);
 

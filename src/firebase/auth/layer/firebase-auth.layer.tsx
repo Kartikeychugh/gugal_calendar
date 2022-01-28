@@ -1,81 +1,25 @@
-import { PropsWithChildren, useEffect, useMemo, useState } from "react";
-import { Auth, GoogleAuthProvider, getAuth } from "@firebase/auth";
+import { PropsWithChildren, useMemo } from "react";
+import { GoogleAuthProvider, getAuth } from "@firebase/auth";
 
-import { useAddSaga, useFirebaseRedux } from "../../redux";
 import { useFirebase } from "../../core";
-import { FirebaseAuthContext } from "../context/firebase-auth.context";
-import {
-  FirebaseAuthManager,
-  IFirebaseAuthManager,
-} from "../managers/auth-manager";
-import { FirebaseAuthListener } from "../listeners";
-import { FirebaseAuthService } from "../services";
-import { initAuthDetailsSaga } from "../sagas";
+import { FirebaseAuthLayerContext, FirebaseUserProvider } from "../context";
 
 export const FirebaseAuthLayer = (
   props: PropsWithChildren<{ loading: () => JSX.Element }>
 ) => {
-  const { loading: Loading } = props;
-  const { firebaseAuth, googleAuthProvider, firebaseAuthManager } =
-    useCreateFirebaseAuthContext();
-
-  const { done } = useInitialisation({
-    firebaseAuth,
-    googleAuthProvider,
-    firebaseAuthManager,
-  });
-
-  if (!done) {
-    return <Loading />;
-  }
+  const { firebaseAuth, googleAuthProvider } =
+    useCreateFirebaseAuthLayerContext();
 
   return (
-    <FirebaseAuthContext.Provider
-      value={{ firebaseAuth, googleAuthProvider, firebaseAuthManager }}
+    <FirebaseAuthLayerContext.Provider
+      value={{ firebaseAuth, googleAuthProvider }}
     >
-      <FirebaseAuthListener>{props.children}</FirebaseAuthListener>
-    </FirebaseAuthContext.Provider>
+      <FirebaseUserProvider>{props.children}</FirebaseUserProvider>
+    </FirebaseAuthLayerContext.Provider>
   );
 };
 
-const useInitialisation = (props: {
-  firebaseAuth: Auth;
-  googleAuthProvider: GoogleAuthProvider;
-  firebaseAuthManager: IFirebaseAuthManager;
-}) => {
-  const [done, setDone] = useState(false);
-  const addSaga = useAddSaga();
-  const { dispatch } = useFirebaseRedux();
-
-  const { firebaseAuth, googleAuthProvider, firebaseAuthManager } = props;
-
-  useEffect(() => {
-    function initSaga() {
-      addSaga(
-        initAuthDetailsSaga(
-          new FirebaseAuthService(firebaseAuth, googleAuthProvider)
-        )
-      );
-    }
-
-    function initManager() {
-      firebaseAuthManager.initialise();
-    }
-
-    initSaga();
-    initManager();
-    setDone(true);
-  }, [
-    addSaga,
-    dispatch,
-    firebaseAuth,
-    googleAuthProvider,
-    firebaseAuthManager,
-  ]);
-
-  return { done };
-};
-const useCreateFirebaseAuthContext = () => {
+const useCreateFirebaseAuthLayerContext = () => {
   const { firebaseApp } = useFirebase();
 
   const firebaseAuth = useMemo(() => getAuth(firebaseApp), [firebaseApp]);
@@ -85,6 +29,5 @@ const useCreateFirebaseAuthContext = () => {
     return googleAuthProvider;
   }, []);
 
-  const firebaseAuthManager = useMemo(() => FirebaseAuthManager(), []);
-  return { firebaseAuth, googleAuthProvider, firebaseAuthManager };
+  return { firebaseAuth, googleAuthProvider };
 };

@@ -1,14 +1,13 @@
 import { PropsWithChildren } from "react";
-import { useAuthenticationCommands } from "../../firebase";
+import { useUser } from "../../firebase/auth/context/firebase-user.context";
 import { LoadingScreen } from "../loading-screen";
 
 export const PrivateRoute = (props: PropsWithChildren<{}>) => {
-  const { getUser, signIn } = useAuthenticationCommands();
-  const user = getUser();
+  const { user, dispatch: userDispatch } = useUser();
 
   if (!user) {
     if (user === null) {
-      signIn();
+      userDispatch({ type: "GOOGLE_SIGN_IN" });
     }
     return <LoadingScreen />;
   } else {

@@ -1,4 +1,4 @@
-import { Defer } from "../firebase";
+import { Defer } from "./defer";
 
 export const dynamicScriptLoad = (url: string) => {
   const defer = new Defer<void>();
