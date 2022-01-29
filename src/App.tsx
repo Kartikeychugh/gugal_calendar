@@ -4,7 +4,9 @@ import { FirebaseAuthLayer } from "./firebase/auth";
 import { FirebaseProvider } from "./firebase";
 import { PrivateRoute } from "./components";
 import { LoadingScreen } from "./components/loading-screen";
-import { GugalCalendar } from "./components/gugal-calendar";
+// import { GugalCalendar } from "./components/gugal-calendar";
+import { GugalCalendarReusable } from "./components/gugal-calendar/gugal-calendar.container.reusable";
+import { CalendarReduxProvider } from "./redux";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -27,7 +29,10 @@ function App() {
       <FirebaseProvider firebaseOptions={firebaseConfig}>
         <FirebaseAuthLayer loading={() => <LoadingScreen />}>
           <PrivateRoute>
-            <GugalCalendar minColumnWidth={100} minCellHeight={30} />
+            <CalendarReduxProvider>
+              <GugalCalendarReusable minColumnWidth={100} minCellHeight={30} />
+              {/* <GugalCalendar minColumnWidth={100} minCellHeight={30} /> */}
+            </CalendarReduxProvider>
           </PrivateRoute>
         </FirebaseAuthLayer>
       </FirebaseProvider>
