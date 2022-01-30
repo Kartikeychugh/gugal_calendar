@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "../redux";
 
-export const useCalendarColors = (): CalendarColors | null => {
+export const useCalendarColors = () => {
   const dispatch = useDispatch();
   const { colorDetails } = useSelector((state) => state.colors);
 

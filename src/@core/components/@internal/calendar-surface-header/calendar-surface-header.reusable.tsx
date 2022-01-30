@@ -1,14 +1,15 @@
 import { Box, Button } from "@mui/material";
 import { eachDayOfInterval, isSameDay, startOfToday } from "date-fns";
-import { ICalendarDimensionsContext } from "../../../providers";
+import { useContext } from "react";
+import { CalendarViewContextReusable } from "../../../providers/calendar-view/calendar-view.context.reusable";
 
 export const CalendarSurfaceHeaderReusable = (props: {
-  startDateOfView: number;
-  endDateOfView: number;
   onHeaderClick: (date: number) => void;
-  dimensions: ICalendarDimensionsContext;
 }) => {
-  const { startDateOfView, endDateOfView, onHeaderClick, dimensions } = props;
+  const { onHeaderClick } = props;
+  const { startDateOfView, endDateOfView, dimensions } = useContext(
+    CalendarViewContextReusable
+  );
   const currentDates = eachDayOfInterval({
     start: startDateOfView,
     end: endDateOfView,
@@ -35,7 +36,7 @@ export const CalendarSurfaceHeaderReusable = (props: {
           <Button
             variant="text"
             sx={{
-              minWidth: `${dimensions.minColumnWidth}px`,
+              minWidth: `${dimensions.columnWidth}px`,
               height: "100%",
               padding: "4px 8px 4px 8px",
               flexDirection: "column",

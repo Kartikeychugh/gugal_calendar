@@ -1,8 +1,11 @@
 import { Box } from "@mui/material";
-import { ICalendarDimensionsContext } from "../../../providers";
 
 export const CalendarSurfaceTimeGridReusable = (props: {
-  dimensions: ICalendarDimensionsContext;
+  dimensions: {
+    cellHeight: number;
+    timeGridWidth: number;
+    columnWidth: number;
+  };
 }) => {
   const cells = [];
   for (let i = 0; i < 24; i++) {
@@ -29,7 +32,11 @@ export const CalendarSurfaceTimeGridReusable = (props: {
 
 const CalendarGridTimeCellReusable = (props: {
   hour: number;
-  dimensions: ICalendarDimensionsContext;
+  dimensions: {
+    cellHeight: number;
+    timeGridWidth: number;
+    columnWidth: number;
+  };
 }) => {
   const hour = props.hour > 12 ? props.hour - 12 : props.hour;
   const ampm = props.hour > 12 ? "PM" : "AM";
@@ -38,7 +45,7 @@ const CalendarGridTimeCellReusable = (props: {
       sx={{
         display: "flex",
         width: "100%",
-        height: `${props.dimensions.minCellHeight}px`,
+        height: `${props.dimensions.cellHeight}px`,
         padding: "4px",
       }}
     >

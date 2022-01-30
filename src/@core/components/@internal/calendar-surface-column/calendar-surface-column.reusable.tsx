@@ -1,39 +1,31 @@
 import { Box } from "@mui/material";
-import { eachDayOfInterval } from "date-fns";
-import { useRef } from "react";
-import { ICalendarEventItem } from "../../../../models";
+import { eachDayOfInterval, isSameDay, startOfToday } from "date-fns";
+import { useContext, useRef } from "react";
 import { extractEventForDay } from "../../../../utils";
-import { ICalendarView } from "../../../providers/calendar-view/calendar-view.context";
+import { useCalendarEventDetails } from "../../../providers/calendar-events-details";
+import { CalendarViewContextReusable } from "../../../providers/calendar-view/calendar-view.context.reusable";
 import { CalendarSurfaceEventColumnReusable } from "../calendar-surface-event-column/calendar-surface-event-column.reusable";
 import { CalendarSurfaceGridColumnReusable } from "../calendar-surface-grid-column/calendar-surface-grid-column.reusable";
 import { CalendarSurfaceSizeWatcherReusable } from "../calendar-surface-size-watcher/calendar-surface-size-watcher.component.reusable";
 
 export const CalendarSurfaceColumnsReusable = (props: {
-  events: ICalendarEventItem[];
-  startDateOfView: number;
-  endDateOfView: number;
   onCellClick: (datetime: Date, hour: number) => void;
-  columnDimensions: {
-    minColumnWidth: number;
-    minCellHeight: number;
-  };
-  colors: CalendarColors | null;
-  allViews: ICalendarView[];
-  getView: (viewId: number) => ICalendarView;
-  setAvailableViews: (newAvailableViews: ICalendarView[]) => void;
-  userViewId: number;
-  updateResponsiveView: (newViewId: number | null) => void;
 }) => {
+  const { events, colors } = useCalendarEventDetails();
   const {
-    allViews,
+    dimensions,
+    startDateOfView,
+    endDateOfView,
     getView,
-    setAvailableViews,
-    userViewId,
     updateResponsiveView,
-  } = props;
+    allViews,
+    userViewId,
+    setAvailableViews,
+  } = useContext(CalendarViewContextReusable);
+
   const currentDates = eachDayOfInterval({
-    start: props.startDateOfView,
-    end: props.endDateOfView,
+    start: startDateOfView,
+    end: endDateOfView,
   });
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -57,15 +49,15 @@ export const CalendarSurfaceColumnsReusable = (props: {
       >
         {currentDates.map((day, i) => (
           <CalendarSurfaceColumn
-            colors={props.colors}
-            events={props.events}
+            colors={colors}
+            events={events}
             lastColumn={i + 1 === currentDates.length}
             date={day}
             key={i}
             numberOfDaysInTheView={currentDates.length}
             columnDimensions={{
-              minColumnWidth: props.columnDimensions.minColumnWidth,
-              minCellHeight: props.columnDimensions.minCellHeight,
+              minColumnWidth: dimensions.columnWidth,
+              minCellHeight: dimensions.cellHeight,
             }}
             onCellClick={props.onCellClick}
           />
@@ -85,11 +77,16 @@ const CalendarSurfaceColumn = (props: {
     minCellHeight: number;
   };
   onCellClick: (datetime: Date, hour: number) => void;
-  colors: CalendarColors | null;
+  colors: CalendarColors;
 }) => {
   return (
     <Box
       sx={{
+        backgroundColor: `${
+          isSameDay(props.date, startOfToday())
+            ? "rgb(25, 118, 210, 0.07)"
+            : "#ffffff"
+        }`,
         height: "100%",
         width: "100%",
         minWidth: `${props.columnDimensions.minColumnWidth}px`,

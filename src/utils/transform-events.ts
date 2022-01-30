@@ -3,7 +3,8 @@ import { ICalendarEventItem } from "../models";
 
 export const transformEvents = (
   events: CalendarEventItem[],
-  minCellHeight: number
+  minCellHeight: number,
+  colors: CalendarColors | null
 ) => {
   events.sort((_a, _b) => {
     const aStart = new Date(_a.start.dateTime);
@@ -30,6 +31,8 @@ export const transformEvents = (
 
     columnsWiseEvents.forEach((columnWiseEvents, index) => {
       columnWiseEvents.forEach((event) => {
+        const colorId = event.colorId ? event.colorId : 5;
+
         const left = `calc(${(index / totalColumns) * 100}% + ${index * 2}px)`;
         const width = `${(1 / totalColumns) * 100}%`;
         const startTime = new Date(event.start.dateTime);
@@ -47,6 +50,13 @@ export const transformEvents = (
           }px`,
           left,
           width,
+        };
+        (event as ICalendarEventItem).colors = {
+          calendar: { backgroundColor: colors!.calendar[colorId].background },
+          event: {
+            backgroundColor: colors!.event[colorId].background,
+            foregroundColor: colors!.event[colorId].foreground,
+          },
         };
       });
     });

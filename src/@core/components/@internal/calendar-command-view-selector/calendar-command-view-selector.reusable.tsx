@@ -1,21 +1,17 @@
 import { Button, Box, Menu, MenuItem } from "@mui/material";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { ICalendarView } from "../../../providers/calendar-view/calendar-view.context.reusable";
+import { CalendarViewContextReusable } from "../../../providers/calendar-view/calendar-view.context.reusable";
 
-export const CalendarCommandViewSelectorReusable = (props: {
-  currentView: ICalendarView;
-  getView: (viewId: number) => ICalendarView;
-  availableViews: ICalendarView[];
-  updateUserView: (newViewId: number) => void;
-}) => {
+export const CalendarCommandViewSelectorReusable = () => {
   const [state, setState] = useState({ open: false });
   const {
     currentView: { title },
     getView,
     availableViews,
     updateUserView,
-  } = props;
+  } = useContext(CalendarViewContextReusable);
+
   const ref = useRef(null);
 
   return (

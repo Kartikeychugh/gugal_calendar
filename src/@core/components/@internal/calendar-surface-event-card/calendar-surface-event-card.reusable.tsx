@@ -6,11 +6,9 @@ import { useCalendarColors } from "../../../../hooks";
 
 export const CalendarSurfaceEventCardReusable = (props: {
   event: ICalendarEventItem;
-  colors: CalendarColors | null;
 }) => {
   const { event } = props;
   const ele = useRef(null);
-  const colors = useCalendarColors();
 
   const time = new Date(event.start.dateTime);
 
@@ -54,14 +52,14 @@ export const CalendarSurfaceEventCardReusable = (props: {
     >
       <Box
         sx={{
-          background: `${colors!.calendar[colorId].background}`,
+          background: event.colors.calendar.backgroundColor,
           minWidth: "3px",
         }}
       ></Box>
       <Box
         sx={{
-          backgroundColor: `${colors!.event[colorId].background}`,
-          color: `${colors!.event[colorId].foreground}`,
+          backgroundColor: event.colors.event.backgroundColor,
+          color: event.colors.event.foregroundColor,
           padding: "0px 5px 0px 5px",
           width: "100%",
         }}

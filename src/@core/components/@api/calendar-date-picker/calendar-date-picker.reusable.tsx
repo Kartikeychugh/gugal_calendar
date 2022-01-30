@@ -3,9 +3,9 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 export const CalendarDatePickerReusable = (props: {
   selectedDate: number;
-  setCalendarSelectedDate: (newSelectedDate: number) => void;
+  setSelectedDate: (newSelectedDate: number) => void;
 }) => {
-  const { selectedDate, setCalendarSelectedDate } = props;
+  const { selectedDate, setSelectedDate } = props;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -15,7 +15,7 @@ export const CalendarDatePickerReusable = (props: {
           if (!newValue) {
             return;
           }
-          setCalendarSelectedDate(newValue.valueOf());
+          setSelectedDate(newValue.valueOf());
         }}
       />
     </LocalizationProvider>

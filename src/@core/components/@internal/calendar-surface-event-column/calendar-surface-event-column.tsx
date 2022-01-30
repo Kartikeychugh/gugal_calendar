@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { useContext } from "react";
+import { useCalendarColors } from "../../../../hooks";
 import { transformEvents } from "../../../../utils";
 import { CalendarDimensionsContext } from "../../../providers";
 import { CalendarSurfaceEventCard } from "../calendar-surface-event-card";
@@ -9,11 +10,12 @@ export const CalendarSurfaceEventColumn = (props: {
   view: number;
 }) => {
   const calendarDimensionsValue = useContext(CalendarDimensionsContext);
-
+  const colors = useCalendarColors();
   const { events = [] } = props;
   let transformedEvents = transformEvents(
     events,
-    calendarDimensionsValue.minCellHeight
+    calendarDimensionsValue.minCellHeight,
+    colors
   );
 
   return (

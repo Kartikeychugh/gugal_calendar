@@ -6,10 +6,10 @@ export const CalendarSurfaceEventColumnReusable = (props: {
   events: CalendarEventItem[] | undefined;
   numberOfDaysInTheView: number;
   minCellHeight: number;
-  colors: CalendarColors | null;
+  colors: CalendarColors;
 }) => {
   const { events = [], minCellHeight, colors } = props;
-  let transformedEvents = transformEvents(events, minCellHeight);
+  let transformedEvents = transformEvents(events, minCellHeight, colors);
 
   return (
     <Box
@@ -21,11 +21,7 @@ export const CalendarSurfaceEventColumnReusable = (props: {
       }}
     >
       {transformedEvents.map((event) => (
-        <CalendarSurfaceEventCardReusable
-          key={event.id}
-          event={event}
-          colors={colors}
-        />
+        <CalendarSurfaceEventCardReusable key={event.id} event={event} />
       ))}
     </Box>
   );

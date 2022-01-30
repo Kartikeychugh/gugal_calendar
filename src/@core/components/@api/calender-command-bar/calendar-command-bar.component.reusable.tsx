@@ -2,28 +2,13 @@ import { Box } from "@mui/material";
 
 import { CalendarCommandViewSliderReusable } from "../../@internal/calendar-command-view-slider/calendar-command-view-slider.reusable";
 import { CalendarCommandViewSelectorReusable } from "../../@internal/calendar-command-view-selector/calendar-command-view-selector.reusable";
-import { ICalendarView } from "../../../providers/calendar-view/calendar-view.context.reusable";
+import { CalendarViewContextReusable } from "../../../providers/calendar-view/calendar-view.context.reusable";
+import { useContext } from "react";
 
-export const CalendarCommandBarReusable = (props: {
-  startDateOfView: number;
-  endDateOfView: number;
-  slideView: (direction: number) => void;
-  slideToToday: () => void;
-  currentView: ICalendarView;
-  getView: (viewId: number) => ICalendarView;
-  availableViews: ICalendarView[];
-  updateUserView: (newViewId: number) => void;
-}) => {
-  const {
-    startDateOfView,
-    endDateOfView,
-    slideView,
-    slideToToday,
-    currentView,
-    getView,
-    availableViews,
-    updateUserView,
-  } = props;
+export const CalendarCommandBarReusable = () => {
+  const { startDateOfView, endDateOfView } = useContext(
+    CalendarViewContextReusable
+  );
 
   const viewStart = new Date(startDateOfView);
   const viewEnd = new Date(endDateOfView);
@@ -46,10 +31,7 @@ export const CalendarCommandBarReusable = (props: {
           letterSpacing: "1px",
         }}
       >
-        <CalendarCommandViewSliderReusable
-          slideView={slideView}
-          slideToToday={slideToToday}
-        />
+        <CalendarCommandViewSliderReusable />
         <Box
           sx={{
             display: "flex",
@@ -74,12 +56,7 @@ export const CalendarCommandBarReusable = (props: {
         </Box>
       </Box>
 
-      <CalendarCommandViewSelectorReusable
-        currentView={currentView}
-        getView={getView}
-        availableViews={availableViews}
-        updateUserView={updateUserView}
-      />
+      <CalendarCommandViewSelectorReusable />
     </Box>
   );
 };

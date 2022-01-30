@@ -1,5 +1,10 @@
 import { addDays, getDay, startOfToday, startOfWeek } from "date-fns";
-import React, { PropsWithChildren, useMemo, useState } from "react";
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 
 export const views: {
   fromDay?: number;
@@ -43,11 +48,10 @@ export interface ICalendarViewContext {
   startDateOfView: number;
   endDateOfView: number;
   dimensions: {
-    minCellHeight: number;
+    cellHeight: number;
     timeGridWidth: number;
-    minColumnWidth: number;
+    columnWidth: number;
   };
-  colors: CalendarColors | null;
   selectedDate: number;
   currentView: ICalendarView;
   setSelectedDate: (newDate: number) => void;
@@ -60,6 +64,7 @@ export interface ICalendarViewContext {
   userViewId: number;
   allViews: ICalendarView[];
   setAvailableViews: (newAvailableViews: ICalendarView[]) => void;
+  setCellHeight: (newMinCellHeight: number) => void;
 }
 
 export const CalendarViewContextReusable =
@@ -68,11 +73,6 @@ export const CalendarViewContextReusable =
 interface IState {
   userViewId: number;
   responsiveViewId: number | null;
-  dimensions: {
-    minCellHeight: number;
-    timeGridWidth: number;
-    minColumnWidth: number;
-  };
 }
 
 export const CalendarViewProviderReusable = (
@@ -80,30 +80,57 @@ export const CalendarViewProviderReusable = (
     userViewId: number;
     selectedDate: number;
     setSelectedDate: (newDate: number) => void;
+    dimensions: {
+      minCellHeight: number;
+      timeGridWidth: number;
+      minColumnWidth: number;
+    };
   }>
 ) => {
-  const { userViewId, selectedDate, setSelectedDate } = props;
+  const {
+    userViewId,
+    selectedDate,
+    setSelectedDate,
+    dimensions: {
+      minCellHeight,
+      minColumnWidth,
+      timeGridWidth: _timeGridWidth,
+    },
+  } = props;
 
   const [state, setState] = useState<IState>({
     userViewId,
     responsiveViewId: null,
-    dimensions: { minColumnWidth: 100, timeGridWidth: 50, minCellHeight: 60 },
   });
+
+  const [cellHeight, _setCellHeight] = useState<number>(minCellHeight);
+  const [timeGridWidth, setTimeGridWidth] = useState<number>(_timeGridWidth);
+  const [columnWidth, setColumnWidth] = useState<number>(minColumnWidth);
+
+  const setCellHeight = useCallback(
+    (newMinCellHeight: number) => {
+      console.log("update cellHeight");
+
+      _setCellHeight(Math.max(newMinCellHeight, minCellHeight));
+    },
+    [minCellHeight, _setCellHeight]
+  );
 
   const allViews: ICalendarView[] = useMemo(() => {
     const _allViews = views.map((view) => {
-      if (view.viewId === 0) {
-        view.fromDay = getDay(selectedDate);
+      const _view = { ...view };
+      if (_view.viewId === 0) {
+        _view.fromDay = getDay(selectedDate);
       }
-      return view as ICalendarView;
+      return _view as ICalendarView;
     });
 
     _allViews.forEach((view) => {
-      view.breakpoint = view.numberOfDays * state.dimensions.minColumnWidth;
+      view.breakpoint = view.numberOfDays * columnWidth;
     });
 
     return _allViews;
-  }, [state.dimensions.minColumnWidth, selectedDate]);
+  }, [columnWidth, selectedDate]);
 
   const [availableViews, setAvailableViews] =
     useState<ICalendarView[]>(allViews);
@@ -123,35 +150,50 @@ export const CalendarViewProviderReusable = (
     allViews[currentViewId].numberOfDays - 1
   ).valueOf();
 
-  const colors = null;
+  const currentView = useMemo(
+    () => allViews[currentViewId],
+    [allViews, currentViewId]
+  );
+  const getView = useCallback(
+    (viewId: number) => {
+      return allViews[viewId];
+    },
+    [allViews]
+  );
 
-  const currentView = allViews[currentViewId];
-  const getView = (viewId: number) => {
-    return allViews[viewId];
-  };
-  const updateUserView = (newViewId: number) => {
-    setState({ ...state, userViewId: newViewId });
-  };
+  const updateUserView = useCallback(
+    (newViewId: number) => {
+      setState({ ...state, userViewId: newViewId });
+    },
+    [state, setState]
+  );
 
-  const updateResponsiveView = (newViewId: number | null) => {
-    setState({ ...state, responsiveViewId: newViewId });
-  };
-  const slideToToday = () => {
+  const updateResponsiveView = useCallback(
+    (newViewId: number | null) => {
+      setState({ ...state, responsiveViewId: newViewId });
+    },
+    [state, setState]
+  );
+
+  const slideToToday = useCallback(() => {
     setSelectedDate(startOfToday().valueOf());
-  };
-  const slideView = (direction: number) => {
-    setSelectedDate(
-      addDays(selectedDate, direction * currentView.change).valueOf()
-    );
-  };
+  }, [setSelectedDate]);
+
+  const slideView = useCallback(
+    (direction: number) => {
+      setSelectedDate(
+        addDays(selectedDate, direction * currentView.change).valueOf()
+      );
+    },
+    [setSelectedDate, selectedDate, currentView.change]
+  );
 
   return (
     <CalendarViewContextReusable.Provider
       value={{
         startDateOfView,
         endDateOfView,
-        colors,
-        dimensions: state.dimensions,
+        dimensions: { cellHeight, timeGridWidth, columnWidth },
         selectedDate: selectedDate,
         setSelectedDate,
         currentView,
@@ -164,6 +206,7 @@ export const CalendarViewProviderReusable = (
         userViewId: state.userViewId,
         allViews,
         setAvailableViews,
+        setCellHeight,
       }}
     >
       {true ? props.children : null}

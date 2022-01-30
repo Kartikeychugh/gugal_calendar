@@ -1,12 +1,11 @@
 import { Box, Button } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { useContext } from "react";
+import { CalendarViewContextReusable } from "../../../providers/calendar-view/calendar-view.context.reusable";
 
-export const CalendarCommandViewSliderReusable = (props: {
-  slideView: (direction: number) => void;
-  slideToToday: () => void;
-}) => {
-  const { slideView, slideToToday } = props;
+export const CalendarCommandViewSliderReusable = () => {
+  const { slideView, slideToToday } = useContext(CalendarViewContextReusable);
   return (
     <Box
       sx={{

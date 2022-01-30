@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { useCurrentTime } from "../../../hooks";
 
 export const CalendarSurfaceTimeMarkerReusable = (props: {
@@ -10,13 +10,13 @@ export const CalendarSurfaceTimeMarkerReusable = (props: {
   const time = useCurrentTime();
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    ref.current &&
-      ref.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-  }, []);
+  // useEffect(() => {
+  //   ref.current &&
+  //     ref.current.scrollIntoView({
+  //       behavior: "smooth",
+  //       block: "center",
+  //     });
+  // }, []);
 
   let totalMarkerLengthFraction;
   let solidMarrkerLengthFraction;
