@@ -29,6 +29,7 @@ export const CalendarSurfaceReusable = (props: {
     hideCommandBar = false,
     dimensions,
   } = props;
+
   return (
     <CalendarEventsDetailsProvider events={events} colors={colors}>
       <CalendarViewProviderReusable

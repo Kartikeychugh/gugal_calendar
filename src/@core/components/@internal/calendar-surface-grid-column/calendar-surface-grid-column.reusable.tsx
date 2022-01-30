@@ -1,32 +1,33 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
+import { CalendarViewContextReusable } from "../../../providers/calendar-view/calendar-view.context.reusable";
 
 export const CalendarSurfaceGridColumnReusable = React.memo(
   (props: {
-    isLastColumnInView: boolean;
     date: Date;
-    minCellHeight: number;
     onCellClick: (datetime: Date, hour: number) => void;
   }) => {
+    const {
+      dimensions: { cellHeight },
+      endDateOfView,
+    } = useContext(CalendarViewContextReusable);
     const cells = [];
 
     for (let i = 0; i < 24; i++) {
-      console.log({ minCellHeight: props.minCellHeight });
-
       cells.push(
         <Box
           key={i}
           sx={{
-            height: `${props.minCellHeight}px`,
+            height: `${cellHeight}px`,
             width: "100%",
             transition: "0.2s all ease-in-out",
             borderRadius: "2px",
             boxShadow:
               i === 23
-                ? props.isLastColumnInView
+                ? endDateOfView === props.date.valueOf()
                   ? "none"
                   : "inset -1px 0px 0px #e0e0e0"
-                : props.isLastColumnInView
+                : endDateOfView === props.date.valueOf()
                 ? "inset 0px -1px 0px #e0e0e0"
                 : "inset -1px -1px 0px #e0e0e0",
             "&:hover": {
@@ -42,8 +43,6 @@ export const CalendarSurfaceGridColumnReusable = React.memo(
     return (
       <Box
         style={{
-          // display: "flex",
-          // flexDirection: "column",
           width: "100%",
         }}
       >

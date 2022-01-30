@@ -2,14 +2,13 @@ import { Box, Paper } from "@mui/material";
 import { startOfToday } from "date-fns";
 import { CalendarDatePickerReusable } from "../../@core/components/@api/calendar-date-picker/calendar-date-picker.reusable";
 import { CalendarSurfaceReusable } from "../../@core/components/@api/calendar-surface/calendar-surface.reusable";
+import { useCalendarEventsReusable } from "../../hooks/use-calendar-events.reusable";
 import { ICalendarEventItem } from "../../models";
 
 export const CalendarDatePickerContainerReusable = (props: {
-  events: ICalendarEventItem[]; //fine
   colors: CalendarColors; //fine
   onHeaderClick: (date: number) => void; //fine
   onCellClick: (date: Date, hour: number) => void; //fine
-  userViewId: number; //fine
   selectedDate: number;
   setSelectedDate: (newDate: number) => void;
   dimensions: {
@@ -18,8 +17,9 @@ export const CalendarDatePickerContainerReusable = (props: {
     minColumnWidth: number;
   };
 }) => {
-  const { userViewId, selectedDate, ...other } = props;
+  const { selectedDate, ...other } = props;
   const today = startOfToday().valueOf();
+  const events = useCalendarEventsReusable(today);
   return (
     <Paper
       elevation={2}
@@ -37,16 +37,20 @@ export const CalendarDatePickerContainerReusable = (props: {
       }}
     >
       <Box sx={{ height: "330px" }}>
-        <CalendarDatePickerReusable {...props} />
+        <CalendarDatePickerReusable
+          selectedDate={props.selectedDate}
+          setSelectedDate={props.setSelectedDate}
+        />
       </Box>
-      <Box sx={{ height: "calc(100% - 330px)", width: "350px" }}>
+      {/* <Box sx={{ height: "calc(100% - 330px)", width: "350px" }}>
         <CalendarSurfaceReusable
           {...other}
           selectedDate={today}
           userViewId={0}
           hideCommandBar={true}
+          events={events}
         />
-      </Box>
+      </Box> */}
     </Paper>
   );
 };

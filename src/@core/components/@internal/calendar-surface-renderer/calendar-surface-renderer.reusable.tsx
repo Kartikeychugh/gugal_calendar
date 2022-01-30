@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { CalendarCommandBarContainerReusable } from "../../../../components/calendar-command-bar-container/calendar-command-bar-container.component.reusable";
+import { CalendarCommandBarReusable } from "../../@api/calender-command-bar/calendar-command-bar.component.reusable";
 import { CalendarSurfaceScrollableGridReusable } from "../calendar-surface-grid/calendar-surface-grid.component.reusable";
 import { CalendarSurfaceHeaderReusable } from "../calendar-surface-header/calendar-surface-header.reusable";
 
@@ -12,7 +12,19 @@ export const CalendarSurfaceRendererResuable = (props: {
 
   return (
     <>
-      {hideCommandBar ? null : <CalendarCommandBarContainerReusable />}
+      {hideCommandBar ? null : (
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            height: "30px",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <CalendarCommandBarReusable />
+        </Box>
+      )}
       <Box
         sx={{
           flexGrow: 1,

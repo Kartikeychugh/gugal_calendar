@@ -18,6 +18,7 @@ export const CalendarContainerReusable = (props: {
     minColumnWidth: number;
   };
 }) => {
+  const { events, ...otherProps } = props;
   return (
     <Box
       sx={{
@@ -30,7 +31,7 @@ export const CalendarContainerReusable = (props: {
     >
       <Box sx={{ display: "flex", height: "100%" }}>
         <Box sx={{ height: "100%" }}>
-          <CalendarDatePickerContainerReusable {...props} />
+          <CalendarDatePickerContainerReusable {...otherProps} />
         </Box>
         <Box sx={{ height: "100%", flexGrow: 1 }}>
           <CalendarSurfaceContainerReusable {...props} />

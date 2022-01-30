@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import { eachDayOfInterval, startOfToday } from "date-fns";
 import { useContext, useEffect, useRef } from "react";
 import { useCurrentTime, useSizeWatcher } from "../../../hooks";
 import { CalendarSurfaceColumnsReusable } from "../calendar-surface-column/calendar-surface-column.reusable";
@@ -11,22 +10,9 @@ export const CalendarSurfaceScrollableGridReusable = (props: {
   onCellClick: (datetime: Date, hour: number) => void;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const height = useSizeWatcher(ref, "height");
-  const { dimensions, setCellHeight } = useContext(CalendarViewContextReusable);
-  const time = useCurrentTime();
 
-  useEffect(() => {
-    ref.current &&
-      ref.current.scrollTo({
-        left: 0,
-        top: (dimensions.cellHeight / 60) * time,
-        behavior: "smooth",
-      });
-  }, [dimensions.cellHeight, time]);
-
-  useEffect(() => {
-    setCellHeight(height / 12);
-  }, [height, setCellHeight]);
+  useScrollToTimeMarker(ref);
+  useSurfaceGridHeightWatcher(ref);
 
   return (
     <Box
@@ -38,7 +24,7 @@ export const CalendarSurfaceScrollableGridReusable = (props: {
         } as any
       }
     >
-      <CalendarSurfaceGridReusable {...props} />
+      <CalendarSurfaceGridReusable onCellClick={props.onCellClick} />
     </Box>
   );
 };
@@ -46,11 +32,10 @@ export const CalendarSurfaceScrollableGridReusable = (props: {
 const CalendarSurfaceGridReusable = (props: {
   onCellClick: (datetime: Date, hour: number) => void;
 }) => {
-  const { dimensions } = useContext(CalendarViewContextReusable);
   return (
     <Box sx={{ width: "100%", display: "flex" }}>
-      <CalendarSurfaceTimeGridReusable dimensions={dimensions} />
-      <CalendarSurfaceGridRendererReusable {...props} />
+      <CalendarSurfaceTimeGridReusable />
+      <CalendarSurfaceGridRendererReusable onCellClick={props.onCellClick} />
     </Box>
   );
 };
@@ -60,23 +45,33 @@ const CalendarSurfaceGridRendererReusable = (props: {
 }) => {
   const { onCellClick } = props;
 
-  const { startDateOfView, endDateOfView, dimensions } = useContext(
-    CalendarViewContextReusable
-  );
-
-  const currentDates = eachDayOfInterval({
-    start: startDateOfView,
-    end: endDateOfView,
-  });
-
   return (
     <Box sx={{ display: "flex", position: "relative", width: "100%" }}>
-      <CalendarSurfaceTimeMarkerReusable
-        view={currentDates.length}
-        diff={startOfToday().getDay() - currentDates[0].getDay()}
-        minCellHeight={dimensions.cellHeight}
-      />
+      <CalendarSurfaceTimeMarkerReusable />
       <CalendarSurfaceColumnsReusable onCellClick={onCellClick} />
     </Box>
   );
+};
+
+const useScrollToTimeMarker = (ref: React.RefObject<HTMLDivElement>) => {
+  const time = useCurrentTime();
+  const { dimensions } = useContext(CalendarViewContextReusable);
+
+  useEffect(() => {
+    ref.current &&
+      ref.current.scrollTo({
+        left: 0,
+        top: (dimensions.cellHeight / 60) * time,
+        behavior: "smooth",
+      });
+  }, [dimensions.cellHeight, ref.current]);
+};
+
+const useSurfaceGridHeightWatcher = (ref: React.RefObject<HTMLDivElement>) => {
+  const height = useSizeWatcher(ref, "height");
+  const { setCellHeight } = useContext(CalendarViewContextReusable);
+
+  useEffect(() => {
+    setCellHeight(height / 12);
+  }, [height, setCellHeight]);
 };

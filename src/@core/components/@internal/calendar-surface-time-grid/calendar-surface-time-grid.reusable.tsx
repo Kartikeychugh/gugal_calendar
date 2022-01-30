@@ -1,20 +1,14 @@
 import { Box } from "@mui/material";
+import { useContext } from "react";
+import { CalendarViewContextReusable } from "../../../providers/calendar-view/calendar-view.context.reusable";
 
-export const CalendarSurfaceTimeGridReusable = (props: {
-  dimensions: {
-    cellHeight: number;
-    timeGridWidth: number;
-    columnWidth: number;
-  };
-}) => {
+export const CalendarSurfaceTimeGridReusable = (props: {}) => {
+  const { dimensions } = useContext(CalendarViewContextReusable);
+
   const cells = [];
   for (let i = 0; i < 24; i++) {
     cells.push(
-      <CalendarGridTimeCellReusable
-        key={i}
-        hour={i}
-        dimensions={props.dimensions}
-      />
+      <CalendarGridTimeCellReusable key={i} hour={i} dimensions={dimensions} />
     );
   }
   return (
@@ -22,7 +16,7 @@ export const CalendarSurfaceTimeGridReusable = (props: {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minWidth: `${props.dimensions.timeGridWidth}px`,
+        minWidth: `${dimensions.timeGridWidth}px`,
       }}
     >
       {cells}

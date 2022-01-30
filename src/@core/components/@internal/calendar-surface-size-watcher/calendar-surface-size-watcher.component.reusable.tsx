@@ -1,25 +1,27 @@
-import { PropsWithChildren, useEffect, useState, useMemo } from "react";
+import {
+  PropsWithChildren,
+  useEffect,
+  useState,
+  useMemo,
+  useContext,
+} from "react";
 import { useSizeWatcher } from "../../../hooks";
-import { ICalendarView } from "../../../providers/calendar-view/calendar-view.context";
+import { CalendarViewContextReusable } from "../../../providers/calendar-view/calendar-view.context.reusable";
 
 export const CalendarSurfaceSizeWatcherReusable = (
   props: PropsWithChildren<{
     containerRef: React.MutableRefObject<HTMLDivElement | null>;
-    allViews: ICalendarView[];
-    getView: (viewId: number) => ICalendarView;
-    setAvailableViews: (newAvailableViews: ICalendarView[]) => void;
-    userViewId: number;
-    updateResponsiveView: (newViewId: number | null) => void;
   }>
 ) => {
   const {
-    containerRef,
-    allViews,
     getView,
-    setAvailableViews,
-    userViewId,
     updateResponsiveView,
-  } = props;
+    allViews,
+    userViewId,
+    setAvailableViews,
+  } = useContext(CalendarViewContextReusable);
+
+  const { containerRef } = props;
   const [lastBreakAt, setLastBreakAt] = useState<number | null>(null);
   const [firstUnAvailableViewId, setFirstUnAvailableViewId] = useState<number>(
     allViews.length
