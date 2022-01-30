@@ -1,12 +1,13 @@
+import { startOfWeek } from "date-fns";
 import { useEffect, useMemo } from "react";
-import { useCalendarView } from "../@core";
 import { ICalendarEventItem } from "../models";
 import { useDispatch, useSelector } from "../redux";
 import { getViewKey } from "../utils";
 import { useCalendarColors } from "./use-calendar-colors";
 
-export const useCalendarEvents = () => {
-  const { startOfWeekForSelectedDate } = useCalendarView();
+export const useCalendarEvents = (selectedDate: number) => {
+  const startOfWeekForSelectedDate = startOfWeek(selectedDate).valueOf();
+
   useSyncCalendarEvents(startOfWeekForSelectedDate);
   return useResolveCalendarEvents(startOfWeekForSelectedDate);
 };

@@ -2,14 +2,12 @@ import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { ICalendarEventItem } from "../../../../models";
 import { useRef } from "react";
 import { Box } from "@mui/material";
-import { useCalendarColors } from "../../../../hooks";
 
 export const CalendarSurfaceEventCard = (props: {
   event: ICalendarEventItem;
 }) => {
   const { event } = props;
   const ele = useRef(null);
-  const colors = useCalendarColors();
 
   const time = new Date(event.start.dateTime);
 
@@ -30,7 +28,6 @@ export const CalendarSurfaceEventCard = (props: {
   if (minutes < 10) {
     minutesStr = `0${minutesStr}`;
   }
-  const colorId = event.colorId ? event.colorId : 5;
   return (
     <Box
       key={props.event.id}
@@ -53,14 +50,14 @@ export const CalendarSurfaceEventCard = (props: {
     >
       <Box
         sx={{
-          background: `${colors!.calendar[colorId].background}`,
+          background: event.colors.calendar.backgroundColor,
           minWidth: "3px",
         }}
       ></Box>
       <Box
         sx={{
-          backgroundColor: `${colors!.event[colorId].background}`,
-          color: `${colors!.event[colorId].foreground}`,
+          backgroundColor: event.colors.event.backgroundColor,
+          color: event.colors.event.foregroundColor,
           padding: "0px 5px 0px 5px",
           width: "100%",
         }}

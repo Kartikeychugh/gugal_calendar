@@ -1,10 +1,23 @@
 import { Box } from "@mui/material";
 
-import { CalendarSurfaceContainer } from "../calendar-surface-container";
+import { ICalendarEventItem } from "../../models";
 import { CalendarDatePickerContainer } from "../calendar-date-picker-container";
-import { CalendarCommandBar } from "../../@core";
+import { CalendarSurfaceContainer } from "../calendar-surface-container";
 
-export const CalendarContainer = () => {
+export const CalendarContainer = (props: {
+  events: ICalendarEventItem[];
+  colors: CalendarColors;
+  onHeaderClick: (date: number) => void;
+  onCellClick: (date: Date, hour: number) => void;
+  userViewId: number;
+  selectedDate: number;
+  setSelectedDate: (newDate: number) => void;
+  dimensions: {
+    minCellHeight: number;
+    timeGridWidth: number;
+    minColumnWidth: number;
+  };
+}) => {
   return (
     <Box
       sx={{
@@ -15,19 +28,16 @@ export const CalendarContainer = () => {
         height: "100vh",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          height: "60px",
-          alignItems: "center",
-        }}
-      >
-        <CalendarCommandBar />
-      </Box>
-      <Box sx={{ display: "flex", height: "calc(100% - 60px)" }}>
-        <CalendarDatePickerContainer />
-        <CalendarSurfaceContainer />
+      <Box sx={{ display: "flex", height: "100%" }}>
+        <Box sx={{ height: "100%" }}>
+          <CalendarDatePickerContainer
+            selectedDate={props.selectedDate}
+            setSelectedDate={props.setSelectedDate}
+          />
+        </Box>
+        <Box sx={{ height: "100%", flexGrow: 1 }}>
+          <CalendarSurfaceContainer {...props} />
+        </Box>
       </Box>
     </Box>
   );

@@ -1,23 +1,32 @@
-import { PropsWithChildren, useEffect, useState, useMemo } from "react";
-import { useDispatch, useSelector } from "../../../../redux";
-import { useCalendarView, useSizeWatcher } from "../../../hooks";
+import {
+  PropsWithChildren,
+  useEffect,
+  useState,
+  useMemo,
+  useContext,
+} from "react";
+import { useSizeWatcher } from "../../../hooks";
+import { CalendarViewContext } from "../../../providers";
 
 export const CalendarSurfaceSizeWatcher = (
   props: PropsWithChildren<{
     containerRef: React.MutableRefObject<HTMLDivElement | null>;
   }>
 ) => {
+  const {
+    getView,
+    updateResponsiveView,
+    allViews,
+    userViewId,
+    setAvailableViews,
+  } = useContext(CalendarViewContext);
+
   const { containerRef } = props;
-  const { allViews, getView, setAvailableViews } = useCalendarView();
   const [lastBreakAt, setLastBreakAt] = useState<number | null>(null);
   const [firstUnAvailableViewId, setFirstUnAvailableViewId] = useState<number>(
     allViews.length
   );
-  const {
-    userView: { viewId: userViewId },
-  } = useSelector((state) => state.view);
   const width = useSizeWatcher(containerRef, "width");
-  const dispatch = useDispatch();
   const currentUserView = useMemo(
     () => getView(userViewId),
     [userViewId, getView]
@@ -43,13 +52,13 @@ export const CalendarSurfaceSizeWatcher = (
       width <= currentUserView.breakpoint &&
       (lastBreakAt === null || lastBreakAt !== currentUserView.breakpoint)
     ) {
-      dispatch({ type: "SET_RESPONSIVE_VIEW", payload: 0 });
+      updateResponsiveView(0);
       setLastBreakAt(currentUserView.breakpoint);
     } else if (width > currentUserView.breakpoint && lastBreakAt !== null) {
-      dispatch({ type: "SET_RESPONSIVE_VIEW", payload: null });
+      updateResponsiveView(null);
       setLastBreakAt(null);
     }
-  }, [allViews, dispatch, currentUserView, lastBreakAt, width]);
+  }, [allViews, updateResponsiveView, currentUserView, lastBreakAt, width]);
 
   return <>{props.children}</>;
 };

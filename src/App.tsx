@@ -5,7 +5,6 @@ import { FirebaseProvider } from "./firebase";
 import { PrivateRoute } from "./components";
 import { LoadingScreen } from "./components/loading-screen";
 // import { GugalCalendar } from "./components/gugal-calendar";
-import { GugalCalendarReusable } from "./components/gugal-calendar/gugal-calendar.container.reusable";
 import { CalendarReduxProvider } from "./redux";
 import { GugalCalendar } from "./components/gugal-calendar";
 
@@ -31,8 +30,8 @@ function App() {
         <FirebaseAuthLayer loading={() => <LoadingScreen />}>
           <PrivateRoute>
             <CalendarReduxProvider>
-              <GugalCalendarReusable minColumnWidth={60} minCellHeight={30} />
-              {/* <GugalCalendar minColumnWidth={100} minCellHeight={30} /> */}
+              {/* <GugalCalendarReusable minColumnWidth={60} minCellHeight={30} /> */}
+              <GugalCalendar minColumnWidth={100} minCellHeight={30} />
             </CalendarReduxProvider>
           </PrivateRoute>
         </FirebaseAuthLayer>

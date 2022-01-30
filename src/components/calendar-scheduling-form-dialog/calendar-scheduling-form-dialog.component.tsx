@@ -11,7 +11,9 @@ import Draggable from "react-draggable";
 import { CalendarSchedulingForm } from "../../@core";
 import { useDispatch, useSelector } from "../../redux";
 
-export const CalendarSchedulingFormDialog = () => {
+export const CalendarSchedulingFormDialog = (props: {
+  setSelectedDate: (newDate: number) => void;
+}) => {
   const dispatch = useDispatch();
   const { client } = useSelector((state) => state.events);
 
@@ -50,7 +52,10 @@ export const CalendarSchedulingFormDialog = () => {
             id="draggable-dialog-title"
           />
           <DialogContent>
-            <CalendarSchedulingForm event={client} />
+            <CalendarSchedulingForm
+              event={client}
+              setSelectedDate={props.setSelectedDate}
+            />
           </DialogContent>
         </Box>
       </ClickAwayListener>

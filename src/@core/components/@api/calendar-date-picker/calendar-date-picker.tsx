@@ -1,9 +1,11 @@
 import { LocalizationProvider, CalendarPicker } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import { useCalendarView } from "../../../hooks";
 
-export const CalendarDatePicker = () => {
-  const { selectedDate, setCalendarSelectedDate } = useCalendarView();
+export const CalendarDatePicker = (props: {
+  selectedDate: number;
+  setSelectedDate: (newSelectedDate: number) => void;
+}) => {
+  const { selectedDate, setSelectedDate } = props;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -13,7 +15,7 @@ export const CalendarDatePicker = () => {
           if (!newValue) {
             return;
           }
-          setCalendarSelectedDate(newValue.valueOf());
+          setSelectedDate(newValue.valueOf());
         }}
       />
     </LocalizationProvider>

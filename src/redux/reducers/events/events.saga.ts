@@ -43,6 +43,11 @@ export const initFirebaseGAPISaga = (
       type: "REMOVE_CLIENT_EVENT",
     });
 
+    yield put({
+      type: "FETCH_CALENDAR_EVENTS",
+      payload: { start: new Date(action.payload.start.dateTime).valueOf() },
+    });
+
     console.log({ result });
   }
 

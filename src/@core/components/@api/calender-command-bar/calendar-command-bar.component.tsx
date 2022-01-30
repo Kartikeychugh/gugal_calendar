@@ -1,23 +1,17 @@
 import { Box } from "@mui/material";
-import {
-  CalendarCommandViewSelector,
-  CalendarCommandViewSlider,
-} from "../../@internal";
-import { useCalendarView } from "../../../hooks";
 
-import { addDays } from "date-fns";
+import { useContext } from "react";
+import {
+  CalendarCommandViewSlider,
+  CalendarCommandViewSelector,
+} from "../../@internal";
+import { CalendarViewContext } from "../../../providers";
 
 export const CalendarCommandBar = () => {
-  const {
-    currentView: { fromDay, numberOfDays },
-    startOfWeekForSelectedDate,
-  } = useCalendarView();
+  const { startDateOfView, endDateOfView } = useContext(CalendarViewContext);
 
-  const viewStart = addDays(startOfWeekForSelectedDate, fromDay);
-  const viewEnd = addDays(
-    startOfWeekForSelectedDate,
-    fromDay + numberOfDays - 1
-  );
+  const viewStart = new Date(startDateOfView);
+  const viewEnd = new Date(endDateOfView);
   const viewSpansAcrossMonth = viewStart.getMonth() !== viewEnd.getMonth();
 
   return (

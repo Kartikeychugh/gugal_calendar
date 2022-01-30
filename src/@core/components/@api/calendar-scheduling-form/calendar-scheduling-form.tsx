@@ -9,10 +9,10 @@ import { DatePicker, LoadingButton, TimePicker } from "@mui/lab";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { useDispatch } from "../../../../redux";
-import { useCalendarView } from "../../../hooks";
 
 export const CalendarSchedulingForm = (props: {
   event: ICalendarEventItem;
+  setSelectedDate: (newDate: number) => void;
 }) => {
   const [state, setState] = useState({
     onlineMeeting: false,
@@ -20,7 +20,6 @@ export const CalendarSchedulingForm = (props: {
     loading: false,
   });
   const dispatch = useDispatch();
-  const { setCalendarSelectedDate } = useCalendarView();
   const addGoogleEvent = useCreateGoogleEvent();
   const updateClientEvent = useUpdateClientEvent();
 
@@ -95,7 +94,7 @@ export const CalendarSchedulingForm = (props: {
               );
               e.end.dateTime = newEndtime.toISOString();
               updateClientEvent(e);
-              setCalendarSelectedDate(newValue.valueOf());
+              props.setSelectedDate(newValue.valueOf());
             }}
             renderInput={(params) => <TextField {...params} />}
           />

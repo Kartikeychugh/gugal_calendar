@@ -1,15 +1,17 @@
 import { Button, Box, Menu, MenuItem } from "@mui/material";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { useUpdateView } from "../../../../hooks";
-import { useCalendarView } from "../../../hooks";
+import { CalendarViewContext } from "../../../providers";
 
 export const CalendarCommandViewSelector = () => {
-  const updateView = useUpdateView();
-
   const [state, setState] = useState({ open: false });
-  const { currentView, getView, availableViews } = useCalendarView();
-  const { title } = currentView;
+  const {
+    currentView: { title },
+    getView,
+    availableViews,
+    updateUserView,
+  } = useContext(CalendarViewContext);
+
   const ref = useRef(null);
 
   return (
@@ -73,7 +75,7 @@ export const CalendarCommandViewSelector = () => {
               key={i}
               onClick={() => {
                 setState({ open: false });
-                updateView(viewId);
+                updateUserView(viewId);
               }}
               sx={{
                 color: "#18181B",
