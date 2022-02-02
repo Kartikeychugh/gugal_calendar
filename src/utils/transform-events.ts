@@ -4,7 +4,8 @@ import { ICalendarEventItem } from "../models";
 export const transformEvents = (
   events: CalendarEventItem[],
   cellHeight: number,
-  colors: CalendarColors | null
+  colors: CalendarColors | null,
+  defaultColorId: number
 ) => {
   events.sort((_a, _b) => {
     const aStart = new Date(_a.start.dateTime);
@@ -31,7 +32,7 @@ export const transformEvents = (
 
     columnsWiseEvents.forEach((columnWiseEvents, index) => {
       columnWiseEvents.forEach((event) => {
-        const colorId = event.colorId ? event.colorId : 5;
+        const colorId = event.colorId ? event.colorId : defaultColorId;
 
         const left = `calc(${(index / totalColumns) * 100}% + ${index * 2}px)`;
         const width = `${(1 / totalColumns) * 100}%`;

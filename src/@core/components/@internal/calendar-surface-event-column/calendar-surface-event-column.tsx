@@ -13,11 +13,12 @@ export const CalendarSurfaceEventColumn = (props: { date: Date }) => {
     currentView: { numberOfDays },
   } = useContext(CalendarViewContext);
   const { cellHeight } = useCalendarDimensionCellHeightContext();
-  const { colors, events } = useCalendarEventDetails();
+  const { colors, events, defaultColorId } = useCalendarEventDetails();
   let transformedEvents = transformEvents(
     extractEventForDay(events, props.date) || [],
     cellHeight,
-    colors
+    colors,
+    defaultColorId
   );
 
   return (

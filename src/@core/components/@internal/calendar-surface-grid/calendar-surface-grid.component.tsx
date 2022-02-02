@@ -8,6 +8,7 @@ import { useSizeWatcher } from "../../../hooks";
 import { CalendarSurfaceColumns } from "../calendar-surface-column";
 import { CalendarSurfaceTimeGrid } from "../calendar-surface-time-grid";
 import { CalendarSurfaceTimeMarker } from "../calendar-surface-time-marker";
+import { CustomScrollbar } from "../custom-scrollbar/custom-scrollbar";
 
 export const CalendarSurfaceScrollableGrid = (props: {
   onCellClick: (datetime: Date, hour: number) => void;
@@ -18,18 +19,20 @@ export const CalendarSurfaceScrollableGrid = (props: {
   useSurfaceGridHeightWatcher(ref);
 
   return (
-    <Box
-      ref={ref}
-      sx={
-        {
-          overflowY: "overlay",
-          width: "100%",
-          height: "100%",
-        } as any
-      }
-    >
-      <CalendarSurfaceGrid onCellClick={props.onCellClick} />
-    </Box>
+    <CustomScrollbar>
+      <Box
+        ref={ref}
+        sx={
+          {
+            overflowY: "overlay",
+            width: "100%",
+            height: "100%",
+          } as any
+        }
+      >
+        <CalendarSurfaceGrid onCellClick={props.onCellClick} />
+      </Box>
+    </CustomScrollbar>
   );
 };
 

@@ -10,7 +10,9 @@ export const CalendarEventsDetailsProvider = (
 ) => {
   const { events, colors } = props;
   return (
-    <CalendarEventDetailsContext.Provider value={{ events, colors }}>
+    <CalendarEventDetailsContext.Provider
+      value={{ events, colors, defaultColorId: 1 }}
+    >
       {props.children}
     </CalendarEventDetailsContext.Provider>
   );
