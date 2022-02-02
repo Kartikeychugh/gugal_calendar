@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { eachDayOfInterval, isSameDay, startOfToday } from "date-fns";
 import { useContext, useRef } from "react";
-import { CalendarViewContext } from "../../..";
+import { CalendarViewContext } from "../../../providers";
 import { CalendarSurfaceEventColumn } from "../calendar-surface-event-column";
 import { CalendarSurfaceGridColumn } from "../calendar-surface-grid-column";
 import { CalendarSurfaceSizeWatcher } from "../calendar-surface-size-watcher";
@@ -44,9 +44,7 @@ const CalendarSurfaceColumn = (props: {
   date: Date;
   onCellClick: (datetime: Date, hour: number) => void;
 }) => {
-  const {
-    dimensions: { columnWidth },
-  } = useContext(CalendarViewContext);
+  const { minColumnWidth } = useContext(CalendarViewContext);
 
   return (
     <Box
@@ -58,7 +56,7 @@ const CalendarSurfaceColumn = (props: {
         }`,
         height: "100%",
         width: "100%",
-        minWidth: `${columnWidth}px`,
+        minWidth: `${minColumnWidth}px`,
       }}
     >
       <CalendarSurfaceEventColumn date={props.date} />

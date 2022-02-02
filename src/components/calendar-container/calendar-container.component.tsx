@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { ICalendarFeatureFlags } from "../../@core";
 
 import { ICalendarEventItem } from "../../models";
 import { CalendarDatePickerContainer } from "../calendar-date-picker-container";
@@ -12,11 +13,9 @@ export const CalendarContainer = (props: {
   userViewId: number;
   selectedDate: number;
   setSelectedDate: (newDate: number) => void;
-  dimensions: {
-    minCellHeight: number;
-    timeGridWidth: number;
-    minColumnWidth: number;
-  };
+  minCellHeight: number;
+  minColumnWidth: number;
+  featureFlags?: ICalendarFeatureFlags;
 }) => {
   return (
     <Box

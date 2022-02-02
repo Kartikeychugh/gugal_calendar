@@ -2,14 +2,17 @@ import { Box } from "@mui/material";
 import { getDay, startOfToday } from "date-fns";
 import { useContext, useRef } from "react";
 import { useCurrentTime } from "../../../hooks";
-import { CalendarViewContext } from "../../../providers";
+import {
+  CalendarViewContext,
+  useCalendarDimensionCellHeightContext,
+} from "../../../providers";
 
 export const CalendarSurfaceTimeMarker = (props: {}) => {
   const {
     startDateOfView,
-    dimensions: { cellHeight },
     currentView: { numberOfDays },
   } = useContext(CalendarViewContext);
+  const { cellHeight } = useCalendarDimensionCellHeightContext();
 
   const diff = startOfToday().getDay() - getDay(startDateOfView);
   const time = useCurrentTime();

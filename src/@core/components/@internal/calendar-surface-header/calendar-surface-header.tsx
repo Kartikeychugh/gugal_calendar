@@ -7,7 +7,7 @@ export const CalendarSurfaceHeader = (props: {
   onHeaderClick: (date: number) => void;
 }) => {
   const { onHeaderClick } = props;
-  const { startDateOfView, endDateOfView, dimensions } =
+  const { startDateOfView, endDateOfView, minColumnWidth } =
     useContext(CalendarViewContext);
   const currentDates = eachDayOfInterval({
     start: startDateOfView,
@@ -27,7 +27,7 @@ export const CalendarSurfaceHeader = (props: {
           fontWeight: 700,
           padding: "4px",
           flexDirection: "column",
-          minWidth: `${dimensions.timeGridWidth}px`,
+          minWidth: `50px`,
         }}
       ></Box>
       {currentDates.map((date, i) => {
@@ -35,7 +35,7 @@ export const CalendarSurfaceHeader = (props: {
           <Button
             variant="text"
             sx={{
-              minWidth: `${dimensions.columnWidth}px`,
+              minWidth: `${minColumnWidth}px`,
               height: "100%",
               padding: "4px 8px 4px 8px",
               flexDirection: "column",

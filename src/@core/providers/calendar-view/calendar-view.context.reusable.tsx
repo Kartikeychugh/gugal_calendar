@@ -47,7 +47,11 @@ export interface ICalendarView {
 export interface ICalendarViewContext {
   startDateOfView: number;
   endDateOfView: number;
-  minColumnWidth: number;
+  dimensions: {
+    cellHeight: number;
+    timeGridWidth: number;
+    columnWidth: number;
+  };
   selectedDate: number;
   currentView: ICalendarView;
   setSelectedDate: (newDate: number) => void;
@@ -60,33 +64,57 @@ export interface ICalendarViewContext {
   userViewId: number;
   allViews: ICalendarView[];
   setAvailableViews: (newAvailableViews: ICalendarView[]) => void;
+  setCellHeight: (newMinCellHeight: number) => void;
 }
 
-export const CalendarViewContext = React.createContext<ICalendarViewContext>(
-  undefined!
-);
+export const CalendarViewContextReusable =
+  React.createContext<ICalendarViewContext>(undefined!);
 
 interface IState {
   userViewId: number;
   responsiveViewId: number | null;
-  minColumnWidth: number;
 }
 
-export const CalendarViewProvider = (
+export const CalendarViewProviderReusable = (
   props: PropsWithChildren<{
     userViewId: number;
     selectedDate: number;
     setSelectedDate: (newDate: number) => void;
-    minColumnWidth: number;
+    dimensions: {
+      minCellHeight: number;
+      timeGridWidth: number;
+      minColumnWidth: number;
+    };
   }>
 ) => {
-  const { userViewId, selectedDate, setSelectedDate, minColumnWidth } = props;
+  const {
+    userViewId,
+    selectedDate,
+    setSelectedDate,
+    dimensions: {
+      minCellHeight,
+      minColumnWidth,
+      timeGridWidth: _timeGridWidth,
+    },
+  } = props;
 
   const [state, setState] = useState<IState>({
     userViewId,
     responsiveViewId: null,
-    minColumnWidth: minColumnWidth,
   });
+
+  const [cellHeight, _setCellHeight] = useState<number>(minCellHeight);
+  const [timeGridWidth, setTimeGridWidth] = useState<number>(_timeGridWidth);
+  const [columnWidth, setColumnWidth] = useState<number>(minColumnWidth);
+
+  const setCellHeight = useCallback(
+    (newMinCellHeight: number) => {
+      console.log("update cellHeight");
+
+      _setCellHeight(Math.max(newMinCellHeight, minCellHeight));
+    },
+    [minCellHeight, _setCellHeight]
+  );
 
   const allViews: ICalendarView[] = useMemo(() => {
     const _allViews = views.map((view) => {
@@ -98,11 +126,11 @@ export const CalendarViewProvider = (
     });
 
     _allViews.forEach((view) => {
-      view.breakpoint = view.numberOfDays * state.minColumnWidth;
+      view.breakpoint = view.numberOfDays * columnWidth;
     });
 
     return _allViews;
-  }, [state.minColumnWidth, selectedDate]);
+  }, [columnWidth, selectedDate]);
 
   const [availableViews, setAvailableViews] =
     useState<ICalendarView[]>(allViews);
@@ -161,11 +189,11 @@ export const CalendarViewProvider = (
   );
 
   return (
-    <CalendarViewContext.Provider
+    <CalendarViewContextReusable.Provider
       value={{
         startDateOfView,
         endDateOfView,
-        minColumnWidth,
+        dimensions: { cellHeight, timeGridWidth, columnWidth },
         selectedDate: selectedDate,
         setSelectedDate,
         currentView,
@@ -178,9 +206,10 @@ export const CalendarViewProvider = (
         userViewId: state.userViewId,
         allViews,
         setAvailableViews,
+        setCellHeight,
       }}
     >
       {true ? props.children : null}
-    </CalendarViewContext.Provider>
+    </CalendarViewContextReusable.Provider>
   );
 };

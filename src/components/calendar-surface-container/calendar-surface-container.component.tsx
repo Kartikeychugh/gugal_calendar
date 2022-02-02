@@ -1,5 +1,5 @@
 import { Paper } from "@mui/material";
-import { CalendarSurface } from "../../@core";
+import { CalendarSurface, ICalendarFeatureFlags } from "../../@core";
 import { ICalendarEventItem } from "../../models";
 
 export const CalendarSurfaceContainer = (props: {
@@ -10,11 +10,9 @@ export const CalendarSurfaceContainer = (props: {
   userViewId: number;
   selectedDate: number;
   setSelectedDate: (newDate: number) => void;
-  dimensions: {
-    minCellHeight: number;
-    timeGridWidth: number;
-    minColumnWidth: number;
-  };
+  minCellHeight: number;
+  minColumnWidth: number;
+  featureFlags?: ICalendarFeatureFlags;
 }) => {
   return (
     <Paper

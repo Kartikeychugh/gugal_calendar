@@ -1,6 +1,9 @@
 import { Box } from "@mui/material";
-import { useContext, useEffect, useRef } from "react";
-import { CalendarViewContext } from "../../..";
+import { useEffect, useRef } from "react";
+import {
+  useCalendarDimensionCellHeightContext,
+  useCalendarFeatureFlags,
+} from "../../..";
 import { useSizeWatcher } from "../../../hooks";
 import { CalendarSurfaceColumns } from "../calendar-surface-column";
 import { CalendarSurfaceTimeGrid } from "../calendar-surface-time-grid";
@@ -21,6 +24,7 @@ export const CalendarSurfaceScrollableGrid = (props: {
         {
           overflowY: "overlay",
           width: "100%",
+          height: "100%",
         } as any
       }
     >
@@ -54,24 +58,19 @@ const CalendarSurfaceGridRenderer = (props: {
 };
 
 const useScrollToTimeMarker = (ref: React.RefObject<HTMLDivElement>) => {
-  const { dimensions } = useContext(CalendarViewContext);
-
   useEffect(() => {
-    const now = new Date();
-    const time = now.getHours() * 60 + now.getMinutes();
-
     ref.current &&
-      ref.current.scrollTo({
-        left: 0,
-        top: (dimensions.cellHeight / 60) * time,
+      ref.current.scrollIntoView({
         behavior: "smooth",
       });
-  }, [dimensions.cellHeight, ref]);
+  }, [ref]);
 };
 
 const useSurfaceGridHeightWatcher = (ref: React.RefObject<HTMLDivElement>) => {
-  const height = useSizeWatcher(ref, "height");
-  const { setCellHeight } = useContext(CalendarViewContext);
+  const { responsiveCellHeight } = useCalendarFeatureFlags();
+
+  const height = useSizeWatcher(ref, !!responsiveCellHeight, "height");
+  const { setCellHeight } = useCalendarDimensionCellHeightContext();
 
   useEffect(() => {
     setCellHeight(height / 12);

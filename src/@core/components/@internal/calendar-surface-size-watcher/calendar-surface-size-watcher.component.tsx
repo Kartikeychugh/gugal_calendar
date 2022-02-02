@@ -26,7 +26,7 @@ export const CalendarSurfaceSizeWatcher = (
   const [firstUnAvailableViewId, setFirstUnAvailableViewId] = useState<number>(
     allViews.length
   );
-  const width = useSizeWatcher(containerRef, "width");
+  const width = useSizeWatcher(containerRef, true, "width");
   const currentUserView = useMemo(
     () => getView(userViewId),
     [userViewId, getView]

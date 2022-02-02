@@ -30,8 +30,14 @@ function App() {
         <FirebaseAuthLayer loading={() => <LoadingScreen />}>
           <PrivateRoute>
             <CalendarReduxProvider>
-              {/* <GugalCalendarReusable minColumnWidth={60} minCellHeight={30} /> */}
-              <GugalCalendar minColumnWidth={100} minCellHeight={30} />
+              <GugalCalendar
+                minColumnWidth={60}
+                minCellHeight={60}
+                featureFlags={{
+                  hideCommandBar: false,
+                  responsiveCellHeight: false,
+                }}
+              />
             </CalendarReduxProvider>
           </PrivateRoute>
         </FirebaseAuthLayer>

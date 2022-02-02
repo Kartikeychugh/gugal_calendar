@@ -21,16 +21,16 @@ const useSyncCalendarEvents = (startOfWeekForSelectedDate: number) => {
       payload: { start: startOfWeekForSelectedDate },
     });
 
-    const intervalID = setInterval(() => {
-      dispatch({
-        type: "FETCH_CALENDAR_EVENTS",
-        payload: { start: startOfWeekForSelectedDate },
-      });
-    }, 60000);
+    // const intervalID = setInterval(() => {
+    //   dispatch({
+    //     type: "FETCH_CALENDAR_EVENTS",
+    //     payload: { start: startOfWeekForSelectedDate },
+    //   });
+    // }, 60000);
 
-    return () => {
-      clearInterval(intervalID);
-    };
+    // return () => {
+    //   clearInterval(intervalID);
+    // };
   }, [dispatch, startOfWeekForSelectedDate]);
 };
 

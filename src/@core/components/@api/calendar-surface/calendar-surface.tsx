@@ -1,6 +1,10 @@
-import { ICalendarEventItem } from "../../../models";
-import { CalendarViewProvider } from "../../../providers";
-import { CalendarEventsDetailsProvider } from "../../../providers/calendar-events-details";
+import { ICalendarEventItem, ICalendarFeatureFlags } from "../../../models";
+import {
+  CalendarViewProvider,
+  CalendarEventsDetailsProvider,
+  CalendarDimensionCellHeightProvider,
+  CalendarFeatureFlagsProvider,
+} from "../../../providers";
 import { CalendarSurfaceRenderer } from "../../@internal";
 
 export const CalendarSurface = (props: {
@@ -11,12 +15,9 @@ export const CalendarSurface = (props: {
   userViewId: number;
   selectedDate: number;
   setSelectedDate: (newDate: number) => void;
-  hideCommandBar?: boolean;
-  dimensions: {
-    minCellHeight: number;
-    timeGridWidth: number;
-    minColumnWidth: number;
-  };
+  minCellHeight: number;
+  minColumnWidth: number;
+  featureFlags?: ICalendarFeatureFlags;
 }) => {
   const {
     events,
@@ -26,26 +27,30 @@ export const CalendarSurface = (props: {
     setSelectedDate,
     onHeaderClick,
     onCellClick,
-    hideCommandBar = false,
-    dimensions,
+    featureFlags,
+    minColumnWidth,
+    minCellHeight,
   } = props;
 
   return (
-    <CalendarEventsDetailsProvider events={events} colors={colors}>
-      <CalendarViewProvider
-        userViewId={userViewId}
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
-        dimensions={dimensions}
-      >
-        <div style={{ width: "100%", height: "100%" }}>
-          <CalendarSurfaceRenderer
-            onCellClick={onCellClick}
-            onHeaderClick={onHeaderClick}
-            hideCommandBar={hideCommandBar}
-          />
-        </div>
-      </CalendarViewProvider>
-    </CalendarEventsDetailsProvider>
+    <CalendarFeatureFlagsProvider flags={featureFlags || {}}>
+      <CalendarEventsDetailsProvider events={events} colors={colors}>
+        <CalendarViewProvider
+          userViewId={userViewId}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          minColumnWidth={minColumnWidth}
+        >
+          <CalendarDimensionCellHeightProvider minCellHeight={minCellHeight}>
+            <div style={{ width: "100%", height: "100%" }}>
+              <CalendarSurfaceRenderer
+                onCellClick={onCellClick}
+                onHeaderClick={onHeaderClick}
+              />
+            </div>
+          </CalendarDimensionCellHeightProvider>
+        </CalendarViewProvider>
+      </CalendarEventsDetailsProvider>
+    </CalendarFeatureFlagsProvider>
   );
 };

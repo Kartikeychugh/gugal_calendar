@@ -43,6 +43,7 @@ export const CalendarSurfaceEventCard = (props: {
         left: event.layout.left,
         overflow: "hidden",
         borderRadius: "5px",
+        transition: "0.1s all ease-in",
         "&:hover": {
           opacity: "0.8",
         },

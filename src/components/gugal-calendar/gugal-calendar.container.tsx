@@ -1,6 +1,7 @@
 import { addHours, startOfToday } from "date-fns";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { CalendarContainer } from "..";
+import { ICalendarFeatureFlags } from "../../@core";
 import {
   useCalendarColors,
   useCalendarEvents,
@@ -13,14 +14,18 @@ import { LoadingScreen } from "../loading-screen";
 export const GugalCalendar = (props: {
   minColumnWidth: number;
   minCellHeight: number;
+  featureFlags?: ICalendarFeatureFlags;
 }) => {
   const [selectedDate, setSelectedDate] = useState(startOfToday().valueOf());
   const createClientEvent = useCreateClientEvent();
   const events = useCalendarEvents(selectedDate);
   const colors = useCalendarColors();
-  const onCellClick = (date: Date, hour: number) => {
-    createClientEvent(addHours(date, hour), addHours(date, hour + 1));
-  };
+  const onCellClick = useCallback(
+    (date: Date, hour: number) => {
+      createClientEvent(addHours(date, hour), addHours(date, hour + 1));
+    },
+    [createClientEvent]
+  );
 
   return colors ? (
     <>
@@ -34,11 +39,9 @@ export const GugalCalendar = (props: {
         onHeaderClick={(date) => {
           console.log({ date });
         }}
-        dimensions={{
-          minCellHeight: props.minCellHeight,
-          timeGridWidth: 50,
-          minColumnWidth: props.minColumnWidth,
-        }}
+        minCellHeight={props.minCellHeight}
+        minColumnWidth={props.minColumnWidth}
+        featureFlags={props.featureFlags}
       />
       <CalendarSchedulingFormDialog setSelectedDate={setSelectedDate} />
     </>

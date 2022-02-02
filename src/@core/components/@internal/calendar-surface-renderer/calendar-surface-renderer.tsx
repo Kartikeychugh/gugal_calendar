@@ -1,18 +1,18 @@
 import { Box } from "@mui/material";
-import { CalendarCommandBar } from "../../@api";
+import { useCalendarFeatureFlags } from "../../../providers";
 import { CalendarSurfaceScrollableGrid } from "../calendar-surface-grid";
 import { CalendarSurfaceHeader } from "../calendar-surface-header";
+import { CalendarCommandBar } from "../calender-command-bar";
 
 export const CalendarSurfaceRenderer = (props: {
   onHeaderClick: (date: number) => void;
   onCellClick: (date: Date, hour: number) => void;
-  hideCommandBar: boolean;
 }) => {
-  const { onHeaderClick, onCellClick, hideCommandBar } = props;
-
+  const { onHeaderClick, onCellClick } = props;
+  const { hideCommandBar } = useCalendarFeatureFlags();
   return (
     <>
-      {hideCommandBar ? null : (
+      {!!hideCommandBar ? null : (
         <Box
           sx={{
             display: "flex",

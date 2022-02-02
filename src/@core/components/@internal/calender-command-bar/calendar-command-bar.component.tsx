@@ -1,11 +1,8 @@
 import { Box } from "@mui/material";
-
 import { useContext } from "react";
-import {
-  CalendarCommandViewSlider,
-  CalendarCommandViewSelector,
-} from "../../@internal";
 import { CalendarViewContext } from "../../../providers";
+import { CalendarCommandViewSelector } from "../calendar-command-view-selector";
+import { CalendarCommandViewSlider } from "../calendar-command-view-slider";
 
 export const CalendarCommandBar = () => {
   const { startDateOfView, endDateOfView } = useContext(CalendarViewContext);
