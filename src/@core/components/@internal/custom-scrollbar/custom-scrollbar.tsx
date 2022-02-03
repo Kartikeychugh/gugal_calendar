@@ -7,23 +7,32 @@ import {
   useCallback,
 } from "react";
 
-import { makeStyles } from "@mui/styles";
-import { styled } from "@mui/system";
+import { makeStyles, DefaultTheme } from "@mui/styles";
 
-const useStyles = makeStyles({
+const useScrollBarStyles = makeStyles({
   root: {
     background: "transparent",
     width: "5px",
+    height: "100%",
+    cursor: "pointer",
+    "&:hover": {
+      background: "lightgrey",
+      width: "10px",
+    },
   },
 });
 
-const useStyles1 = makeStyles({
+const useScrollHeadStyles = makeStyles<
+  DefaultTheme,
+  { top: number; scrollHeadHeight: number },
+  string
+>({
   root: {
     position: "relative",
-    // top: (props: any) => `${props.top}px`,
+    top: (props) => `${props.top}px`,
     transition: "0s all linear",
     width: "100%",
-    // height: (props: any) => `${props.scrollHeadHeight}px`,
+    height: (props) => `${props.scrollHeadHeight}px`,
     background: `lightblue`,
     borderRadius: "5px",
   },
@@ -76,14 +85,16 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
       }}
     >
       {props.children}
-      <Scrollbar
-        child={child}
-        totalScrollCarpet={totalScrollCarpet}
-        scrollCarpet={scrollCarpet}
-        scrollHeadHeight={scrollCarpet / (totalScrollCarpet / scrollCarpet)}
-        scrolledBy={scrolledBy}
-        setScrolledBy={setScrolledBy}
-      />
+      <Box sx={{ width: "10px", display: "flex", justifyContent: "center" }}>
+        <Scrollbar
+          child={child}
+          totalScrollCarpet={totalScrollCarpet}
+          scrollCarpet={scrollCarpet}
+          scrollHeadHeight={scrollCarpet / (totalScrollCarpet / scrollCarpet)}
+          scrolledBy={scrolledBy}
+          setScrolledBy={setScrolledBy}
+        />
+      </Box>
     </Box>
   );
 };
@@ -96,7 +107,7 @@ const Scrollbar = (props: {
   setScrolledBy: (scrolledBy: number) => void;
   child: HTMLElement | undefined;
 }) => {
-  const classes = useStyles();
+  const classes = useScrollBarStyles();
   const { totalScrollCarpet, setScrolledBy, ...otherProps } = props;
   const k =
     (totalScrollCarpet - props.scrollCarpet) /
@@ -113,15 +124,6 @@ const Scrollbar = (props: {
           });
         }
       }}
-      // sx={{
-      //   cursor: "pointer",
-      //   width: "10px",
-      //   height: "100%",
-      //   background: "transparent",
-      //   "&:hover": {
-      //     background: "lightgrey",
-      //   },
-      // }}
     >
       <ScrollHead {...otherProps} totalScrollCarpet={totalScrollCarpet} />
     </Box>
@@ -145,7 +147,7 @@ const ScrollHead = (props: {
 
   const top = scrolledBy / k;
 
-  const classes = useStyles1({ scrollHeadHeight, top });
+  const classes = useScrollHeadStyles({ scrollHeadHeight, top });
   return scrollCarpet ? (
     <Box
       onClick={(e) => {
@@ -162,19 +164,6 @@ const ScrollHead = (props: {
         console.log({ m, scrolledBy });
       }}
       className={classes.root}
-      style={{
-        top: `${top}px`,
-        height: `${scrollHeadHeight}px`,
-      }}
-      // sx={{
-      //   position: "relative",
-      //   top: `${top}px`,
-      //   transition: "0s all linear",
-      //   width: "100%",
-      //   height: `${scrollHeadHeight}px`,
-      //   background: `lightblue`,
-      //   borderRadius: "5px",
-      // }}
     />
   ) : null;
 };

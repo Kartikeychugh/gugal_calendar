@@ -17,7 +17,7 @@ export const CalendarSurfaceHeader = (props: {
   const today = startOfToday();
 
   return (
-    <Box sx={{ width: "100%", height: "60px", display: "flex", pr: "5px" }}>
+    <Box sx={{ width: "100%", height: "60px", display: "flex", pr: "10px" }}>
       <Box
         sx={{
           display: "flex",
