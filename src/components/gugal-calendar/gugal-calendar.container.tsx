@@ -22,7 +22,10 @@ export const GugalCalendar = (props: {
   const colors = useCalendarColors();
   const onCellClick = useCallback(
     (date: Date, hour: number) => {
-      createClientEvent(addHours(date, hour), addHours(date, hour + 1));
+      createClientEvent(
+        addHours(date, hour),
+        addHours(date, hour === 23 ? 24 : hour + 1)
+      );
     },
     [createClientEvent]
   );
