@@ -7,7 +7,7 @@ import { CalendarSurfaceContainer } from "../calendar-surface-container";
 
 export const CalendarContainer = (props: {
   events: ICalendarEventItem[];
-  colors: CalendarColors;
+  colors: CalendarColors | null;
   onHeaderClick: (date: number) => void;
   onCellClick: (date: Date, hour: number) => void;
   userViewId: number;

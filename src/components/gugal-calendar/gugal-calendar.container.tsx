@@ -9,8 +9,6 @@ import {
 } from "../../hooks";
 import { CalendarSchedulingFormDialog } from "../calendar-scheduling-form-dialog";
 
-import { LoadingScreen } from "../loading-screen";
-
 export const GugalCalendar = (props: {
   minColumnWidth: number;
   minCellHeight: number;
@@ -27,7 +25,7 @@ export const GugalCalendar = (props: {
     [createClientEvent]
   );
 
-  return colors ? (
+  return (
     <>
       <CalendarContainer
         colors={colors}
@@ -45,7 +43,5 @@ export const GugalCalendar = (props: {
       />
       <CalendarSchedulingFormDialog setSelectedDate={setSelectedDate} />
     </>
-  ) : (
-    <LoadingScreen />
   );
 };

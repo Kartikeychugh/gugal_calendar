@@ -3,8 +3,6 @@ import "./App.css";
 import { FirebaseAuthLayer } from "./firebase/auth";
 import { FirebaseProvider } from "./firebase";
 import { PrivateRoute } from "./components";
-import { LoadingScreen } from "./components/loading-screen";
-// import { GugalCalendar } from "./components/gugal-calendar";
 import { CalendarReduxProvider } from "./redux";
 import { GugalCalendar } from "./components/gugal-calendar";
 
