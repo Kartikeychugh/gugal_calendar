@@ -24,22 +24,22 @@ const firebaseConfig = {
 function App() {
   return (
     <div className="App">
-      <FirebaseProvider firebaseOptions={firebaseConfig}>
-        <FirebaseAuthLayer>
-          <PrivateRoute>
-            <CalendarReduxProvider>
-              <GugalCalendar
-                minColumnWidth={100}
-                minCellHeight={60}
-                featureFlags={{
-                  hideCommandBar: false,
-                  responsiveCellHeight: false,
-                }}
-              />
-            </CalendarReduxProvider>
-          </PrivateRoute>
-        </FirebaseAuthLayer>
-      </FirebaseProvider>
+      {/* <FirebaseProvider firebaseOptions={firebaseConfig}> */}
+      {/* <FirebaseAuthLayer> */}
+      {/* <PrivateRoute> */}
+      <CalendarReduxProvider>
+        <GugalCalendar
+          minColumnWidth={100}
+          minCellHeight={60}
+          featureFlags={{
+            hideCommandBar: false,
+            responsiveCellHeight: false,
+          }}
+        />
+      </CalendarReduxProvider>
+      {/* </PrivateRoute> */}
+      {/* </FirebaseAuthLayer> */}
+      {/* </FirebaseProvider> */}
     </div>
   );
 }

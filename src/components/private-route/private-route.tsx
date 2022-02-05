@@ -7,13 +7,13 @@ export const PrivateRoute = (props: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     if (user === null) {
-      userDispatch({ type: "GOOGLE_SIGN_IN" });
+      // userDispatch({ type: "GOOGLE_SIGN_IN" });
     }
   }, [user, userDispatch]);
 
   return (
     <>
-      {!user ? <LoadingScreen /> : null}
+      {/* {!user ? <LoadingScreen /> : null} */}
       {props.children}
     </>
   );
