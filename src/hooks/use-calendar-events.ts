@@ -1,5 +1,6 @@
 import { startOfWeek } from "date-fns";
 import { useEffect, useMemo } from "react";
+import { useFirebaseUser } from "../firebase";
 import { ICalendarEventItem } from "../models";
 import { useDispatch, useSelector } from "../redux";
 import { getViewKey } from "../utils";
@@ -7,15 +8,19 @@ import { useCalendarColors } from "./use-calendar-colors";
 
 export const useCalendarEvents = (selectedDate: number) => {
   const startOfWeekForSelectedDate = startOfWeek(selectedDate).valueOf();
-
   useSyncCalendarEvents(startOfWeekForSelectedDate);
   return useResolveCalendarEvents(startOfWeekForSelectedDate);
 };
 
 const useSyncCalendarEvents = (startOfWeekForSelectedDate: number) => {
   const dispatch = useDispatch();
+  const { user } = useFirebaseUser();
 
   useEffect(() => {
+    if (user === undefined || user === null) {
+      return;
+    }
+
     dispatch({
       type: "FETCH_CALENDAR_EVENTS",
       payload: { start: startOfWeekForSelectedDate },
@@ -31,7 +36,7 @@ const useSyncCalendarEvents = (startOfWeekForSelectedDate: number) => {
     // return () => {
     //   clearInterval(intervalID);
     // };
-  }, [dispatch, startOfWeekForSelectedDate]);
+  }, [dispatch, startOfWeekForSelectedDate, user]);
 };
 
 const useResolveCalendarEvents = (startOfWeekForSelectedDate: number) => {

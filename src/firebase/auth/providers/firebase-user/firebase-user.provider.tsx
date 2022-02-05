@@ -14,7 +14,8 @@ const initReducer = (firebaseAuthService: IFirebaseAuthService) => {
         return action.payload;
       }
       case "GOOGLE_SIGN_IN":
-        return googleSignIn(firebaseAuthService, state);
+        firebaseAuthService.signInWithGooglePopup();
+        return state;
       default:
         return state;
     }

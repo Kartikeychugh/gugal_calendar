@@ -1,4 +1,4 @@
-import { compareAsc } from "date-fns";
+import { compareAsc, subSeconds } from "date-fns";
 import { ICalendarEventItem } from "../models";
 
 export const transformEvents = (
@@ -37,7 +37,7 @@ export const transformEvents = (
         const left = `calc(${(index / totalColumns) * 100}% + ${index * 2}px)`;
         const width = `${(1 / totalColumns) * 100}%`;
         const startTime = new Date(event.start.dateTime);
-        const endTime = new Date(event.end.dateTime);
+        const endTime = subSeconds(new Date(event.end.dateTime), 1);
 
         (event as ICalendarEventItem).layout = {
           top: `${

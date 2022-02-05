@@ -12,13 +12,15 @@ import { makeStyles, DefaultTheme } from "@mui/styles";
 const useScrollBarStyles = makeStyles({
   root: {
     background: "transparent",
-    width: "5px",
+    width: "3px",
     height: "100%",
     cursor: "pointer",
+    borderRadius: "5px",
     "&:hover": {
       background: "lightgrey",
-      width: "10px",
+      width: "7px",
     },
+    transition: "0.1s all ease-in-out",
   },
 });
 
@@ -30,10 +32,10 @@ const useScrollHeadStyles = makeStyles<
   root: {
     position: "relative",
     top: (props) => `${props.top}px`,
-    transition: "0s all linear",
+    transition: "0s all ease-in-out",
     width: "100%",
     height: (props) => `${props.scrollHeadHeight}px`,
-    background: `lightblue`,
+    background: `#1976d2`,
     borderRadius: "5px",
   },
 });
@@ -55,7 +57,6 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
   useEffect(() => {
     const deb = debouncer.current;
     child && child.addEventListener("scroll", scrollEventListenerCallback);
-    console.log({ child });
 
     return () => {
       console.log("removeEventListener");
@@ -63,8 +64,6 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
       // child && child.removeEventListener("scroll", scrollEventListenerCallback);
     };
   }, [child, setScrolledBy, scrollEventListenerCallback]);
-
-  console.log({});
 
   return (
     <Box
@@ -143,8 +142,6 @@ const ScrollHead = (props: {
   const k =
     (totalScrollCarpet - scrollCarpet) / (scrollCarpet - scrollHeadHeight);
 
-  console.log();
-
   const top = scrolledBy / k;
 
   const classes = useScrollHeadStyles({ scrollHeadHeight, top });
@@ -161,7 +158,6 @@ const ScrollHead = (props: {
             ),
           });
         }
-        console.log({ m, scrolledBy });
       }}
       className={classes.root}
     />
@@ -175,6 +171,8 @@ const useScrollEventListenerCallback = (
 ) => {
   return useCallback(
     (ev: any) => {
+      // setScrolledBy(Math.min(ev.target.scrollTop, maxScroll));
+
       clearTimeout(debouncer.current);
       debouncer.current = setTimeout(() => {
         setScrolledBy(Math.min(ev.target.scrollTop, maxScroll));

@@ -15,7 +15,6 @@ export const CalendarSurfaceScrollableGrid = (props: {
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  useScrollToTimeMarker(ref);
   useSurfaceGridHeightWatcher(ref);
 
   return (
@@ -58,15 +57,6 @@ const CalendarSurfaceGridRenderer = (props: {
       <CalendarSurfaceColumns onCellClick={onCellClick} />
     </Box>
   );
-};
-
-const useScrollToTimeMarker = (ref: React.RefObject<HTMLDivElement>) => {
-  useEffect(() => {
-    ref.current &&
-      ref.current.scrollIntoView({
-        behavior: "smooth",
-      });
-  }, [ref]);
 };
 
 const useSurfaceGridHeightWatcher = (ref: React.RefObject<HTMLDivElement>) => {

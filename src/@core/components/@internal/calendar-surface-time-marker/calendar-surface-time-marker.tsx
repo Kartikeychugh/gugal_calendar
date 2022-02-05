@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { getDay, startOfToday } from "date-fns";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useCurrentTime } from "../../../hooks";
 import {
   CalendarViewContext,
@@ -17,6 +17,13 @@ export const CalendarSurfaceTimeMarker = (props: {}) => {
   const diff = startOfToday().getDay() - getDay(startDateOfView);
   const time = useCurrentTime();
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    ref.current &&
+      ref.current.scrollIntoView({
+        behavior: "smooth",
+      });
+  }, [ref]);
 
   let totalMarkerLengthFraction;
   let solidMarrkerLengthFraction;
