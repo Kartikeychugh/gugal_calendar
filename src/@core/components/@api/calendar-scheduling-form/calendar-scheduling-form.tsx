@@ -20,10 +20,10 @@ const useStyle = makeStyles<DefaultTheme, {}, string>({
 export const CalendarSchedulingForm = (props: {
   event: ICalendarEventItem;
   setSelectedDate: (newDate: number) => void;
+  onCancel: () => void;
+  onSubmit: () => void;
 }) => {
   const classes = useStyle();
-
-  const [loading, _setLoading] = useState(false);
 
   const [meetingTitle, _setMeetingTitle] = useState("");
   const [onlineMeeting, _setOnlineMeeting] = useState(false);
@@ -95,15 +95,19 @@ export const CalendarSchedulingForm = (props: {
         }}
       />
       <FormActions
-        loading={loading}
         onCancel={() => {
           dispatch({
             type: "REMOVE_CLIENT_EVENT",
           });
+          props.onCancel();
         }}
         onSubmit={() => {
-          _setLoading(true);
+          const e = { ...props.event };
+          e.client.status = "syncing";
+          updateClientEvent(e);
+
           addGoogleEvent(props.event, meetingTitle, onlineMeeting);
+          props.onSubmit();
         }}
       />
     </Box>

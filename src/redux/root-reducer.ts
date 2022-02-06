@@ -4,6 +4,7 @@ import {
   CalendarEventsReducer,
   CalendarNotificationsReducer,
   CalendarViewReducer,
+  CalendarSchedulingFormReducer,
 } from "./reducers";
 
 export const rootReducer = combineReducers<any, any>({
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers<any, any>({
   events: CalendarEventsReducer,
   notification: CalendarNotificationsReducer,
   colors: CalendarColorsReducer,
+  form: CalendarSchedulingFormReducer,
 });

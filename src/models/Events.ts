@@ -20,6 +20,7 @@ export interface ICalendarClientEvent {
   };
   client: {
     clientLie: boolean;
+    status: string;
   };
 }
 
@@ -40,6 +41,7 @@ export const CalendarEvent = (
     },
     client: {
       clientLie: true,
+      status: "draft",
     },
     ...(onlineMeeting && {
       conferenceData: {

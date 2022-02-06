@@ -98,7 +98,7 @@ export const CalendarViewProvider = (
     });
 
     _allViews.forEach((view) => {
-      view.breakpoint = view.numberOfDays * state.minColumnWidth;
+      view.breakpoint = view.numberOfDays * state.minColumnWidth + 2;
     });
 
     return _allViews;

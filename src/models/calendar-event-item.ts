@@ -7,6 +7,7 @@ export interface ICalendarEventItem extends CalendarEventItem {
   };
   client: {
     clientLie: boolean;
+    status: string;
   };
   colors: {
     calendar: {

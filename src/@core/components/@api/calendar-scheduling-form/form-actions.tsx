@@ -18,25 +18,19 @@ const useStyle = makeStyles<DefaultTheme, {}, string>({
 });
 
 export const FormActions = (props: {
-  loading: boolean;
   onCancel: () => void;
   onSubmit: () => void;
 }) => {
-  const { loading, onCancel, onSubmit } = props;
+  const { onCancel, onSubmit } = props;
   const classes = useStyle();
   return (
     <Box className={classes.root}>
       <Button variant="outlined" onClick={onCancel}>
         Cancel
       </Button>
-      <LoadingButton
-        variant="contained"
-        loading={loading}
-        loadingPosition="center"
-        onClick={onSubmit}
-      >
+      <Button variant="contained" onClick={onSubmit}>
         Save
-      </LoadingButton>
+      </Button>
     </Box>
   );
 };

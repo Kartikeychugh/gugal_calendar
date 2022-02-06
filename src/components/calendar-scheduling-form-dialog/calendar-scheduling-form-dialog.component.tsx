@@ -34,14 +34,16 @@ export const CalendarSchedulingFormDialog = (props: {
 }) => {
   const dispatch = useDispatch();
   const { client } = useSelector((state) => state.events);
+  const { open } = useSelector((state) => state.form);
   const classes = useStyle();
 
   return (
     <Dialog
       keepMounted={true}
       className={classes.root}
-      open={!!client}
+      open={open}
       onClose={() => {
+        dispatch({ type: "SET_FORM_OPEN", payload: false });
         dispatch({
           type: "REMOVE_CLIENT_EVENT",
         });
@@ -56,16 +58,18 @@ export const CalendarSchedulingFormDialog = (props: {
           id="draggable-dialog-title"
         />
         <DialogContent>
-          <CalendarSchedulingForm
-            event={
-              client ||
-              (CalendarEvent(
-                startOfToday(),
-                addHours(startOfToday(), 1)
-              ) as any)
-            }
-            setSelectedDate={props.setSelectedDate}
-          />
+          {client ? (
+            <CalendarSchedulingForm
+              onSubmit={() => {
+                dispatch({ type: "SET_FORM_OPEN", payload: false });
+              }}
+              onCancel={() => {
+                dispatch({ type: "SET_FORM_OPEN", payload: false });
+              }}
+              event={client}
+              setSelectedDate={props.setSelectedDate}
+            />
+          ) : null}
         </DialogContent>
       </Box>
     </Dialog>

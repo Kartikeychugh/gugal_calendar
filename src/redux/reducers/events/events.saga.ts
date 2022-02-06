@@ -39,16 +39,17 @@ export const initFirebaseGAPISaga = (
   }) {
     const result: {} = yield googleCalendarService.createEvent(action.payload);
 
-    yield put({
-      type: "REMOVE_CLIENT_EVENT",
-    });
+    const e = { ...action.payload };
+    e.client.status = "synced";
+    yield put({ type: "SET_CLIENT_EVENTS", payload: e });
 
     yield put({
       type: "FETCH_CALENDAR_EVENTS",
-      payload: { start: new Date(action.payload.start.dateTime).valueOf() },
+      payload: {
+        start: new Date(action.payload.start.dateTime).valueOf(),
+        removeClient: true,
+      },
     });
-
-    console.log({ result });
   }
 
   function* watchInsertCalendarEvents() {

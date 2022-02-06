@@ -7,6 +7,7 @@ import {
   useCalendarEvents,
   useCreateClientEvent,
 } from "../../hooks";
+import { useDispatch } from "../../redux";
 import { CalendarSchedulingFormDialog } from "../calendar-scheduling-form-dialog";
 
 export const GugalCalendar = (props: {
@@ -18,8 +19,11 @@ export const GugalCalendar = (props: {
   const createClientEvent = useCreateClientEvent();
   const events = useCalendarEvents(selectedDate);
   const colors = useCalendarColors();
+  const dispatch = useDispatch();
+
   const onCellClick = useCallback(
     (date: Date, hour: number) => {
+      dispatch({ type: "SET_FORM_OPEN", payload: true });
       createClientEvent(addHours(date, hour), addHours(date, hour + 1));
     },
     [createClientEvent]
