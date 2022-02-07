@@ -1,12 +1,15 @@
 import { Box } from "@mui/material";
-import { ICalendarFeatureFlags } from "../../@core";
+import {
+  ICalendarEventItem,
+  ICalendarFeatureFlags,
+  ICalendarClientEventItem,
+} from "../../@core";
 
-import { ICalendarEventItem } from "../../models";
 import { CalendarDatePickerContainer } from "../calendar-date-picker-container";
 import { CalendarSurfaceContainer } from "../calendar-surface-container";
 
 export const CalendarContainer = (props: {
-  events: ICalendarEventItem[];
+  events: (ICalendarEventItem | ICalendarClientEventItem)[];
   colors: CalendarColors | null;
   onHeaderClick: (date: number) => void;
   onCellClick: (date: Date, hour: number) => void;

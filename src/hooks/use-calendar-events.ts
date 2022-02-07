@@ -1,10 +1,9 @@
 import { startOfWeek } from "date-fns";
 import { useEffect, useMemo } from "react";
-import { ICalendarEventItem } from "../models";
 import { useDispatch, useSelector } from "../redux";
 import { getViewKey } from "../utils";
 import { useCalendarColors } from "./use-calendar-colors";
-
+import { ICalendarClientEventItem, ICalendarEventItem } from "./../@core";
 export const useCalendarEvents = (selectedDate: number) => {
   const startOfWeekForSelectedDate = startOfWeek(selectedDate).valueOf();
   useSyncCalendarEvents(startOfWeekForSelectedDate);
@@ -54,22 +53,25 @@ const useResolveCalendarEvents = (startOfWeekForSelectedDate: number) => {
   return [
     ...(backendEvents ? backendEvents : []),
     ...(client && !clientEventAlreadySynced ? [client] : []),
-  ].sort((a: ICalendarEventItem, b: ICalendarEventItem) => {
-    return (
-      new Date(a.start.dateTime).getTime() -
-      new Date(b.start.dateTime).getTime()
-    );
-  });
+  ].sort(
+    (
+      a: ICalendarEventItem | ICalendarClientEventItem,
+      b: ICalendarEventItem | ICalendarClientEventItem
+    ) => {
+      return (
+        new Date(a.start.dateTime).getTime() -
+        new Date(b.start.dateTime).getTime()
+      );
+    }
+  );
 };
 
 const isClientEventAlreadySynced = (
-  client: ICalendarEventItem | null,
+  client: ICalendarClientEventItem | null,
   backendEvents: ICalendarEventItem[]
 ) => {
   if (client && backendEvents) {
-    const index = backendEvents.findIndex(
-      (event: ICalendarEventItem) => event.id === client.id
-    );
+    const index = backendEvents.findIndex((event) => event.id === client.id);
     if (index !== -1) {
       return true;
     }

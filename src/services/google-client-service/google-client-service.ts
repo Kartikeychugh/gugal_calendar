@@ -3,8 +3,6 @@ import { Defer, dynamicScriptLoad } from "../../utils";
 export class GoogleGAPIService {
   private defer = new Defer<void>();
 
-  constructor() {}
-
   public initialise() {
     if (!window.gapi) {
       dynamicScriptLoad("https://apis.google.com/js/platform.js").then(() => {

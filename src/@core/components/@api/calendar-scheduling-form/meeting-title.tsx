@@ -1,6 +1,7 @@
 import { TextField, Box } from "@mui/material";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import { DefaultTheme, makeStyles } from "@mui/styles";
+import { useState } from "react";
 
 const useStyle = makeStyles<DefaultTheme, {}, string>({
   root: {
@@ -30,21 +31,25 @@ export const MeetingTitle = (props: {
   setMeetingTitle: (title: string) => void;
 }) => {
   const { meetingTitle, setMeetingTitle } = props;
+  const [value, setValue] = useState(meetingTitle);
   const classes = useStyle();
 
   return (
     <Box className={classes.root}>
       <ArticleRoundedIcon />
       <TextField
+        onBlur={() => {
+          setMeetingTitle(value);
+        }}
         className={classes.text}
         autoComplete="off"
         fullWidth
         id="standard-basic"
         label="Add title"
         variant="standard"
-        value={meetingTitle}
+        value={value}
         onChange={(e) => {
-          setMeetingTitle(e.target.value);
+          setValue(e.target.value);
         }}
       />
     </Box>

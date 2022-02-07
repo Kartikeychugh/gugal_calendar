@@ -1,8 +1,8 @@
 import React from "react";
-import { ICalendarEventItem } from "../../models";
+import { ICalendarEvent } from "../../models";
 
 export interface ICalendarEventDetailsContext {
-  events: ICalendarEventItem[];
+  events: ICalendarEvent[];
   colors: CalendarColors;
   defaultColorId: number;
 }

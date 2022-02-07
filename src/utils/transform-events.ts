@@ -1,8 +1,8 @@
 import { compareAsc, subSeconds } from "date-fns";
-import { ICalendarEventItem } from "../models";
+import { ICalendarEvent, ICalendarEventItem } from "../@core";
 
 export const transformEvents = (
-  events: CalendarEventItem[],
+  events: ICalendarEvent[],
   cellHeight: number,
   colors: CalendarColors | null,
   defaultColorId: number
@@ -26,6 +26,8 @@ export const transformEvents = (
   });
 
   const conflictingGroups = divideIntoConflictingGroups(events);
+  const tramsformedEvents: ICalendarEventItem[] = [];
+
   conflictingGroups.forEach((conflictingGroup) => {
     const columnsWiseEvents = divideIntoColumns(conflictingGroup);
     const totalColumns = columnsWiseEvents.length;
@@ -39,38 +41,44 @@ export const transformEvents = (
         const startTime = new Date(event.start.dateTime);
         const endTime = subSeconds(new Date(event.end.dateTime), 1);
 
-        (event as ICalendarEventItem).layout = {
-          top: `${
-            cellHeight * startTime.getHours() +
-            (cellHeight / 60) * startTime.getMinutes()
-          }px`,
-          height: `${
-            cellHeight * (endTime.getHours() - startTime.getHours()) +
-            (cellHeight / 60) * (endTime.getMinutes() - startTime.getMinutes())
-          }px`,
-          left,
-          width,
-        };
-        (event as ICalendarEventItem).colors = {
-          calendar: { backgroundColor: colors!.calendar[colorId].background },
-          event: {
-            backgroundColor: colors!.event[colorId].background,
-            foregroundColor: colors!.event[colorId].foreground,
+        const transformedEvent: ICalendarEventItem = {
+          ...event,
+          layout: {
+            top: `${
+              cellHeight * startTime.getHours() +
+              (cellHeight / 60) * startTime.getMinutes()
+            }px`,
+            height: `${
+              cellHeight * (endTime.getHours() - startTime.getHours()) +
+              (cellHeight / 60) *
+                (endTime.getMinutes() - startTime.getMinutes())
+            }px`,
+            left,
+            width,
+          },
+          colors: {
+            calendar: { backgroundColor: colors!.calendar[colorId].background },
+            event: {
+              backgroundColor: colors!.event[colorId].background,
+              foregroundColor: colors!.event[colorId].foreground,
+            },
           },
         };
+
+        tramsformedEvents.push(transformedEvent);
       });
     });
   });
 
-  return events as ICalendarEventItem[];
+  return tramsformedEvents;
 };
 
 interface IConflictingGroup {
   start: Date;
   end: Date;
-  conflictingEvents: CalendarEventItem[];
+  conflictingEvents: ICalendarEvent[];
 }
-const divideIntoConflictingGroups = (events: CalendarEventItem[]) => {
+const divideIntoConflictingGroups = (events: ICalendarEvent[]) => {
   const conflictingGroups: IConflictingGroup[] = [];
 
   let currentGroup: IConflictingGroup | undefined = undefined;
@@ -102,7 +110,7 @@ const divideIntoConflictingGroups = (events: CalendarEventItem[]) => {
 
 const isConflictingGroup = (
   currentGroup: IConflictingGroup,
-  event: CalendarEventItem
+  event: ICalendarEvent
 ) => {
   const startTime = new Date(event.start.dateTime);
 
@@ -111,7 +119,7 @@ const isConflictingGroup = (
 
 const updateGroup = (
   currentGroup: IConflictingGroup,
-  event: CalendarEventItem
+  event: ICalendarEvent
 ) => {
   const endTime = new Date(event.end.dateTime);
   const flag = compareAsc(currentGroup.end, endTime);
@@ -122,7 +130,7 @@ const updateGroup = (
 };
 
 const divideIntoColumns = (conflictGroup: IConflictingGroup) => {
-  const columnWiseEvents: CalendarEventItem[][] = [];
+  const columnWiseEvents: ICalendarEvent[][] = [];
 
   while (conflictGroup.conflictingEvents.length) {
     columnWiseEvents.push(
@@ -133,8 +141,8 @@ const divideIntoColumns = (conflictGroup: IConflictingGroup) => {
   return columnWiseEvents;
 };
 
-const selectEventsInCurrentColumn = (events: CalendarEventItem[]) => {
-  const result: CalendarEventItem[] = [events[0]];
+const selectEventsInCurrentColumn = (events: ICalendarEvent[]) => {
+  const result: ICalendarEvent[] = [events[0]];
   const remainingEvents = events.shift();
   if (!remainingEvents) {
     return result;
@@ -155,7 +163,7 @@ const selectEventsInCurrentColumn = (events: CalendarEventItem[]) => {
   return result;
 };
 
-const isConflictingEvent = (a: CalendarEventItem, b: CalendarEventItem) => {
+const isConflictingEvent = (a: ICalendarEvent, b: ICalendarEvent) => {
   const endTime = new Date(a.end.dateTime);
   const startTime = new Date(b.start.dateTime);
 

@@ -10,8 +10,6 @@ import Draggable from "react-draggable";
 import { CalendarSchedulingForm } from "../../@core";
 import { useDispatch, useSelector } from "../../redux";
 import { DefaultTheme, makeStyles } from "@mui/styles";
-import { addHours, startOfToday } from "date-fns";
-import { CalendarEvent } from "../../models";
 
 const useStyle = makeStyles<DefaultTheme, {}, string>({
   root: {

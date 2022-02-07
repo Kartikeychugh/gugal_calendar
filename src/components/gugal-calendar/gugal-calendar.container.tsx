@@ -5,7 +5,7 @@ import { ICalendarFeatureFlags } from "../../@core";
 import {
   useCalendarColors,
   useCalendarEvents,
-  useCreateClientEvent,
+  useClientEvent,
 } from "../../hooks";
 import { useDispatch } from "../../redux";
 import { CalendarSchedulingFormDialog } from "../calendar-scheduling-form-dialog";
@@ -16,7 +16,7 @@ export const GugalCalendar = (props: {
   featureFlags?: ICalendarFeatureFlags;
 }) => {
   const [selectedDate, setSelectedDate] = useState(startOfToday().valueOf());
-  const createClientEvent = useCreateClientEvent();
+  const { createClientEvent } = useClientEvent();
   const events = useCalendarEvents(selectedDate);
   const colors = useCalendarColors();
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ export const GugalCalendar = (props: {
       dispatch({ type: "SET_FORM_OPEN", payload: true });
       createClientEvent(addHours(date, hour), addHours(date, hour + 1));
     },
-    [createClientEvent]
+    [createClientEvent, dispatch]
   );
 
   return (

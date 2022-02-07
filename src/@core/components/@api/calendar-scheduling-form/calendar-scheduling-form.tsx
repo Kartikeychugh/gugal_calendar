@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
-import { useCallback, useState } from "react";
-import { useCreateGoogleEvent, useUpdateClientEvent } from "../../../../hooks";
-import { ICalendarEventItem } from "../../../../models";
+import { useState } from "react";
+import { useClientEvent } from "../../../../hooks";
 import { useDispatch } from "../../../../redux";
 import { MeetingTitle } from "./meeting-title";
 import { DateTimeSelector } from "./date-time-selector";
@@ -9,6 +8,7 @@ import { OnlineMeetingToggle } from "./online-meeting-selector";
 import { FormActions } from "./form-actions";
 
 import { DefaultTheme, makeStyles } from "@mui/styles";
+import { ICalendarClientEventItem } from "../../..";
 
 const useStyle = makeStyles<DefaultTheme, {}, string>({
   root: {
@@ -18,36 +18,30 @@ const useStyle = makeStyles<DefaultTheme, {}, string>({
 });
 
 export const CalendarSchedulingForm = (props: {
-  event: ICalendarEventItem;
+  event: ICalendarClientEventItem;
   setSelectedDate: (newDate: number) => void;
   onCancel: () => void;
   onSubmit: () => void;
 }) => {
   const classes = useStyle();
 
-  const [meetingTitle, _setMeetingTitle] = useState("");
-  const [onlineMeeting, _setOnlineMeeting] = useState(false);
+  const [onlineMeeting, setOnlineMeeting] = useState(false);
 
   const dispatch = useDispatch();
-  const addGoogleEvent = useCreateGoogleEvent();
-  const updateClientEvent = useUpdateClientEvent();
-
-  const setMeetingTitle = useCallback(
-    (meetingTitle: string) => {
-      const ev = { ...props.event };
-      ev.summary = meetingTitle;
-      updateClientEvent(ev);
-
-      _setMeetingTitle(meetingTitle);
-    },
-    [props.event, updateClientEvent]
-  );
+  const {
+    syncClientEvent,
+    updateMeetingTitle,
+    updateOnlineMeeting,
+    updateDate,
+    updateStartTime,
+    updateEndTime,
+  } = useClientEvent();
 
   return (
     <Box className={classes.root}>
       <MeetingTitle
-        meetingTitle={meetingTitle}
-        setMeetingTitle={setMeetingTitle}
+        meetingTitle={props.event.summary || ""}
+        setMeetingTitle={updateMeetingTitle}
       />
       <DateTimeSelector
         startTime={props.event.start.dateTime}
@@ -57,41 +51,27 @@ export const CalendarSchedulingForm = (props: {
             return;
           }
 
-          const e = { ...props.event };
-          e.start.dateTime = newValue.toISOString();
-          const newEndtime = newValue;
-          newEndtime.setHours(new Date(props.event.end.dateTime).getHours());
-          newEndtime.setMinutes(
-            new Date(props.event.end.dateTime).getMinutes()
-          );
-          newEndtime.setSeconds(
-            new Date(props.event.end.dateTime).getSeconds()
-          );
-          e.end.dateTime = newEndtime.toISOString();
-          updateClientEvent(e);
+          updateDate(newValue);
           props.setSelectedDate(newValue.valueOf());
         }}
         onStartTimeChange={(newValue) => {
           if (!newValue) {
             return;
           }
-          const e = { ...props.event };
-          e.start.dateTime = newValue.toISOString();
-          updateClientEvent(e);
+          updateStartTime(newValue);
         }}
         onEndTimeChange={(newValue) => {
           if (!newValue) {
             return;
           }
-          const e = { ...props.event };
-          e.end.dateTime = newValue.toISOString();
-          updateClientEvent(e);
+          updateEndTime(newValue);
         }}
       />
       <OnlineMeetingToggle
         onlineMeeting={onlineMeeting}
         toggleOnlineMeeting={() => {
-          _setOnlineMeeting(!onlineMeeting);
+          updateOnlineMeeting(!onlineMeeting);
+          setOnlineMeeting(!onlineMeeting);
         }}
       />
       <FormActions
@@ -102,11 +82,7 @@ export const CalendarSchedulingForm = (props: {
           props.onCancel();
         }}
         onSubmit={() => {
-          const e = { ...props.event };
-          e.client.status = "syncing";
-          updateClientEvent(e);
-
-          addGoogleEvent(props.event, meetingTitle, onlineMeeting);
+          syncClientEvent();
           props.onSubmit();
         }}
       />

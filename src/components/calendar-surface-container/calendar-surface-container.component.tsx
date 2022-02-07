@@ -1,9 +1,13 @@
 import { Paper } from "@mui/material";
-import { CalendarSurface, ICalendarFeatureFlags } from "../../@core";
-import { ICalendarEventItem } from "../../models";
+import {
+  CalendarSurface,
+  ICalendarEventItem,
+  ICalendarFeatureFlags,
+  ICalendarClientEventItem,
+} from "../../@core";
 
 export const CalendarSurfaceContainer = (props: {
-  events: ICalendarEventItem[];
+  events: (ICalendarEventItem | ICalendarClientEventItem)[];
   colors: CalendarColors | null;
   onHeaderClick: (date: number) => void;
   onCellClick: (date: Date, hour: number) => void;

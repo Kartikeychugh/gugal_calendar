@@ -1,11 +1,11 @@
 import { endOfWeek, startOfWeek } from "date-fns";
-import { ICalendarClientEvent } from "../../models";
+import { ICalendarClientEventItem } from "../../@core";
 import { GoogleAuthenticationService } from "../google-authentication-service/google-authentication-service";
 import { GoogleGAPIService } from "../google-client-service/google-client-service";
 
 export interface IGoogleCalendarService {
   getEvents(start: number): Promise<CalendarEventItem[]>;
-  createEvent(event: ICalendarClientEvent): Promise<any>;
+  createEvent(event: ICalendarClientEventItem): Promise<any>;
   getColors(): Promise<CalendarColors>;
 }
 
@@ -38,7 +38,7 @@ export class GoogleCalendarService implements IGoogleCalendarService {
     });
   }
 
-  public async createEvent(event: ICalendarClientEvent) {
+  public async createEvent(event: ICalendarClientEventItem) {
     return this.googleAuthenticationService.ensureSignIn().then(async () => {
       const response = await (gapi.client.calendar as any).events.insert({
         calendarId: "primary",

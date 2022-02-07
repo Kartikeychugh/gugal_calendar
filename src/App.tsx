@@ -1,8 +1,5 @@
 import "./App.css";
 
-import { FirebaseAuthLayer } from "./firebase/auth";
-import { FirebaseProvider } from "./firebase";
-import { PrivateRoute } from "./components";
 import { CalendarReduxProvider } from "./redux";
 import { GugalCalendar } from "./components/gugal-calendar";
 
@@ -11,22 +8,19 @@ import { GugalCalendar } from "./components/gugal-calendar";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_apiKey,
-  authDomain: process.env.REACT_APP_FIREBASE_authDomain,
-  projectId: process.env.REACT_APP_FIREBASE_projectId,
-  storageBucket: process.env.REACT_APP_FIREBASE_storageBucket,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_messagingSenderId,
-  appId: process.env.REACT_APP_FIREBASE_appId,
-  measurementId: process.env.REACT_APP_FIREBASE_measurementId,
-};
+// const firebaseConfig = {
+//   apiKey: process.env.REACT_APP_FIREBASE_apiKey,
+//   authDomain: process.env.REACT_APP_FIREBASE_authDomain,
+//   projectId: process.env.REACT_APP_FIREBASE_projectId,
+//   storageBucket: process.env.REACT_APP_FIREBASE_storageBucket,
+//   messagingSenderId: process.env.REACT_APP_FIREBASE_messagingSenderId,
+//   appId: process.env.REACT_APP_FIREBASE_appId,
+//   measurementId: process.env.REACT_APP_FIREBASE_measurementId,
+// };
 
 function App() {
   return (
     <div className="App">
-      {/* <FirebaseProvider firebaseOptions={firebaseConfig}> */}
-      {/* <FirebaseAuthLayer> */}
-      {/* <PrivateRoute> */}
       <CalendarReduxProvider>
         <GugalCalendar
           minColumnWidth={100}
@@ -37,9 +31,6 @@ function App() {
           }}
         />
       </CalendarReduxProvider>
-      {/* </PrivateRoute> */}
-      {/* </FirebaseAuthLayer> */}
-      {/* </FirebaseProvider> */}
     </div>
   );
 }

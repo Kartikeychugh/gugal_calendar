@@ -1,6 +1,6 @@
 import { put, takeLeading } from "redux-saga/effects";
+import { ICalendarClientEventItem, ICalendarEventItem } from "../../../@core";
 import { IGoogleCalendarService } from "../../../services";
-import { ICalendarClientEvent } from "../../../models";
 import { getViewKey } from "../../../utils";
 
 export const initFirebaseGAPISaga = (
@@ -8,7 +8,7 @@ export const initFirebaseGAPISaga = (
 ) => {
   function* fetchCalendarEvents(action: {
     type: string;
-    payload: { start: number; removeClient?: boolean };
+    payload: { start: number };
   }) {
     yield put({ type: "GOOGLE_SYNC_START" });
     const result: CalendarEventItem[] = yield googleCalendarService.getEvents(
@@ -20,12 +20,6 @@ export const initFirebaseGAPISaga = (
       payload: { [getViewKey(action.payload.start)]: result },
     });
 
-    if (action.payload.removeClient) {
-      yield put({
-        type: "REMOVE_CLIENT_EVENT",
-      });
-    }
-
     yield put({ type: "GOOGLE_SYNC_SUCCESS" });
   }
 
@@ -35,20 +29,16 @@ export const initFirebaseGAPISaga = (
 
   function* insertCalendarEvents(action: {
     type: string;
-    payload: ICalendarClientEvent;
+    payload: ICalendarClientEventItem;
   }) {
-    const result: {} = yield googleCalendarService.createEvent(action.payload);
+    const result: ICalendarEventItem = yield googleCalendarService.createEvent(
+      action.payload
+    );
 
-    const e = { ...action.payload };
-    e.client.status = "synced";
-    yield put({ type: "SET_CLIENT_EVENTS", payload: e });
+    yield put({ type: "ADD_BACKEND_EVENT", payload: result });
 
     yield put({
-      type: "FETCH_CALENDAR_EVENTS",
-      payload: {
-        start: new Date(action.payload.start.dateTime).valueOf(),
-        removeClient: true,
-      },
+      type: "REMOVE_CLIENT_EVENT",
     });
   }
 

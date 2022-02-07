@@ -19,8 +19,8 @@ const useStyle = makeStyles<DefaultTheme, {}, string>({
 });
 
 export const DateTimeSelector = (props: {
-  startTime: Date;
-  endTime: Date;
+  startTime: string | Date;
+  endTime: string | Date;
   onDateChange: (newValue: Date | null) => void;
   onStartTimeChange: (newValue: Date | null) => void;
   onEndTimeChange: (newValue: Date | null) => void;

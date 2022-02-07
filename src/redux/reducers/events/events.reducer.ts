@@ -1,10 +1,15 @@
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { ICalendarEventItem } from "../../../models";
+import { ICalendarClientEventItem, ICalendarEventItem } from "../../../@core";
+import {
+  addBackendEvent,
+  setBackendEvents,
+  setClientEvent,
+} from "./events.utils";
 
 export type IEventsState = {
   backend: { [key: string]: ICalendarEventItem[] };
-  client: ICalendarEventItem | null;
+  client: ICalendarClientEventItem | null;
 };
 
 const INITIAL_STATE: IEventsState = {
@@ -16,24 +21,22 @@ const _CalendarEventsReducer = (
   state = INITIAL_STATE,
   action: {
     type: string;
-    payload: { [key: string]: ICalendarEventItem[] } | ICalendarEventItem;
+    payload:
+      | IEventsState["client"]
+      | IEventsState["backend"]
+      | ICalendarEventItem;
   }
 ): IEventsState => {
   switch (action.type) {
     case "SET_BACKEND_EVENTS":
-      return {
-        ...state,
-        backend: { ...state.backend, ...action.payload } as {
-          [key: string]: ICalendarEventItem[];
-        },
-      };
+      return setBackendEvents(state, action.payload as IEventsState["backend"]);
     case "SET_CLIENT_EVENTS":
-      return { ...state, client: action.payload as ICalendarEventItem };
+      return setClientEvent(state, action.payload as IEventsState["client"]);
+    case "ADD_BACKEND_EVENT":
+      return addBackendEvent(state, action.payload as ICalendarEventItem);
     case "REMOVE_CLIENT_EVENT":
-      const _state = { ...state };
-      _state.client = null;
+      return setClientEvent(state, null);
 
-      return _state;
     default:
       return state;
   }

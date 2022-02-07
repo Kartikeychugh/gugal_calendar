@@ -1,4 +1,4 @@
-import { ICalendarEventItem, ICalendarFeatureFlags } from "../../../models";
+import { ICalendarEvent, ICalendarFeatureFlags } from "../../../models";
 import {
   CalendarViewProvider,
   CalendarEventsDetailsProvider,
@@ -8,7 +8,7 @@ import {
 import { CalendarSurfaceRenderer } from "../../@internal";
 
 export const CalendarSurface = (props: {
-  events: ICalendarEventItem[];
+  events: ICalendarEvent[];
   colors: CalendarColors | null;
   onHeaderClick: (date: number) => void;
   onCellClick: (date: Date, hour: number) => void;
