@@ -24,10 +24,10 @@ function App() {
       <CalendarReduxProvider>
         <GugalCalendar
           minColumnWidth={100}
-          minCellHeight={60}
+          minCellHeight={30}
           featureFlags={{
             hideCommandBar: false,
-            responsiveCellHeight: false,
+            responsiveCellHeight: true,
           }}
         />
       </CalendarReduxProvider>

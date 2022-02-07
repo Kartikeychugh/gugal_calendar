@@ -36,8 +36,30 @@ export const transformEvents = (
       columnWiseEvents.forEach((event) => {
         const colorId = event.colorId ? event.colorId : defaultColorId;
 
-        const left = `calc(${(index / totalColumns) * 100}% + ${index * 2}px)`;
-        const width = `${(1 / totalColumns) * 100}%`;
+        /**
+         * totalColumns: Number of sub-columns containing events within a single day column.
+         * Width left after subtractng the margins is equally distributed between these sub columns.
+         * hence 100%/columns minus the total margins.
+         */
+        const margin = 1;
+        const totalMargins = (totalColumns - 1) * margin;
+
+        const width = `${(1 / totalColumns) * 100}% - ${
+          totalMargins / totalColumns
+        }px`;
+
+        /**
+         * The left property determines in which column would the event reside.
+         * An event in 1st column would have 0 widths in front, 2nd -> 1 widths and so on.
+         *
+         * Hence width*index would determine the left property.
+         * But this would keep events stacked next to each other. We need to add margins.
+         * Hence add margin*index
+         */
+        const left = `${(index / totalColumns) * 100}% - ${
+          (totalMargins / totalColumns) * index - margin * index
+        }px`;
+
         const startTime = new Date(event.start.dateTime);
         const endTime = subSeconds(new Date(event.end.dateTime), 1);
 
@@ -46,15 +68,18 @@ export const transformEvents = (
           layout: {
             top: `${
               cellHeight * startTime.getHours() +
-              (cellHeight / 60) * startTime.getMinutes()
+              (cellHeight / 60) * startTime.getMinutes() +
+              (cellHeight / 3600) * startTime.getSeconds()
             }px`,
             height: `${
               cellHeight * (endTime.getHours() - startTime.getHours()) +
               (cellHeight / 60) *
-                (endTime.getMinutes() - startTime.getMinutes())
+                (endTime.getMinutes() - startTime.getMinutes()) +
+              (cellHeight / 3600) *
+                (endTime.getSeconds() - startTime.getSeconds())
             }px`,
-            left,
-            width,
+            left: `calc(${left})`,
+            width: `calc(${width})`,
           },
           colors: {
             calendar: { backgroundColor: colors!.calendar[colorId].background },

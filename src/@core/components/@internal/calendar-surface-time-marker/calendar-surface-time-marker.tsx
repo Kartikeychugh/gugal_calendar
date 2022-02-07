@@ -22,6 +22,7 @@ export const CalendarSurfaceTimeMarker = (props: {}) => {
     ref.current &&
       ref.current.scrollIntoView({
         behavior: "smooth",
+        block: "center",
       });
   }, [ref]);
 
