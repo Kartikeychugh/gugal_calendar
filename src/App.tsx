@@ -1,7 +1,7 @@
 import "./App.css";
 
 import { CalendarReduxProvider } from "./redux";
-import { GugalCalendar } from "./components/gugal-calendar";
+import { GugalCalendar } from "./components";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries

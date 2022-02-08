@@ -1,77 +1,62 @@
 import { Box } from "@mui/material";
 import {
   PropsWithChildren,
-  useEffect,
   useRef,
   useState,
   useCallback,
+  useMemo,
 } from "react";
 
-import { makeStyles, DefaultTheme } from "@mui/styles";
-
-const useScrollBarStyles = makeStyles({
-  root: {
-    background: "transparent",
-    width: "3px",
-    height: "100%",
-    cursor: "pointer",
-    borderRadius: "5px",
-    "&:hover": {
-      background: "lightgrey",
-      width: "7px",
-    },
-    transition: "0.1s all ease-in-out",
-  },
-});
-
-const useScrollHeadStyles = makeStyles<
-  DefaultTheme,
-  { top: number; scrollHeadHeight: number },
-  string
->({
-  root: {
-    position: "relative",
-    top: (props) => `${props.top}px`,
-    transition: "0s all ease-in-out",
-    width: "100%",
-    height: (props) => `${props.scrollHeadHeight}px`,
-    background: `#1976d2`,
-    borderRadius: "5px",
-  },
-});
+import { useClickAndDragWatcher, useEventListener } from "../../../hooks";
+import {
+  useScrollBarStyles,
+  useScrollHeadStyles,
+} from "./custom-scrollbar.styles";
 
 export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
-  const [child, setChild] = useState<HTMLElement | undefined>(undefined);
-  const [scrolledBy, setScrolledBy] = useState<number>(0);
-  const [scrollCarpet, setScrollCarpet] = useState<number>(0);
-  const [totalScrollCarpet, setTotalScrollCarpet] = useState<number>(0);
+  const [child, setChild] = useState<HTMLElement | null>(null);
+  const [windowLength, setWindowLength] = useState<number>(0);
+  const [contentLength, setContentLength] = useState<number>(0);
+  const [travel, setTravel] = useState<number>(0);
 
-  let debouncer = useRef<number | undefined>(undefined);
-
-  const scrollEventListenerCallback = useScrollEventListenerCallback(
-    debouncer,
-    setScrolledBy,
-    totalScrollCarpet - scrollCarpet
+  const scrollHeadHeight = useMemo(
+    () => windowLength / (contentLength / windowLength),
+    [windowLength, contentLength]
   );
 
-  useEffect(() => {
-    const deb = debouncer.current;
-    child && child.addEventListener("scroll", scrollEventListenerCallback);
+  const scrollFactor = useMemo(
+    () => (contentLength - windowLength) / (windowLength - scrollHeadHeight),
+    [contentLength, windowLength, scrollHeadHeight]
+  );
 
-    return () => {
-      console.log("removeEventListener");
-      clearTimeout(deb);
-      // child && child.removeEventListener("scroll", scrollEventListenerCallback);
-    };
-  }, [child, setScrolledBy, scrollEventListenerCallback]);
+  const scrollByHeadTravel = useScrollCallback(
+    child,
+    travel,
+    scrollHeadHeight,
+    windowLength,
+    scrollFactor
+  );
+
+  useEventListener(
+    child,
+    "scroll",
+    useScrollEventListenerCallback(
+      setTravel,
+      contentLength - windowLength,
+      scrollFactor
+    )
+  );
 
   return (
     <Box
       ref={(node: any) => {
-        if (node) {
+        if (node && node.children[0]) {
           setChild(node.children[0]);
-          setScrollCarpet(node.children[0].clientHeight);
-          setTotalScrollCarpet(node.children[0].children[0].clientHeight);
+          setWindowLength(node.children[0].clientHeight); // The window
+
+          if (node.children[0].children[0]) {
+            setContentLength(node.children[0].children[0].clientHeight); // The content
+          }
         }
       }}
       sx={{
@@ -86,12 +71,9 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
       {props.children}
       <Box sx={{ width: "10px", display: "flex", justifyContent: "center" }}>
         <Scrollbar
-          child={child}
-          totalScrollCarpet={totalScrollCarpet}
-          scrollCarpet={scrollCarpet}
-          scrollHeadHeight={scrollCarpet / (totalScrollCarpet / scrollCarpet)}
-          scrolledBy={scrolledBy}
-          setScrolledBy={setScrolledBy}
+          travel={travel}
+          scrollHeadHeight={scrollHeadHeight}
+          scrollByHeadTravel={scrollByHeadTravel}
         />
       </Box>
     </Box>
@@ -99,85 +81,106 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
 };
 
 const Scrollbar = (props: {
-  totalScrollCarpet: number;
+  travel: number;
   scrollHeadHeight: number;
-  scrollCarpet: number;
-  scrolledBy: number;
-  setScrolledBy: (scrolledBy: number) => void;
-  child: HTMLElement | undefined;
+  scrollByHeadTravel: (travel: number) => void;
 }) => {
   const classes = useScrollBarStyles();
-  const { totalScrollCarpet, setScrolledBy, ...otherProps } = props;
-  const k =
-    (totalScrollCarpet - props.scrollCarpet) /
-    (props.scrollCarpet - props.scrollHeadHeight);
+  const { scrollHeadHeight, travel, scrollByHeadTravel } = props;
 
-  return totalScrollCarpet && props.child ? (
+  return (
     <Box
       className={classes.root}
       onClick={(e) => {
-        const m = (e.nativeEvent as any).layerY;
-        if (props.child) {
-          props.child.scrollTo({
-            top: Math.min(k * m, totalScrollCarpet - props.scrollCarpet),
-          });
-        }
+        const newTravel = (e.nativeEvent as any).layerY;
+        scrollByHeadTravel(newTravel);
       }}
     >
-      <ScrollHead {...otherProps} totalScrollCarpet={totalScrollCarpet} />
+      <ScrollHead
+        scrollHeadHeight={scrollHeadHeight}
+        travel={travel}
+        scrollByHeadTravel={scrollByHeadTravel}
+      />
     </Box>
-  ) : null;
+  );
 };
 
 const ScrollHead = (props: {
   scrollHeadHeight: number;
-  scrollCarpet: number;
-  scrolledBy: number;
-  totalScrollCarpet: number;
-  child: HTMLElement | undefined;
+  travel: number;
+  scrollByHeadTravel: (travel: number) => void;
 }) => {
-  const { totalScrollCarpet, scrollHeadHeight, scrollCarpet, scrolledBy } =
-    props;
+  const { scrollHeadHeight, travel, scrollByHeadTravel } = props;
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const k =
-    (totalScrollCarpet - scrollCarpet) / (scrollCarpet - scrollHeadHeight);
+  useClickAndDragWatcher(
+    containerRef,
+    "movementY",
+    useCallback(
+      (movementY: number) => {
+        scrollByHeadTravel(travel + movementY);
+      },
+      [scrollByHeadTravel, travel]
+    )
+  );
 
-  const top = scrolledBy / k;
+  const classes = useScrollHeadStyles({
+    scrollHeadHeight,
+    top: travel,
+  });
 
-  const classes = useScrollHeadStyles({ scrollHeadHeight, top });
-  return scrollCarpet ? (
+  return (
     <Box
       onClick={(e) => {
         e.stopPropagation();
-        const m = (e.nativeEvent as any).layerY;
-        if (props.child) {
-          props.child.scrollTo({
-            top: Math.min(
-              k * (m + top),
-              totalScrollCarpet - props.scrollCarpet
-            ),
-          });
-        }
       }}
+      ref={containerRef}
       className={classes.root}
     />
-  ) : null;
+  );
 };
 
 const useScrollEventListenerCallback = (
-  debouncer: React.MutableRefObject<number | undefined>,
-  setScrolledBy: (scrolledBy: number) => void,
-  maxScroll: number
+  setTravel: (travel: number) => void,
+  maxScroll: number,
+  scrollFactor: number
 ) => {
+  let debouncer = useRef<number | undefined>(undefined);
+
   return useCallback(
     (ev: any) => {
-      // setScrolledBy(Math.min(ev.target.scrollTop, maxScroll));
-
       clearTimeout(debouncer.current);
       debouncer.current = setTimeout(() => {
-        setScrolledBy(Math.min(ev.target.scrollTop, maxScroll));
+        setTravel(
+          Math.min(ev.target.scrollTop / scrollFactor, maxScroll / scrollFactor)
+        );
       }, 0) as unknown as number;
     },
-    [setScrolledBy, debouncer, maxScroll]
+    [setTravel, debouncer, maxScroll, scrollFactor]
   );
 };
+
+const useScrollCallback = (
+  child: HTMLElement | null,
+  travel: number,
+  scrollHeadHeight: number,
+  windowLength: number,
+  scrollFactor: number
+) =>
+  useCallback(
+    (newDistanceFromTop: number) => {
+      if (child) {
+        const diff = newDistanceFromTop - (travel + scrollHeadHeight);
+        const scroll = diff > 0 ? travel + diff : newDistanceFromTop;
+
+        if (scroll <= windowLength - scrollHeadHeight) {
+          child.scrollTo({
+            top: Math.min(
+              scrollFactor * Math.min(scroll, windowLength - scrollHeadHeight)
+            ),
+          });
+        }
+      }
+    },
+    [windowLength, child, scrollFactor, scrollHeadHeight, travel]
+  );
