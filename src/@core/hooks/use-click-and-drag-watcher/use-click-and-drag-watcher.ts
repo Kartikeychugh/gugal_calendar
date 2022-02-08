@@ -7,7 +7,6 @@ export const useClickAndDragWatcher = (
   onMovement?: (distanceFromTop: number) => void
 ) => {
   const [mouseDown, setMouseDown] = useState(false);
-  const [movement, setMovement] = useState(0);
 
   useEventListener(
     containerRef.current,
@@ -34,12 +33,9 @@ export const useClickAndDragWatcher = (
       (e: Event) => {
         if (mouseDown && (e as MouseEvent).buttons !== 0) {
           onMovement && onMovement((e as MouseEvent)[direction]);
-          setMovement((e as MouseEvent)[direction]);
         }
       },
       [onMovement, mouseDown, direction]
     )
   );
-
-  return movement;
 };

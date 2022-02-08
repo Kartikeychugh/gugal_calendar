@@ -70,11 +70,13 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
     >
       {props.children}
       <Box sx={{ width: "10px", display: "flex", justifyContent: "center" }}>
-        <Scrollbar
-          travel={travel}
-          scrollHeadHeight={scrollHeadHeight}
-          scrollByHeadTravel={scrollByHeadTravel}
-        />
+        {contentLength > windowLength ? (
+          <Scrollbar
+            travel={travel}
+            scrollHeadHeight={scrollHeadHeight}
+            scrollByHeadTravel={scrollByHeadTravel}
+          />
+        ) : null}
       </Box>
     </Box>
   );
@@ -83,7 +85,7 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
 const Scrollbar = (props: {
   travel: number;
   scrollHeadHeight: number;
-  scrollByHeadTravel: (travel: number) => void;
+  scrollByHeadTravel: (newTravel: number, behavior: "auto" | "smooth") => void;
 }) => {
   const classes = useScrollBarStyles();
   const { scrollHeadHeight, travel, scrollByHeadTravel } = props;
@@ -93,7 +95,7 @@ const Scrollbar = (props: {
       className={classes.root}
       onClick={(e) => {
         const newTravel = (e.nativeEvent as any).layerY;
-        scrollByHeadTravel(newTravel);
+        scrollByHeadTravel(newTravel, "smooth");
       }}
     >
       <ScrollHead
@@ -108,7 +110,7 @@ const Scrollbar = (props: {
 const ScrollHead = (props: {
   scrollHeadHeight: number;
   travel: number;
-  scrollByHeadTravel: (travel: number) => void;
+  scrollByHeadTravel: (newTravel: number, behavior: "auto" | "smooth") => void;
 }) => {
   const { scrollHeadHeight, travel, scrollByHeadTravel } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -118,7 +120,7 @@ const ScrollHead = (props: {
     "movementY",
     useCallback(
       (movementY: number) => {
-        scrollByHeadTravel(travel + movementY);
+        scrollByHeadTravel(travel + movementY, "auto");
       },
       [scrollByHeadTravel, travel]
     )
@@ -168,16 +170,17 @@ const useScrollCallback = (
   scrollFactor: number
 ) =>
   useCallback(
-    (newDistanceFromTop: number) => {
+    (newTravel: number, behavior: "auto" | "smooth") => {
       if (child) {
-        const diff = newDistanceFromTop - (travel + scrollHeadHeight);
-        const scroll = diff > 0 ? travel + diff : newDistanceFromTop;
+        const diff = newTravel - (travel + scrollHeadHeight);
+        const scroll = diff > 0 ? travel + diff : newTravel;
 
         if (scroll <= windowLength - scrollHeadHeight) {
           child.scrollTo({
             top: Math.min(
               scrollFactor * Math.min(scroll, windowLength - scrollHeadHeight)
             ),
+            behavior,
           });
         }
       }
