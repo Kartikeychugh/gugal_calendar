@@ -1,9 +1,11 @@
-import { compareAsc } from "date-fns";
-import { ICalendarEventItem } from "../models";
+import { compareAsc, subSeconds } from "date-fns";
+import { ICalendarEvent, ICalendarEventItem } from "../@core";
 
 export const transformEvents = (
-  events: CalendarEventItem[],
-  minCellHeight: number
+  events: ICalendarEvent[],
+  cellHeight: number,
+  colors: CalendarColors | null,
+  defaultColorId: number
 ) => {
   events.sort((_a, _b) => {
     const aStart = new Date(_a.start.dateTime);
@@ -24,43 +26,84 @@ export const transformEvents = (
   });
 
   const conflictingGroups = divideIntoConflictingGroups(events);
+  const tramsformedEvents: ICalendarEventItem[] = [];
+
   conflictingGroups.forEach((conflictingGroup) => {
     const columnsWiseEvents = divideIntoColumns(conflictingGroup);
     const totalColumns = columnsWiseEvents.length;
 
     columnsWiseEvents.forEach((columnWiseEvents, index) => {
       columnWiseEvents.forEach((event) => {
-        const left = `calc(${(index / totalColumns) * 100}% + ${index * 2}px)`;
-        const width = `${(1 / totalColumns) * 100}%`;
-        const startTime = new Date(event.start.dateTime);
-        const endTime = new Date(event.end.dateTime);
+        const colorId = event.colorId ? event.colorId : defaultColorId;
 
-        (event as ICalendarEventItem).layout = {
-          top: `${
-            minCellHeight * startTime.getHours() +
-            (minCellHeight / 60) * startTime.getMinutes()
-          }px`,
-          height: `${
-            minCellHeight * (endTime.getHours() - startTime.getHours()) +
-            (minCellHeight / 60) *
-              (endTime.getMinutes() - startTime.getMinutes())
-          }px`,
-          left,
-          width,
+        /**
+         * totalColumns: Number of sub-columns containing events within a single day column.
+         * Width left after subtractng the margins is equally distributed between these sub columns.
+         * hence 100%/columns minus the total margins.
+         */
+        const margin = 1;
+        const totalMargins = (totalColumns - 1) * margin;
+
+        const width = `${(1 / totalColumns) * 100}% - ${
+          totalMargins / totalColumns
+        }px`;
+
+        /**
+         * The left property determines in which column would the event reside.
+         * An event in 1st column would have 0 widths in front, 2nd -> 1 widths and so on.
+         *
+         * Hence width*index would determine the left property.
+         * But this would keep events stacked next to each other. We need to add margins.
+         * Hence add margin*index
+         */
+        const left = `${(index / totalColumns) * 100}% - ${
+          (totalMargins / totalColumns) * index - margin * index
+        }px`;
+
+        const startTime = new Date(event.start.dateTime);
+        const endTime = subSeconds(new Date(event.end.dateTime), 1);
+
+        const transformedEvent: ICalendarEventItem = {
+          ...event,
+          layout: {
+            top: `${
+              cellHeight * startTime.getHours() +
+              (cellHeight / 60) * startTime.getMinutes() +
+              (cellHeight / 3600) * startTime.getSeconds()
+            }px`,
+            height: `${
+              cellHeight * (endTime.getHours() - startTime.getHours()) +
+              (cellHeight / 60) *
+                (endTime.getMinutes() - startTime.getMinutes()) +
+              (cellHeight / 3600) *
+                (endTime.getSeconds() - startTime.getSeconds())
+            }px`,
+            left: `calc(${left})`,
+            width: `calc(${width})`,
+          },
+          colors: {
+            calendar: { backgroundColor: colors!.calendar[colorId].background },
+            event: {
+              backgroundColor: colors!.event[colorId].background,
+              foregroundColor: colors!.event[colorId].foreground,
+            },
+          },
         };
+
+        tramsformedEvents.push(transformedEvent);
       });
     });
   });
 
-  return events as ICalendarEventItem[];
+  return tramsformedEvents;
 };
 
 interface IConflictingGroup {
   start: Date;
   end: Date;
-  conflictingEvents: CalendarEventItem[];
+  conflictingEvents: ICalendarEvent[];
 }
-const divideIntoConflictingGroups = (events: CalendarEventItem[]) => {
+const divideIntoConflictingGroups = (events: ICalendarEvent[]) => {
   const conflictingGroups: IConflictingGroup[] = [];
 
   let currentGroup: IConflictingGroup | undefined = undefined;
@@ -92,7 +135,7 @@ const divideIntoConflictingGroups = (events: CalendarEventItem[]) => {
 
 const isConflictingGroup = (
   currentGroup: IConflictingGroup,
-  event: CalendarEventItem
+  event: ICalendarEvent
 ) => {
   const startTime = new Date(event.start.dateTime);
 
@@ -101,7 +144,7 @@ const isConflictingGroup = (
 
 const updateGroup = (
   currentGroup: IConflictingGroup,
-  event: CalendarEventItem
+  event: ICalendarEvent
 ) => {
   const endTime = new Date(event.end.dateTime);
   const flag = compareAsc(currentGroup.end, endTime);
@@ -112,7 +155,7 @@ const updateGroup = (
 };
 
 const divideIntoColumns = (conflictGroup: IConflictingGroup) => {
-  const columnWiseEvents: CalendarEventItem[][] = [];
+  const columnWiseEvents: ICalendarEvent[][] = [];
 
   while (conflictGroup.conflictingEvents.length) {
     columnWiseEvents.push(
@@ -123,8 +166,8 @@ const divideIntoColumns = (conflictGroup: IConflictingGroup) => {
   return columnWiseEvents;
 };
 
-const selectEventsInCurrentColumn = (events: CalendarEventItem[]) => {
-  const result: CalendarEventItem[] = [events[0]];
+const selectEventsInCurrentColumn = (events: ICalendarEvent[]) => {
+  const result: ICalendarEvent[] = [events[0]];
   const remainingEvents = events.shift();
   if (!remainingEvents) {
     return result;
@@ -145,7 +188,7 @@ const selectEventsInCurrentColumn = (events: CalendarEventItem[]) => {
   return result;
 };
 
-const isConflictingEvent = (a: CalendarEventItem, b: CalendarEventItem) => {
+const isConflictingEvent = (a: ICalendarEvent, b: ICalendarEvent) => {
   const endTime = new Date(a.end.dateTime);
   const startTime = new Date(b.start.dateTime);
 

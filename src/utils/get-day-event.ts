@@ -1,5 +1,7 @@
+import { ICalendarEvent } from "../@core";
+
 export const extractEventForDay = (
-  events: CalendarEventItem[] | undefined,
+  events: ICalendarEvent[] | undefined,
   date: Date
 ) => {
   if (!events) {

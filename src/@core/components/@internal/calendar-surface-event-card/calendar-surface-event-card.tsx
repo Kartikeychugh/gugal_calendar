@@ -1,40 +1,15 @@
 import VideoCallIcon from "@mui/icons-material/VideoCall";
-import { ICalendarEventItem } from "../../../../models";
-import { useRef } from "react";
-import { Box } from "@mui/material";
-import { useCalendarColors } from "../../../../hooks";
+import { Box, CircularProgress } from "@mui/material";
+import { clientEventStatus, ICalendarEventItem } from "../../../models";
 
 export const CalendarSurfaceEventCard = (props: {
   event: ICalendarEventItem;
 }) => {
   const { event } = props;
-  const ele = useRef(null);
-  const colors = useCalendarColors();
 
-  const time = new Date(event.start.dateTime);
-
-  let hours = time.getHours();
-  let minutes = time.getMinutes();
-  let hoursStr = hours.toLocaleString();
-  let minutesStr = minutes.toLocaleString();
-  let ampm = "AM";
-
-  if (hours >= 12) {
-    ampm = "PM";
-  }
-
-  if (hours < 10) {
-    hoursStr = `0${hoursStr}`;
-  }
-
-  if (minutes < 10) {
-    minutesStr = `0${minutesStr}`;
-  }
-  const colorId = event.colorId ? event.colorId : 5;
   return (
     <Box
       key={props.event.id}
-      ref={ele}
       sx={{
         display: "flex",
         position: "absolute",
@@ -46,6 +21,7 @@ export const CalendarSurfaceEventCard = (props: {
         left: event.layout.left,
         overflow: "hidden",
         borderRadius: "5px",
+        transition: "0.2s all ease-in-out",
         "&:hover": {
           opacity: "0.8",
         },
@@ -53,14 +29,14 @@ export const CalendarSurfaceEventCard = (props: {
     >
       <Box
         sx={{
-          background: `${colors!.calendar[colorId].background}`,
+          background: event.colors.calendar.backgroundColor,
           minWidth: "3px",
         }}
       ></Box>
       <Box
         sx={{
-          backgroundColor: `${colors!.event[colorId].background}`,
-          color: `${colors!.event[colorId].foreground}`,
+          backgroundColor: event.colors.event.backgroundColor,
+          color: event.colors.event.foregroundColor,
           padding: "0px 5px 0px 5px",
           width: "100%",
         }}
@@ -82,7 +58,15 @@ export const CalendarSurfaceEventCard = (props: {
               lineHeight: "16px",
             }}
           >
-            {hoursStr}:{minutesStr} {ampm}
+            {new Date(event.start.dateTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}{" "}
+            -{" "}
+            {new Date(event.end.dateTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </Box>
           {event.hangoutLink ? (
             <Box
@@ -105,6 +89,17 @@ export const CalendarSurfaceEventCard = (props: {
                 sx={{ fontSize: 20 }}
               />
             </Box>
+          ) : null}
+          {event.client?.status === clientEventStatus.syncing ? (
+            <CircularProgress
+              style={{
+                position: "relative",
+                top: "3px",
+                height: "1em",
+                width: "1em",
+              }}
+              color="inherit"
+            />
           ) : null}
         </Box>
         <Box

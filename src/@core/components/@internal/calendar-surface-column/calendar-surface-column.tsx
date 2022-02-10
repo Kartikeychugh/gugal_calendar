@@ -1,23 +1,20 @@
 import { Box } from "@mui/material";
+import { eachDayOfInterval, isSameDay, startOfToday } from "date-fns";
 import { useContext, useRef } from "react";
-import {
-  CalendarDimensionsContext,
-  CalendarSurfaceSizeWatcher,
-  useCalendarView,
-} from "../../..";
-import { ICalendarEventItem } from "../../../../models";
-import { extractEventForDay } from "../../../../utils";
+import { CalendarViewContext } from "../../../providers";
 import { CalendarSurfaceEventColumn } from "../calendar-surface-event-column";
 import { CalendarSurfaceGridColumn } from "../calendar-surface-grid-column";
+import { CalendarSurfaceSizeWatcher } from "../calendar-surface-size-watcher";
 
 export const CalendarSurfaceColumns = (props: {
-  events: ICalendarEventItem[];
+  onCellClick: (datetime: Date, hour: number) => void;
 }) => {
-  const {
-    currentView: { numberOfDays },
-    currentDates,
-  } = useCalendarView();
+  const { startDateOfView, endDateOfView } = useContext(CalendarViewContext);
 
+  const currentDates = eachDayOfInterval({
+    start: startDateOfView,
+    end: endDateOfView,
+  });
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   return (
@@ -33,11 +30,9 @@ export const CalendarSurfaceColumns = (props: {
       >
         {currentDates.map((day, i) => (
           <CalendarSurfaceColumn
-            events={props.events}
-            lastColumn={i + 1 === currentDates.length}
-            datetime={day}
             key={i}
-            view={numberOfDays}
+            date={day}
+            onCellClick={props.onCellClick}
           />
         ))}
       </Box>
@@ -46,29 +41,29 @@ export const CalendarSurfaceColumns = (props: {
 };
 
 const CalendarSurfaceColumn = (props: {
-  datetime: Date;
-  events: CalendarEventItem[] | undefined;
-  lastColumn: boolean;
-  view: number;
+  date: Date;
+  onCellClick: (datetime: Date, hour: number) => void;
 }) => {
-  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
+  const { minColumnWidth } = useContext(CalendarViewContext);
 
+  //TODO
   return (
     <Box
       sx={{
+        backgroundColor: `${
+          isSameDay(props.date, startOfToday())
+            ? "rgb(25, 118, 210, 0.07)"
+            : "#ffffff"
+        }`,
         height: "100%",
         width: "100%",
-        minWidth: `${calendarDimensionsValue.minColumnWidth}px`,
+        minWidth: `${minColumnWidth}px`,
       }}
     >
-      <CalendarSurfaceEventColumn
-        view={props.view}
-        events={extractEventForDay(props.events, props.datetime)}
-      />
+      <CalendarSurfaceEventColumn date={props.date} />
       <CalendarSurfaceGridColumn
-        view={props.view}
-        datetime={props.datetime}
-        lastColumn={props.lastColumn}
+        date={props.date}
+        onCellClick={props.onCellClick}
       />
     </Box>
   );

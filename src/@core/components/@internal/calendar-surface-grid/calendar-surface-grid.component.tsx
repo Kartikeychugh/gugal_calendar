@@ -1,71 +1,71 @@
 import { Box } from "@mui/material";
-import { startOfToday } from "date-fns";
-import { useContext, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
-  CalendarDimensionsContext,
-  CalendarDimensionsProvider,
-} from "../../../providers";
-import { useCalendarEvents } from "../../../../hooks";
-import { ICalendarEventItem } from "../../../../models";
+  useCalendarDimensionCellHeightContext,
+  useCalendarFeatureFlags,
+} from "../../..";
+import { useSizeWatcher } from "../../../hooks";
 import { CalendarSurfaceColumns } from "../calendar-surface-column";
-import { CalendarSurfaceTimeMarker } from "../calendar-surface-time-marker";
-import { useCalendarView, useSizeWatcher } from "../../../hooks";
 import { CalendarSurfaceTimeGrid } from "../calendar-surface-time-grid";
+import { CalendarSurfaceTimeMarker } from "../calendar-surface-time-marker";
+import { CustomScrollbar } from "../custom-scrollbar/custom-scrollbar";
 
-export const CalendarSurfaceScrollableGrid = () => {
-  const value = useContext(CalendarDimensionsContext);
-  const ref = useRef(null);
-  const width = useSizeWatcher(ref, "height");
+export const CalendarSurfaceScrollableGrid = (props: {
+  onCellClick: (datetime: Date, hour: number) => void;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useSurfaceGridHeightWatcher(ref);
 
   return (
-    <Box
-      ref={ref}
-      sx={
-        {
-          overflowY: "overlay",
-          width: "100%",
-        } as any
-      }
-    >
-      <CalendarDimensionsProvider
-        value={{
-          ...value,
-          minCellHeight:
-            width === 0
-              ? value.minCellHeight
-              : Math.max(width / 12, value.minCellHeight),
-        }}
+    <CustomScrollbar>
+      <Box
+        ref={ref}
+        sx={
+          {
+            overflowY: "overlay",
+            width: "100%",
+            height: "100%",
+          } as any
+        }
       >
-        <CalendarSurfaceGrid />
-      </CalendarDimensionsProvider>
-    </Box>
+        <CalendarSurfaceGrid onCellClick={props.onCellClick} />
+      </Box>
+    </CustomScrollbar>
   );
 };
 
-const CalendarSurfaceGrid = () => {
-  const events = useCalendarEvents();
-
+const CalendarSurfaceGrid = (props: {
+  onCellClick: (datetime: Date, hour: number) => void;
+}) => {
   return (
     <Box sx={{ width: "100%", display: "flex" }}>
       <CalendarSurfaceTimeGrid />
-      <CalendarSurfaceGridRenderer events={events} />
+      <CalendarSurfaceGridRenderer onCellClick={props.onCellClick} />
     </Box>
   );
 };
 
 const CalendarSurfaceGridRenderer = (props: {
-  events: ICalendarEventItem[];
+  onCellClick: (datetime: Date, hour: number) => void;
 }) => {
-  const { currentView } = useCalendarView();
-  const { fromDay, numberOfDays } = currentView;
+  const { onCellClick } = props;
 
   return (
     <Box sx={{ display: "flex", position: "relative", width: "100%" }}>
-      <CalendarSurfaceTimeMarker
-        view={numberOfDays}
-        diff={startOfToday().getDay() - fromDay}
-      />
-      <CalendarSurfaceColumns {...props} />
+      <CalendarSurfaceTimeMarker />
+      <CalendarSurfaceColumns onCellClick={onCellClick} />
     </Box>
   );
+};
+
+const useSurfaceGridHeightWatcher = (ref: React.RefObject<HTMLDivElement>) => {
+  const { responsiveCellHeight } = useCalendarFeatureFlags();
+
+  const height = useSizeWatcher(ref, !!responsiveCellHeight, "height");
+  const { setCellHeight } = useCalendarDimensionCellHeightContext();
+
+  useEffect(() => {
+    setCellHeight(height / 12);
+  }, [height, setCellHeight]);
 };

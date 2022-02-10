@@ -1,6 +1,5 @@
 import {
   Dialog,
-  ClickAwayListener,
   Box,
   DialogTitle,
   DialogContent,
@@ -10,25 +9,39 @@ import {
 import Draggable from "react-draggable";
 import { CalendarSchedulingForm } from "../../@core";
 import { useDispatch, useSelector } from "../../redux";
+import { DefaultTheme, makeStyles } from "@mui/styles";
 
-export const CalendarSchedulingFormDialog = () => {
+const useStyle = makeStyles<DefaultTheme, {}, string>({
+  root: {
+    "& .MuiBackdrop-root": {
+      backgroundColor: "transparent",
+    },
+    "& .MuiPaper-root": {
+      pointerEvents: "all",
+      margin: 0,
+      borderRadius: "15px",
+    },
+  },
+  title: {
+    backgroundColor: "rgb(25, 118, 210, 0.07)",
+  },
+});
+
+export const CalendarSchedulingFormDialog = (props: {
+  setSelectedDate: (newDate: number) => void;
+}) => {
   const dispatch = useDispatch();
   const { client } = useSelector((state) => state.events);
+  const { open } = useSelector((state) => state.form);
+  const classes = useStyle();
 
-  return client ? (
+  return (
     <Dialog
-      sx={{
-        "& .MuiBackdrop-root": {
-          backgroundColor: "transparent",
-        },
-        "& .MuiPaper-root": {
-          pointerEvents: "all",
-          margin: 0,
-          borderRadius: "15px",
-        },
-      }}
-      open={!!client}
+      keepMounted={true}
+      className={classes.root}
+      open={open}
       onClose={() => {
+        dispatch({ type: "SET_FORM_OPEN", payload: false });
         dispatch({
           type: "REMOVE_CLIENT_EVENT",
         });
@@ -36,26 +49,29 @@ export const CalendarSchedulingFormDialog = () => {
       PaperComponent={PaperComponent}
       aria-labelledby="draggable-dialog-title"
     >
-      <ClickAwayListener
-        onClickAway={() => {
-          dispatch({
-            type: "REMOVE_CLIENT_EVENT",
-          });
-        }}
-      >
-        <Box>
-          <DialogTitle
-            sx={{ backgroundColor: "rgb(25, 118, 210, 0.07)" }}
-            style={{ cursor: "move" }}
-            id="draggable-dialog-title"
-          />
-          <DialogContent>
-            <CalendarSchedulingForm event={client} />
-          </DialogContent>
-        </Box>
-      </ClickAwayListener>
+      <Box>
+        <DialogTitle
+          className={classes.title}
+          style={{ cursor: "move" }}
+          id="draggable-dialog-title"
+        />
+        <DialogContent>
+          {client ? (
+            <CalendarSchedulingForm
+              onSubmit={() => {
+                dispatch({ type: "SET_FORM_OPEN", payload: false });
+              }}
+              onCancel={() => {
+                dispatch({ type: "SET_FORM_OPEN", payload: false });
+              }}
+              event={client}
+              setSelectedDate={props.setSelectedDate}
+            />
+          ) : null}
+        </DialogContent>
+      </Box>
     </Dialog>
-  ) : null;
+  );
 };
 
 function PaperComponent(props: PaperProps) {

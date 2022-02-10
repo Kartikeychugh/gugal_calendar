@@ -1,20 +1,21 @@
 import { Box } from "@mui/material";
-import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../../providers";
+import { useCalendarDimensionCellHeightContext } from "../../../providers";
 
-export const CalendarSurfaceTimeGrid = () => {
-  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
+export const CalendarSurfaceTimeGrid = (props: {}) => {
+  const { cellHeight } = useCalendarDimensionCellHeightContext();
 
   const cells = [];
   for (let i = 0; i < 24; i++) {
-    cells.push(<CalendarGridTimeCell key={i} hour={i} />);
+    cells.push(
+      <CalendarGridTimeCell key={i} hour={i} cellHeight={cellHeight} />
+    );
   }
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        minWidth: `${calendarDimensionsValue.timeGridWidth}px`,
+        minWidth: `50px`,
       }}
     >
       {cells}
@@ -22,19 +23,17 @@ export const CalendarSurfaceTimeGrid = () => {
   );
 };
 
-const CalendarGridTimeCell = (props: { hour: number }) => {
-  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
-
+const CalendarGridTimeCell = (props: { hour: number; cellHeight: number }) => {
   const hour = props.hour > 12 ? props.hour - 12 : props.hour;
   const ampm = props.hour > 12 ? "PM" : "AM";
+
   return (
     <Box
       sx={{
         display: "flex",
         width: "100%",
-        height: `${calendarDimensionsValue.minCellHeight}px`,
+        height: `${props.cellHeight}px`,
         padding: "4px",
-        // justifyContent: "center",
       }}
     >
       <Box

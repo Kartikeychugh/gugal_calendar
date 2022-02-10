@@ -1,2 +1,2 @@
-export * from "./private-route";
 export { CalendarContainer } from "./calendar-container";
+export { GugalCalendar } from "./gugal-calendar";

@@ -1,24 +1,28 @@
 import { endOfWeek, startOfWeek } from "date-fns";
-import { ICalendarClientEvent } from "../../models";
-import { Defer, dynamicScriptLoad } from "../../utils";
+import { ICalendarClientEventItem } from "../../@core";
+import { GoogleAuthenticationService } from "../google-authentication-service/google-authentication-service";
+import { GoogleGAPIService } from "../google-client-service/google-client-service";
 
 export interface IGoogleCalendarService {
   getEvents(start: number): Promise<CalendarEventItem[]>;
-  createEvent(event: ICalendarClientEvent): Promise<any>;
+  createEvent(event: ICalendarClientEventItem): Promise<any>;
   getColors(): Promise<CalendarColors>;
 }
 
 export class GoogleCalendarService implements IGoogleCalendarService {
-  private defer = new Defer<void>();
+  private googleAuthenticationService: GoogleAuthenticationService;
+  private googleGapiService: GoogleGAPIService;
 
-  constructor() {
-    dynamicScriptLoad("https://apis.google.com/js/api.js").then(() => {
-      this.defer.resolve();
-    });
+  constructor(googleGapiService: GoogleGAPIService) {
+    this.googleGapiService = googleGapiService;
+    this.googleAuthenticationService = new GoogleAuthenticationService(
+      this.googleGapiService
+    );
   }
 
   public async getEvents(start: number) {
-    return this.defer.promise.then(async () => {
+    return this.googleAuthenticationService.ensureSignIn().then(async () => {
+      console.log("Ensured authentication");
       const s = startOfWeek(start);
       const e = endOfWeek(start);
 
@@ -34,8 +38,8 @@ export class GoogleCalendarService implements IGoogleCalendarService {
     });
   }
 
-  public async createEvent(event: ICalendarClientEvent) {
-    return this.defer.promise.then(async () => {
+  public async createEvent(event: ICalendarClientEventItem) {
+    return this.googleAuthenticationService.ensureSignIn().then(async () => {
       const response = await (gapi.client.calendar as any).events.insert({
         calendarId: "primary",
         resource: event,
@@ -46,7 +50,7 @@ export class GoogleCalendarService implements IGoogleCalendarService {
   }
 
   public async getColors() {
-    return this.defer.promise.then(async () => {
+    return this.googleGapiService.ensureGAPIInitialised().then(async () => {
       const response = await gapi.client.calendar.colors.get();
       return response.result;
     });

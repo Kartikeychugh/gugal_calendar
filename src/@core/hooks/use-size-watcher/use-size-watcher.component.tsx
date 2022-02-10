@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 
 export const useSizeWatcher = (
   containerRef: React.MutableRefObject<HTMLDivElement | null>,
+  watchIfTrue: boolean,
   param: "height" | "width"
 ) => {
-  const [width, setWidth] = useState(0);
+  const [width, setWidth] = useState(300);
 
   const observer = useMemo(() => {
     return new ResizeObserver((entries) => {
@@ -14,14 +15,14 @@ export const useSizeWatcher = (
   }, [param]);
 
   useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && watchIfTrue) {
       observer.observe(containerRef.current);
     }
 
     return () => {
       observer.disconnect();
     };
-  }, [observer, containerRef]);
+  }, [observer, containerRef, watchIfTrue]);
 
   return width;
 };

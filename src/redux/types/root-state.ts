@@ -3,6 +3,7 @@ import {
   IEventsState,
   ICalendarSurfaceViewState,
   ICalendarNotificationsState,
+  ICalendarSchedulingFormDialogState,
 } from "../reducers";
 
 export interface IRootState {
@@ -10,4 +11,5 @@ export interface IRootState {
   events: IEventsState;
   notification: ICalendarNotificationsState;
   colors: ICalendarColorsState;
+  form: ICalendarSchedulingFormDialogState;
 }

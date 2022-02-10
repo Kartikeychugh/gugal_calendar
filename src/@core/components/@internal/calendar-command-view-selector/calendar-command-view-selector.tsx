@@ -1,44 +1,68 @@
 import { Button, Box, Menu, MenuItem } from "@mui/material";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { useUpdateView } from "../../../../hooks";
-import { useCalendarView } from "../../../hooks";
+import { CalendarViewContext } from "../../../providers";
+import { makeStyles } from "@mui/styles";
+
+const useStyle = makeStyles({
+  root: { display: "flex", alignItems: "center", height: "100%" },
+  viewSelectorButton: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "30px",
+    backgroundColor: "rgb(25, 118, 210, 0.07)",
+    fontSize: "12px",
+    color: "#18181B",
+    marginLeft: "2px",
+    marginRight: "2px",
+    minWidth: "100px",
+    fontWeight: "700",
+    "& .MuiSvgIcon-root": {
+      fill: "black",
+      width: "14px",
+    },
+  },
+  todayIcon: {
+    width: "20px",
+    fill: "white",
+    marginRight: "8px",
+  },
+  menu: {
+    "& .MuiPaper-root": { marginTop: "8px", borderRadius: "5px" },
+  },
+  menuItem: {
+    color: "#18181B",
+    fontSize: "13px",
+    fontStyle: "normal",
+    letterSpacing: "1px",
+    "& .MuiSvgIcon-root": {
+      fill: "black",
+      width: "14px",
+      fontWeight: 500,
+    },
+    "&:hover": {
+      backgroundColor: "rgb(25, 118, 210, 0.07)",
+    },
+  },
+});
 
 export const CalendarCommandViewSelector = () => {
-  const updateView = useUpdateView();
-
   const [state, setState] = useState({ open: false });
-  const { currentView, getView, availableViews } = useCalendarView();
-  const { title } = currentView;
+  const {
+    currentView: { title },
+    getView,
+    availableViews,
+    updateUserView,
+  } = useContext(CalendarViewContext);
+
   const ref = useRef(null);
+  const classes = useStyle();
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        height: "100%",
-      }}
-    >
+    <Box className={classes.root}>
       <Button
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "30px",
-          backgroundColor: "rgb(25, 118, 210, 0.07)",
-          fontSize: "12px",
-          color: "#18181B",
-          ml: "2px",
-          mr: "2px",
-          minWidth: "100px",
-          fontWeight: "700",
-          "& .MuiSvgIcon-root": {
-            fill: "black",
-            width: "14px",
-          },
-        }}
-        // variant="contained"
+        className={classes.viewSelectorButton}
         ref={ref}
         id="basic-button"
         aria-controls={state.open ? "basic-menu" : undefined}
@@ -48,13 +72,11 @@ export const CalendarCommandViewSelector = () => {
           setState({ open: !state.open });
         }}
       >
-        <CalendarTodayIcon sx={{ width: "20px", fill: "white", mr: 1 }} />
+        <CalendarTodayIcon className={classes.todayIcon} />
         {title}
       </Button>
       <Menu
-        sx={{
-          "& .MuiPaper-root": { mt: 1, borderRadius: "5px" },
-        }}
+        className={classes.menu}
         id="basic-menu"
         anchorEl={ref.current}
         open={state.open}
@@ -73,22 +95,9 @@ export const CalendarCommandViewSelector = () => {
               key={i}
               onClick={() => {
                 setState({ open: false });
-                updateView(viewId);
+                updateUserView(viewId);
               }}
-              sx={{
-                color: "#18181B",
-                fontSize: "13px",
-                fontStyle: "normal",
-                letterSpacing: "1px",
-                "& .MuiSvgIcon-root": {
-                  fill: "black",
-                  width: "14px",
-                  fontWeight: 500,
-                },
-                "&:hover": {
-                  backgroundColor: "rgb(25, 118, 210, 0.07)",
-                },
-              }}
+              className={classes.menuItem}
             >
               {view.title}
             </MenuItem>

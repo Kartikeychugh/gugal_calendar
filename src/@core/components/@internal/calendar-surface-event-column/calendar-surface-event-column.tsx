@@ -1,28 +1,34 @@
 import { Box } from "@mui/material";
 import { useContext } from "react";
-import { transformEvents } from "../../../../utils";
-import { CalendarDimensionsContext } from "../../../providers";
+import { extractEventForDay, transformEvents } from "../../../../utils";
+import {
+  CalendarViewContext,
+  useCalendarEventDetails,
+  useCalendarDimensionCellHeightContext,
+} from "../../../providers";
 import { CalendarSurfaceEventCard } from "../calendar-surface-event-card";
 
-export const CalendarSurfaceEventColumn = (props: {
-  events: CalendarEventItem[] | undefined;
-  view: number;
-}) => {
-  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
-
-  const { events = [] } = props;
+export const CalendarSurfaceEventColumn = (props: { date: Date }) => {
+  const {
+    currentView: { numberOfDays },
+  } = useContext(CalendarViewContext);
+  const { cellHeight } = useCalendarDimensionCellHeightContext();
+  const { colors, events, defaultColorId } = useCalendarEventDetails();
   let transformedEvents = transformEvents(
-    events,
-    calendarDimensionsValue.minCellHeight
+    extractEventForDay(events, props.date) || [],
+    cellHeight,
+    colors,
+    defaultColorId
   );
 
   return (
+    //TODO
     <Box
       sx={{
         height: "100%",
         position: "absolute",
         pointerEvents: "none",
-        width: `calc(${100 / props.view}% - 15px)`,
+        width: `calc(${100 / numberOfDays}% - 15px)`,
       }}
     >
       {transformedEvents.map((event) => (
