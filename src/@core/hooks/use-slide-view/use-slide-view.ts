@@ -1,24 +1,23 @@
 import { addDays, startOfToday } from "date-fns";
-import { useCalendarView } from "../use-calendar-view";
+import { useContext } from "react";
+import { CalendarViewContext } from "../../providers";
 
 export const useSlideView = () => {
   const {
     selectedDate,
+    setSelectedDate,
     currentView: { change },
-    setCalendarSelectedDate,
-  } = useCalendarView();
+  } = useContext(CalendarViewContext);
 
   return (direction: number) => {
-    setCalendarSelectedDate(
-      addDays(selectedDate, direction * change).valueOf()
-    );
+    setSelectedDate(addDays(selectedDate, direction * change).valueOf());
   };
 };
 
 export const useSlideToToday = () => {
-  const { setCalendarSelectedDate } = useCalendarView();
+  const { setSelectedDate } = useContext(CalendarViewContext);
 
   return () => {
-    setCalendarSelectedDate(startOfToday().valueOf());
+    setSelectedDate(startOfToday().valueOf());
   };
 };

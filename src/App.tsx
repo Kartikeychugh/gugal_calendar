@@ -1,36 +1,36 @@
 import "./App.css";
 
-import { FirebaseAuthLayer } from "./firebase/auth";
-import { FirebaseProvider } from "./firebase";
-import { PrivateRoute } from "./components";
-import { LoadingScreen } from "./components/loading-screen";
-import { GugalCalendar } from "./components/gugal-calendar";
+import { CalendarReduxProvider } from "./redux";
+import { GugalCalendar } from "./components";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_apiKey,
-  authDomain: process.env.REACT_APP_FIREBASE_authDomain,
-  projectId: process.env.REACT_APP_FIREBASE_projectId,
-  storageBucket: process.env.REACT_APP_FIREBASE_storageBucket,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_messagingSenderId,
-  appId: process.env.REACT_APP_FIREBASE_appId,
-  measurementId: process.env.REACT_APP_FIREBASE_measurementId,
-};
+// const firebaseConfig = {
+//   apiKey: process.env.REACT_APP_FIREBASE_apiKey,
+//   authDomain: process.env.REACT_APP_FIREBASE_authDomain,
+//   projectId: process.env.REACT_APP_FIREBASE_projectId,
+//   storageBucket: process.env.REACT_APP_FIREBASE_storageBucket,
+//   messagingSenderId: process.env.REACT_APP_FIREBASE_messagingSenderId,
+//   appId: process.env.REACT_APP_FIREBASE_appId,
+//   measurementId: process.env.REACT_APP_FIREBASE_measurementId,
+// };
 
 function App() {
   return (
     <div className="App">
-      <FirebaseProvider firebaseOptions={firebaseConfig}>
-        <FirebaseAuthLayer loading={() => <LoadingScreen />}>
-          <PrivateRoute>
-            <GugalCalendar minColumnWidth={100} minCellHeight={30} />
-          </PrivateRoute>
-        </FirebaseAuthLayer>
-      </FirebaseProvider>
+      <CalendarReduxProvider>
+        <GugalCalendar
+          minColumnWidth={100}
+          minCellHeight={30}
+          featureFlags={{
+            hideCommandBar: false,
+            responsiveCellHeight: true,
+          }}
+        />
+      </CalendarReduxProvider>
     </div>
   );
 }

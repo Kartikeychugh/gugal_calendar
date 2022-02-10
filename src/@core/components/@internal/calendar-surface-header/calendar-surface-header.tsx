@@ -1,23 +1,23 @@
 import { Box, Button } from "@mui/material";
-import { isSameDay, startOfToday } from "date-fns";
+import { eachDayOfInterval, isSameDay, startOfToday } from "date-fns";
 import { useContext } from "react";
-import { CalendarDimensionsContext } from "../../../providers";
-import { useUpdateView } from "../../../../hooks";
-import { useCalendarView } from "../../../hooks";
+import { CalendarViewContext } from "../../../providers";
 
-export const CalendarSurfaceHeader = () => {
-  const calendarDimensionsValue = useContext(CalendarDimensionsContext);
-  const {
-    currentView: { numberOfDays },
-    setCalendarSelectedDate,
-    currentDates,
-  } = useCalendarView();
-  const updateView = useUpdateView();
-
+export const CalendarSurfaceHeader = (props: {
+  onHeaderClick: (date: number) => void;
+}) => {
+  const { onHeaderClick } = props;
+  const { startDateOfView, endDateOfView, minColumnWidth } =
+    useContext(CalendarViewContext);
+  const currentDates = eachDayOfInterval({
+    start: startDateOfView,
+    end: endDateOfView,
+  });
+  const numberOfDays = currentDates.length;
   const today = startOfToday();
 
   return (
-    <Box sx={{ width: "100%", height: "60px", display: "flex" }}>
+    <Box sx={{ width: "100%", height: "60px", display: "flex", pr: "10px" }}>
       <Box
         sx={{
           display: "flex",
@@ -27,7 +27,7 @@ export const CalendarSurfaceHeader = () => {
           fontWeight: 700,
           padding: "4px",
           flexDirection: "column",
-          minWidth: `${calendarDimensionsValue.timeGridWidth}px`,
+          minWidth: `50px`,
         }}
       ></Box>
       {currentDates.map((date, i) => {
@@ -35,7 +35,7 @@ export const CalendarSurfaceHeader = () => {
           <Button
             variant="text"
             sx={{
-              minWidth: `${calendarDimensionsValue.minColumnWidth}px`,
+              minWidth: `${minColumnWidth}px`,
               height: "100%",
               padding: "4px 8px 4px 8px",
               flexDirection: "column",
@@ -48,10 +48,7 @@ export const CalendarSurfaceHeader = () => {
                   ? "inset 0px -1px 0px #e0e0e0"
                   : "inset -1px -1px 0px #e0e0e0",
             }}
-            onClick={() => {
-              updateView(0);
-              setCalendarSelectedDate(date.valueOf());
-            }}
+            onClick={() => onHeaderClick(date.valueOf())}
             key={i}
           >
             <Box

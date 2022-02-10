@@ -4,9 +4,7 @@ import { FirebaseAuthLayerContext } from "./firebase-auth-layer.context";
 import { FirebaseUserProvider } from "../firebase-user";
 import { useFirebase } from "../../../core";
 
-export const FirebaseAuthLayer = (
-  props: PropsWithChildren<{ loading: () => JSX.Element }>
-) => {
+export const FirebaseAuthLayer = (props: PropsWithChildren<{}>) => {
   const { firebaseAuth, googleAuthProvider } =
     useCreateFirebaseAuthLayerContext();
 

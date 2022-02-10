@@ -1,1 +1,4 @@
-export {CalendarViewContext, CalendarViewProvider} from "./calendar-view.context"
+export {
+  CalendarViewContext,
+  CalendarViewProvider,
+} from "./calendar-view.context";
