@@ -2,6 +2,8 @@ import "./App.css";
 
 import { CalendarReduxProvider } from "./redux";
 import { GugalCalendar } from "./components";
+import { CssBaseline } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -18,18 +20,25 @@ import { GugalCalendar } from "./components";
 //   measurementId: process.env.REACT_APP_FIREBASE_measurementId,
 // };
 
+let theme = createTheme({
+  palette: { mode: "dark" },
+});
+
 function App() {
   return (
     <div className="App">
+      <CssBaseline />
       <CalendarReduxProvider>
-        <GugalCalendar
-          minColumnWidth={100}
-          minCellHeight={30}
-          featureFlags={{
-            hideCommandBar: false,
-            responsiveCellHeight: true,
-          }}
-        />
+        <ThemeProvider theme={theme}>
+          <GugalCalendar
+            minColumnWidth={10}
+            minCellHeight={30}
+            featureFlags={{
+              hideCommandBar: false,
+              responsiveCellHeight: true,
+            }}
+          />
+        </ThemeProvider>
       </CalendarReduxProvider>
     </div>
   );

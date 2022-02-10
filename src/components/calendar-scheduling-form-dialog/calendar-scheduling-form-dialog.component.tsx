@@ -14,7 +14,7 @@ import { DefaultTheme, makeStyles } from "@mui/styles";
 const useStyle = makeStyles<DefaultTheme, {}, string>({
   root: {
     "& .MuiBackdrop-root": {
-      backgroundColor: "transparent",
+      // backgroundColor: "transparent",
     },
     "& .MuiPaper-root": {
       pointerEvents: "all",
@@ -23,7 +23,7 @@ const useStyle = makeStyles<DefaultTheme, {}, string>({
     },
   },
   title: {
-    backgroundColor: "rgb(25, 118, 210, 0.07)",
+    // backgroundColor: "rgb(25, 118, 210, 0.07)",
   },
 });
 

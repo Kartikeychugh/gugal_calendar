@@ -14,7 +14,6 @@ export const CalendarSurfaceHeader = (props: {
     end: endDateOfView,
   });
   const numberOfDays = currentDates.length;
-  const today = startOfToday();
 
   return (
     <Box sx={{ width: "100%", height: "60px", display: "flex", pr: "10px" }}>
@@ -40,13 +39,15 @@ export const CalendarSurfaceHeader = (props: {
               padding: "4px 8px 4px 8px",
               flexDirection: "column",
               width: `calc(${100 / numberOfDays}%)`,
-              backgroundColor: isSameDay(new Date(date), today)
-                ? "#EFF6FF"
-                : "white",
+              backgroundColor: `${
+                isSameDay(new Date(date), startOfToday())
+                  ? "action.selected"
+                  : "inherit"
+              }`,
               boxShadow:
                 i + 1 === numberOfDays
-                  ? "inset 0px -1px 0px #e0e0e0"
-                  : "inset -1px -1px 0px #e0e0e0",
+                  ? "inset 0px -1px 1px #e0e0e0"
+                  : "inset -1px -1px 1px #e0e0e0",
             }}
             onClick={() => onHeaderClick(date.valueOf())}
             key={i}
@@ -57,7 +58,7 @@ export const CalendarSurfaceHeader = (props: {
                 fontWeight: "bold",
                 fontSize: "10px",
                 lineHeight: "12px",
-                color: "#71717a",
+                // color: "#71717a",
               }}
             >
               {new Date(date).toLocaleDateString("en-GB", { weekday: "short" })}
@@ -68,7 +69,7 @@ export const CalendarSurfaceHeader = (props: {
                 fontWeight: 500,
                 fontSize: "22px",
                 lineHeight: "32px",
-                color: "#000000",
+                // color: "#000000",
                 display: "flex",
               }}
             >

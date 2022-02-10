@@ -15,7 +15,7 @@ const useStyle = makeStyles<DefaultTheme, {}, string>({
     display: "flex",
     alignItems: "center",
     "& .MuiInputLabel-root.Mui-focused": {
-      color: "#1976d2",
+      // color: "#1976d2",
     },
     "& .MuiInput-root:after": {
       borderBottomColor: "#1976d2",

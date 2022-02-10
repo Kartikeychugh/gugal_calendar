@@ -24,7 +24,7 @@ export const CalendarCommandBar = () => {
           display: "flex",
           flexGrow: 1,
           alignItems: "center",
-          color: "black",
+          // color: "black",
           letterSpacing: "1px",
         }}
       >

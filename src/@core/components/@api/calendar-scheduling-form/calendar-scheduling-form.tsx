@@ -13,7 +13,9 @@ import { ICalendarClientEventItem } from "../../..";
 const useStyle = makeStyles<DefaultTheme, {}, string>({
   root: {
     padding: "8px",
-    "& .MuiSvgIcon-root": { fill: "#1976d2" },
+    "& .MuiSvgIcon-root": {
+      // fill: "#1976d2"
+    },
   },
 });
 

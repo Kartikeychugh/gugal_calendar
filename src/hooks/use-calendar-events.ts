@@ -45,6 +45,7 @@ const useResolveCalendarEvents = (startOfWeekForSelectedDate: number) => {
     return [];
   }
 
+  // return [];
   const clientEventAlreadySynced = isClientEventAlreadySynced(
     client,
     backendEvents

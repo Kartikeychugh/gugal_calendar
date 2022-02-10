@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import React, { useContext } from "react";
 import {
   CalendarViewContext,
@@ -13,7 +13,7 @@ export const CalendarSurfaceGridColumn = React.memo(
     const { endDateOfView } = useContext(CalendarViewContext);
     const cells = [];
     const { cellHeight } = useCalendarDimensionCellHeightContext();
-
+    const theme = useTheme();
     for (let i = 0; i < 24; i++) {
       cells.push(
         <Box
@@ -23,16 +23,17 @@ export const CalendarSurfaceGridColumn = React.memo(
             width: "100%",
             transition: "0.2s all ease-in-out",
             borderRadius: "2px",
+            // boxShadow: `${theme.shadows[1]}`,
             boxShadow:
               i === 23
                 ? endDateOfView === props.date.valueOf()
                   ? "none"
-                  : "inset -1px 0px 0px #e0e0e0"
+                  : `inset -1px 0px  ${theme.palette.grey[400]}`
                 : endDateOfView === props.date.valueOf()
-                ? "inset 0px -1px 0px #e0e0e0"
-                : "inset -1px -1px 0px #e0e0e0",
+                ? `inset 0px -1px  ${theme.palette.grey[400]}`
+                : `inset -1px -1px  ${theme.palette.grey[400]}`,
             "&:hover": {
-              backgroundColor: "rgba(25, 118, 210, 0.04)",
+              backgroundColor: `action.hover`,
             },
           }}
           onClick={(e) => {

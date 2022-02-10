@@ -23,7 +23,7 @@ export const CalendarContainer = (props: {
   return (
     <Box
       sx={{
-        padding: "20px",
+        // padding: "20px",
         display: "flex",
         width: "100%",
         flexDirection: "column",

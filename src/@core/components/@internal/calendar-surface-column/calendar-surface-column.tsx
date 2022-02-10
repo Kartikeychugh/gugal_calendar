@@ -49,11 +49,10 @@ const CalendarSurfaceColumn = (props: {
   //TODO
   return (
     <Box
+      // color="secondary"
       sx={{
         backgroundColor: `${
-          isSameDay(props.date, startOfToday())
-            ? "rgb(25, 118, 210, 0.07)"
-            : "#ffffff"
+          isSameDay(props.date, startOfToday()) ? "action.selected" : "inherit"
         }`,
         height: "100%",
         width: "100%",

@@ -24,9 +24,9 @@ export const CalendarCommandViewSlider = () => {
           alignItems: "center",
           minWidth: "30px",
           height: "30px",
-          backgroundColor: "rgb(25, 118, 210, 0.07)",
+          // backgroundColor: "rgb(25, 118, 210, 0.07)",
           "& .MuiSvgIcon-root": {
-            fill: "black",
+            // fill: "black",
             width: "14px",
           },
         }}
@@ -40,9 +40,9 @@ export const CalendarCommandViewSlider = () => {
           alignItems: "center",
           height: "30px",
           width: "70px",
-          backgroundColor: "rgb(25, 118, 210, 0.07)",
+          // backgroundColor: "rgb(25, 118, 210, 0.07)",
           fontSize: "12px",
-          color: "#18181B",
+          // color: "#18181B",
           ml: "2px",
           mr: "2px",
           fontWeight: "700",
@@ -61,9 +61,9 @@ export const CalendarCommandViewSlider = () => {
           alignItems: "center",
           minWidth: "30px",
           height: "30px",
-          backgroundColor: "rgb(25, 118, 210, 0.07)",
+          // backgroundColor: "rgb(25, 118, 210, 0.07)",
           "& .MuiSvgIcon-root": {
-            fill: "black",
+            // fill: "black",
             width: "14px",
           },
         }}

@@ -20,9 +20,9 @@ export const CalendarSurfaceContainer = (props: {
 }) => {
   return (
     <Paper
-      elevation={5}
+      elevation={19}
       sx={{
-        borderRadius: "10px 10px 10px 10px",
+        borderRadius: "0px",
         width: "100%",
         padding: `${16}px`,
         height: "100%",

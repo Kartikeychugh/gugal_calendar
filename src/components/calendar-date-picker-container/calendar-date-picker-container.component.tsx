@@ -7,15 +7,15 @@ export const CalendarDatePickerContainer = (props: {
 }) => {
   return (
     <Paper
-      elevation={2}
+      elevation={1}
       sx={{
         width: "100%",
         height: "100%",
         padding: 2,
         display: "flex",
         flexDirection: "column",
-        borderRadius: "10px",
-        backgroundColor: "rgb(25, 118, 210, 0.07)",
+        borderRadius: "0px",
+        // backgroundColor: "rgb(25, 118, 210, 0.07)",
         "& .MuiCalendarPicker-root": {
           minWidth: "300px",
         },

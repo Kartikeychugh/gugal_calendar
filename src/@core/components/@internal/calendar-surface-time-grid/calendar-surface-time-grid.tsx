@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useCalendarDimensionCellHeightContext } from "../../../providers";
 
 export const CalendarSurfaceTimeGrid = (props: {}) => {
@@ -42,10 +42,12 @@ const CalendarGridTimeCell = (props: { hour: number; cellHeight: number }) => {
           fontWeight: 500,
           fontSize: "12px",
           lineHeight: "16px",
-          color: "#71717a",
+          // color: "#71717a",
         }}
       >
-        {hour} {ampm}
+        <Typography variant="caption">
+          {hour} {ampm}
+        </Typography>
       </Box>
     </Box>
   );
