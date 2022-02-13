@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme, CircularProgress } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import { clientEventStatus, ICalendarEventItem } from "../../../models";
 import { FluidText } from "../fluid-text/fluid-text";
 import { EventCardIcons } from "./event-card-icons";
@@ -33,23 +33,17 @@ export const EventCardDetailsHolders = (props: {
   event: ICalendarEventItem;
 }) => {
   const { event } = props;
-  const theme = useTheme();
-
-  const color = colorShade(
-    event.colors.event.backgroundColor,
-    theme.palette.mode === "dark" ? -190 : -190
-  );
 
   return (
     <Box
       sx={{
         backgroundColor: event.colors.event.backgroundColor,
-        color,
+        color: event.colors.event.foregroundColor,
         padding: "0px 5px 0px 5px",
         width: "100%",
-        "&:hover": {
-          backgroundColor: colorShade(event.colors.event.backgroundColor, 30),
-        },
+        borderLeft: "4px solid",
+
+        borderLeftColor: event.colors.calendar.backgroundColor,
       }}
     >
       <EventCardTopBar event={event} />

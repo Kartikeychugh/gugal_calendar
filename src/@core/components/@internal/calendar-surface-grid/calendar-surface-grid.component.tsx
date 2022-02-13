@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Fade } from "@mui/material";
 import { useEffect, useRef } from "react";
 import {
   useCalendarDimensionCellHeightContext,
@@ -14,8 +14,8 @@ export const CalendarSurfaceScrollableGrid = (props: {
   onCellClick: (datetime: Date, hour: number) => void;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-
   useSurfaceGridHeightWatcher(ref);
+  const { cellHeight } = useCalendarDimensionCellHeightContext();
 
   return (
     <CustomScrollbar>
@@ -29,7 +29,13 @@ export const CalendarSurfaceScrollableGrid = (props: {
           } as any
         }
       >
-        <CalendarSurfaceGrid onCellClick={props.onCellClick} />
+        {cellHeight ? (
+          <Fade in={!!cellHeight} timeout={500}>
+            <Box>
+              <CalendarSurfaceGrid onCellClick={props.onCellClick} />
+            </Box>
+          </Fade>
+        ) : null}
       </Box>
     </CustomScrollbar>
   );
@@ -66,6 +72,11 @@ const useSurfaceGridHeightWatcher = (ref: React.RefObject<HTMLDivElement>) => {
   const { setCellHeight } = useCalendarDimensionCellHeightContext();
 
   useEffect(() => {
+    if (!height) {
+      return;
+    }
     setCellHeight(height / 12);
   }, [height, setCellHeight]);
+
+  return height;
 };

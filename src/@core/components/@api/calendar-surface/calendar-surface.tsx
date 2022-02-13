@@ -9,7 +9,6 @@ import { CalendarSurfaceRenderer } from "../../@internal";
 
 export const CalendarSurface = (props: {
   events: ICalendarEvent[];
-  colors: CalendarColors | null;
   onHeaderClick: (date: number) => void;
   onCellClick: (date: Date, hour: number) => void;
   userViewId: number;
@@ -21,7 +20,6 @@ export const CalendarSurface = (props: {
 }) => {
   const {
     events,
-    colors,
     userViewId,
     selectedDate,
     setSelectedDate,
@@ -34,7 +32,7 @@ export const CalendarSurface = (props: {
 
   return (
     <CalendarFeatureFlagsProvider flags={featureFlags || {}}>
-      <CalendarEventsDetailsProvider events={events} colors={colors}>
+      <CalendarEventsDetailsProvider events={events}>
         <CalendarViewProvider
           userViewId={userViewId}
           selectedDate={selectedDate}

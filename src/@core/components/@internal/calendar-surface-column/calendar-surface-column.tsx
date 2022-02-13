@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { eachDayOfInterval, isSameDay, startOfToday } from "date-fns";
 import { useContext, useRef } from "react";
 import { CalendarViewContext } from "../../../providers";
@@ -45,14 +45,16 @@ const CalendarSurfaceColumn = (props: {
   onCellClick: (datetime: Date, hour: number) => void;
 }) => {
   const { minColumnWidth } = useContext(CalendarViewContext);
+  const theme = useTheme();
 
   //TODO
   return (
     <Box
-      // color="secondary"
       sx={{
-        backgroundColor: `${
-          isSameDay(props.date, startOfToday()) ? "action.selected" : "inherit"
+        backgroundImage: `${
+          isSameDay(props.date, startOfToday())
+            ? theme.palette.backgroundImage?.main
+            : "inherit"
         }`,
         height: "100%",
         width: "100%",

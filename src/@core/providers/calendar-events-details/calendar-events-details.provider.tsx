@@ -5,14 +5,11 @@ import { CalendarEventDetailsContext } from "./calendar-events-details.context";
 export const CalendarEventsDetailsProvider = (
   props: PropsWithChildren<{
     events: ICalendarEvent[];
-    colors: CalendarColors | null;
   }>
 ) => {
-  const { events, colors } = props;
+  const { events } = props;
   return (
-    <CalendarEventDetailsContext.Provider
-      value={{ events, colors: colors!, defaultColorId: 1 }}
-    >
+    <CalendarEventDetailsContext.Provider value={{ events }}>
       {props.children}
     </CalendarEventDetailsContext.Provider>
   );

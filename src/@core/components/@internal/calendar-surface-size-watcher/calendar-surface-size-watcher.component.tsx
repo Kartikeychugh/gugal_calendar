@@ -41,7 +41,7 @@ export const CalendarSurfaceSizeWatcher = (
   }, [firstUnAvailableViewId, allViews, setAvailableViews]);
 
   useEffect(() => {
-    if (width === null) {
+    if (width === null || width === 0) {
       return;
     }
 

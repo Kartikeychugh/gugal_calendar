@@ -1,16 +1,15 @@
 import { Box } from "@mui/material";
 import {
-  ICalendarEventItem,
   ICalendarFeatureFlags,
   ICalendarClientEventItem,
+  ICalendarEvent,
 } from "../../@core";
 
 import { CalendarDatePickerContainer } from "../calendar-date-picker-container";
 import { CalendarSurfaceContainer } from "../calendar-surface-container";
 
 export const CalendarContainer = (props: {
-  events: (ICalendarEventItem | ICalendarClientEventItem)[];
-  colors: CalendarColors | null;
+  events: (ICalendarEvent | ICalendarClientEventItem)[];
   onHeaderClick: (date: number) => void;
   onCellClick: (date: Date, hour: number) => void;
   userViewId: number;
@@ -23,7 +22,6 @@ export const CalendarContainer = (props: {
   return (
     <Box
       sx={{
-        // padding: "20px",
         display: "flex",
         width: "100%",
         flexDirection: "column",

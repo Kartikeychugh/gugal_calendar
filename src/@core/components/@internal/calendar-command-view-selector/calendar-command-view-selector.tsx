@@ -62,6 +62,7 @@ export const CalendarCommandViewSelector = () => {
   return (
     <Box className={classes.root}>
       <Button
+        variant={"contained" as any}
         className={classes.viewSelectorButton}
         ref={ref}
         id="basic-button"

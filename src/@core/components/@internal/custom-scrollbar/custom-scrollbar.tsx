@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Fade } from "@mui/material";
 import {
   PropsWithChildren,
   useRef,
@@ -18,6 +18,8 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
   const [windowLength, setWindowLength] = useState<number>(0);
   const [contentLength, setContentLength] = useState<number>(0);
   const [travel, setTravel] = useState<number>(0);
+  const [scrolling, setScrolling] = useState(false);
+  const [scrollbarHover, setScrollbarHover] = useState(false);
 
   const scrollHeadHeight = useMemo(
     () => windowLength / (contentLength / windowLength),
@@ -42,6 +44,7 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
     "scroll",
     useScrollEventListenerCallback(
       setTravel,
+      setScrolling,
       contentLength - windowLength,
       scrollFactor
     )
@@ -60,6 +63,7 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
         }
       }}
       sx={{
+        height: "100%",
         overflow: "hidden",
         display: "flex",
         scrollbarWidth: "none",
@@ -69,26 +73,40 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
       }}
     >
       {props.children}
-      <Box sx={{ width: "10px", display: "flex", justifyContent: "center" }}>
-        {contentLength > windowLength ? (
-          <Scrollbar
-            travel={travel}
-            scrollHeadHeight={scrollHeadHeight}
-            scrollByHeadTravel={scrollByHeadTravel}
-          />
-        ) : null}
+      <Box
+        sx={{
+          width: "10px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Scrollbar
+          visible={scrolling || scrollbarHover}
+          setScrollbarHover={setScrollbarHover}
+          travel={travel}
+          scrollHeadHeight={scrollHeadHeight}
+          scrollByHeadTravel={scrollByHeadTravel}
+        />
       </Box>
     </Box>
   );
 };
 
 const Scrollbar = (props: {
+  visible: boolean;
+  setScrollbarHover: (value: boolean) => void;
   travel: number;
   scrollHeadHeight: number;
   scrollByHeadTravel: (newTravel: number, behavior: "auto" | "smooth") => void;
 }) => {
   const classes = useScrollBarStyles();
-  const { scrollHeadHeight, travel, scrollByHeadTravel } = props;
+  const {
+    scrollHeadHeight,
+    travel,
+    scrollByHeadTravel,
+    setScrollbarHover,
+    visible,
+  } = props;
 
   return (
     <Box
@@ -97,8 +115,15 @@ const Scrollbar = (props: {
         const newTravel = (e.nativeEvent as any).layerY;
         scrollByHeadTravel(newTravel, "smooth");
       }}
+      onMouseEnter={(e) => {
+        setScrollbarHover(true);
+      }}
+      onMouseLeave={(e) => {
+        setScrollbarHover(false);
+      }}
     >
       <ScrollHead
+        visible={visible}
         scrollHeadHeight={scrollHeadHeight}
         travel={travel}
         scrollByHeadTravel={scrollByHeadTravel}
@@ -108,11 +133,12 @@ const Scrollbar = (props: {
 };
 
 const ScrollHead = (props: {
+  visible: boolean;
   scrollHeadHeight: number;
   travel: number;
   scrollByHeadTravel: (newTravel: number, behavior: "auto" | "smooth") => void;
 }) => {
-  const { scrollHeadHeight, travel, scrollByHeadTravel } = props;
+  const { scrollHeadHeight, travel, scrollByHeadTravel, visible } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useClickAndDragWatcher(
@@ -132,33 +158,45 @@ const ScrollHead = (props: {
   });
 
   return (
-    <Box
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-      ref={containerRef}
-      className={classes.root}
-    />
+    <Fade in={visible} timeout={500}>
+      <Box
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        ref={containerRef}
+        className={classes.root}
+      />
+    </Fade>
   );
 };
 
 const useScrollEventListenerCallback = (
   setTravel: (travel: number) => void,
+  setVisible: (value: boolean) => void,
   maxScroll: number,
   scrollFactor: number
 ) => {
-  let debouncer = useRef<number | undefined>(undefined);
-
+  const setVisibleDebouncer = useRef<number | undefined>(undefined);
   return useCallback(
-    (ev: any) => {
-      clearTimeout(debouncer.current);
-      debouncer.current = setTimeout(() => {
-        setTravel(
-          Math.min(ev.target.scrollTop / scrollFactor, maxScroll / scrollFactor)
-        );
-      }, 0) as unknown as number;
+    (ev: Event) => {
+      if (!ev || !ev.target) {
+        return;
+      }
+
+      clearTimeout(setVisibleDebouncer.current);
+      setVisibleDebouncer.current = setTimeout(() => {
+        setVisible(false);
+      }, 1000) as unknown as number;
+
+      setVisible(true);
+      setTravel(
+        Math.min(
+          (ev.target as HTMLElement).scrollTop / scrollFactor,
+          maxScroll / scrollFactor
+        )
+      );
     },
-    [setTravel, debouncer, maxScroll, scrollFactor]
+    [setVisible, setTravel, maxScroll, scrollFactor]
   );
 };
 

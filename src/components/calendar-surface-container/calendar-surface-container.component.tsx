@@ -1,14 +1,13 @@
 import { Paper } from "@mui/material";
 import {
   CalendarSurface,
-  ICalendarEventItem,
   ICalendarFeatureFlags,
   ICalendarClientEventItem,
+  ICalendarEvent,
 } from "../../@core";
 
 export const CalendarSurfaceContainer = (props: {
-  events: (ICalendarEventItem | ICalendarClientEventItem)[];
-  colors: CalendarColors | null;
+  events: (ICalendarEvent | ICalendarClientEventItem)[];
   onHeaderClick: (date: number) => void;
   onCellClick: (date: Date, hour: number) => void;
   userViewId: number;
@@ -20,12 +19,13 @@ export const CalendarSurfaceContainer = (props: {
 }) => {
   return (
     <Paper
-      elevation={19}
+      elevation={5}
       sx={{
         borderRadius: "0px",
         width: "100%",
         padding: `${16}px`,
         height: "100%",
+        background: "background.default",
       }}
     >
       <CalendarSurface {...props} />

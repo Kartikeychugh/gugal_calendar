@@ -5,7 +5,7 @@ export const useSizeWatcher = (
   watchIfTrue: boolean,
   param: "height" | "width"
 ) => {
-  const [width, setWidth] = useState(300);
+  const [width, setWidth] = useState(0);
 
   const observer = useMemo(() => {
     return new ResizeObserver((entries) => {

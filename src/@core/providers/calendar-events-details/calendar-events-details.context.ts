@@ -3,8 +3,6 @@ import { ICalendarEvent } from "../../models";
 
 export interface ICalendarEventDetailsContext {
   events: ICalendarEvent[];
-  colors: CalendarColors;
-  defaultColorId: number;
 }
 
 export const CalendarEventDetailsContext =

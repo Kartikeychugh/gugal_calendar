@@ -15,6 +15,7 @@ export const CalendarCommandViewSlider = () => {
       }}
     >
       <Button
+        variant="contained"
         onClick={() => {
           slideView(-1);
         }}
@@ -34,6 +35,7 @@ export const CalendarCommandViewSlider = () => {
         <ArrowBackIosIcon />
       </Button>
       <Button
+        variant="contained"
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -52,6 +54,7 @@ export const CalendarCommandViewSlider = () => {
         Today
       </Button>
       <Button
+        variant="contained"
         onClick={() => {
           slideView(1);
         }}

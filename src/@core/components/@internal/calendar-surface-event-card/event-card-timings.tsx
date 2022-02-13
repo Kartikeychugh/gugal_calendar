@@ -12,7 +12,7 @@ export const EventCardTimings = (props: { event: ICalendarEventItem }) => {
       variant="caption"
       width={`100%`}
     >
-      <FluidText minFontPercentage={95}>
+      <FluidText minFontPercentage={90}>
         {new Date(event.start.dateTime).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",

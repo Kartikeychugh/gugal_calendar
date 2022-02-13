@@ -1,6 +1,7 @@
-import { makeStyles, DefaultTheme } from "@mui/styles";
+import { Theme } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
-export const useScrollBarStyles = makeStyles((theme) => ({
+export const useScrollBarStyles = makeStyles<Theme>((theme) => ({
   root: {
     background: "transparent",
     width: "3px",
@@ -8,15 +9,15 @@ export const useScrollBarStyles = makeStyles((theme) => ({
     cursor: "pointer",
     borderRadius: "5px",
     "&:hover": {
-      background: `${(theme as any).palette.action.focus}`,
-      width: "20px",
+      background: `${theme.palette?.action.focus}`,
+      width: "15px",
     },
     transition: "0.1s all ease-in-out",
   },
 }));
 
 export const useScrollHeadStyles = makeStyles<
-  DefaultTheme,
+  Theme,
   { top: number; scrollHeadHeight: number },
   string
 >((theme) => ({
@@ -26,7 +27,7 @@ export const useScrollHeadStyles = makeStyles<
     transition: "0s all ease-in-out",
     width: "100%",
     height: (props) => `${props.scrollHeadHeight}px`,
-    background: `${(theme as any).palette.primary.main}`,
+    background: `${theme.palette.primary.light}`,
     borderRadius: "5px",
     "&:hover": {
       opacity: `0.8`,

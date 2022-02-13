@@ -1,6 +1,6 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { getDay, startOfToday } from "date-fns";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useLayoutEffect, useRef } from "react";
 import { useCurrentTime } from "../../../hooks";
 import {
   CalendarViewContext,
@@ -17,14 +17,15 @@ export const CalendarSurfaceTimeMarker = (props: {}) => {
   const diff = startOfToday().getDay() - getDay(startDateOfView);
   const time = useCurrentTime();
   const ref = useRef<HTMLDivElement>(null);
+  const theme = useTheme();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     ref.current &&
       ref.current.scrollIntoView({
-        behavior: "smooth",
+        behavior: "auto",
         block: "center",
       });
-  }, [ref]);
+  }, []);
 
   let totalMarkerLengthFraction;
   let solidMarrkerLengthFraction;
@@ -56,8 +57,44 @@ export const CalendarSurfaceTimeMarker = (props: {}) => {
       }}
       ref={ref}
     >
-      <Box sx={{ borderTop: "2px red dotted", width: `${solidWidth}%` }}></Box>
-      <Box sx={{ borderTop: "2px red solid", width: `${dottedWiddth}%` }}></Box>
+      <Box
+        sx={{
+          borderTop: "2px dotted",
+          width: `${solidWidth}%`,
+          borderColor: `${theme.palette.timeIndicator}`,
+        }}
+      ></Box>
+      {dottedWiddth ? (
+        <>
+          <Box
+            sx={{
+              borderRadius: "5px",
+              width: "10px",
+              height: "10px",
+              top: "-4px",
+              background: `${theme.palette.timeIndicator}`,
+              position: "relative",
+            }}
+          ></Box>
+          <Box
+            sx={{
+              borderTop: "2px solid",
+              width: `calc(${dottedWiddth}% - 20px)`,
+              borderColor: `${theme.palette.timeIndicator}`,
+            }}
+          ></Box>
+          <Box
+            sx={{
+              borderRadius: "5px",
+              width: "10px",
+              height: "10px",
+              top: "-4px",
+              background: `${theme.palette.timeIndicator}`,
+              position: "relative",
+            }}
+          ></Box>
+        </>
+      ) : null}
     </Box>
   );
 };

@@ -76,7 +76,7 @@ export const FluidText = (
 
       debouncer.current = setTimeout(() => {
         setFluidTextContainerWidth(Math.floor(entry.contentRect.width));
-      }, 250) as unknown as number;
+      }, 200) as unknown as number;
     })
   );
 

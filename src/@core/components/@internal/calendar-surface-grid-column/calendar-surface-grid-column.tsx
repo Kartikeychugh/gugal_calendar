@@ -22,16 +22,27 @@ export const CalendarSurfaceGridColumn = React.memo(
             height: `${cellHeight}px`,
             width: "100%",
             transition: "0.2s all ease-in-out",
-            borderRadius: "2px",
-            // boxShadow: `${theme.shadows[1]}`,
+            // borderRadius: "2px",
             boxShadow:
               i === 23
                 ? endDateOfView === props.date.valueOf()
                   ? "none"
-                  : `inset -1px 0px  ${theme.palette.grey[400]}`
+                  : `inset -1px 0px  ${
+                      theme.palette.grey[
+                        theme.palette.mode === "dark" ? 700 : 300
+                      ]
+                    }`
                 : endDateOfView === props.date.valueOf()
-                ? `inset 0px -1px  ${theme.palette.grey[400]}`
-                : `inset -1px -1px  ${theme.palette.grey[400]}`,
+                ? `inset 0px -1px  ${
+                    theme.palette.grey[
+                      theme.palette.mode === "dark" ? 700 : 300
+                    ]
+                  }`
+                : `inset -1px -1px  ${
+                    theme.palette.grey[
+                      theme.palette.mode === "dark" ? 700 : 300
+                    ]
+                  }`,
             "&:hover": {
               backgroundColor: `action.hover`,
             },
@@ -46,6 +57,8 @@ export const CalendarSurfaceGridColumn = React.memo(
       <Box
         style={{
           width: "100%",
+          // display: "flex",
+          // flexDirection: "column",
         }}
       >
         {cells}

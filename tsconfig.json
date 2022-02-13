@@ -4,11 +4,11 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
+       "es6"
     ],
     "typeRoots": [
-      "./node_modules/@types",
-      "./index.d.ts"
+      "./node_modules/@types"
     ],
     "allowJs": true,
     "skipLibCheck": true,

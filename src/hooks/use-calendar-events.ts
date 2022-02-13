@@ -3,7 +3,7 @@ import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "../redux";
 import { getViewKey } from "../utils";
 import { useCalendarColors } from "./use-calendar-colors";
-import { ICalendarClientEventItem, ICalendarEventItem } from "./../@core";
+import { ICalendarClientEventItem, ICalendarEvent } from "./../@core";
 export const useCalendarEvents = (selectedDate: number) => {
   const startOfWeekForSelectedDate = startOfWeek(selectedDate).valueOf();
   useSyncCalendarEvents(startOfWeekForSelectedDate);
@@ -41,23 +41,45 @@ const useResolveCalendarEvents = (startOfWeekForSelectedDate: number) => {
 
   const colors = useCalendarColors();
 
-  if (!colors) {
-    return [];
-  }
+  const _client: ICalendarClientEventItem | null = client
+    ? {
+        ...client,
+        colors: {
+          calendar: {
+            backgroundColor: "#B296FF",
+          },
+          event: {
+            backgroundColor: "#471AC2",
+            foregroundColor: "white",
+          },
+        },
+      }
+    : null;
+
+  const _backendEvents = backendEvents
+    ? backendEvents.map((event) => {
+        const _event: ICalendarEvent = {
+          ...event,
+          colors: calculateColors(event, colors),
+        };
+
+        return _event;
+      })
+    : null;
 
   // return [];
   const clientEventAlreadySynced = isClientEventAlreadySynced(
-    client,
-    backendEvents
+    _client,
+    _backendEvents
   );
 
   return [
-    ...(backendEvents ? backendEvents : []),
-    ...(client && !clientEventAlreadySynced ? [client] : []),
+    ...(_backendEvents ? _backendEvents : []),
+    ...(_client && !clientEventAlreadySynced ? [_client] : []),
   ].sort(
     (
-      a: ICalendarEventItem | ICalendarClientEventItem,
-      b: ICalendarEventItem | ICalendarClientEventItem
+      a: ICalendarEvent | ICalendarClientEventItem,
+      b: ICalendarEvent | ICalendarClientEventItem
     ) => {
       return (
         new Date(a.start.dateTime).getTime() -
@@ -69,7 +91,7 @@ const useResolveCalendarEvents = (startOfWeekForSelectedDate: number) => {
 
 const isClientEventAlreadySynced = (
   client: ICalendarClientEventItem | null,
-  backendEvents: ICalendarEventItem[]
+  backendEvents: ICalendarEvent[] | null
 ) => {
   if (client && backendEvents) {
     const index = backendEvents.findIndex((event) => event.id === client.id);
@@ -78,4 +100,28 @@ const isClientEventAlreadySynced = (
     }
   }
   return false;
+};
+
+const calculateColors = (
+  event: CalendarEventItem,
+  colors: CalendarColors | null
+) => {
+  return {
+    calendar: {
+      backgroundColor:
+        event.colorId && colors
+          ? colors.calendar[event.colorId].background
+          : "#B296FF",
+    },
+    event: {
+      backgroundColor:
+        event.colorId && colors
+          ? colors.event[event.colorId].background
+          : "#471AC2",
+      foregroundColor:
+        event.colorId && colors
+          ? colors.event[event.colorId].foreground
+          : "white",
+    },
+  };
 };

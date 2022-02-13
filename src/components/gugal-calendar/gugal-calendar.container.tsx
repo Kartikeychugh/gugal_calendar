@@ -2,11 +2,7 @@ import { addHours, startOfToday } from "date-fns";
 import { useCallback, useState } from "react";
 import { CalendarContainer } from "..";
 import { ICalendarFeatureFlags } from "../../@core";
-import {
-  useCalendarColors,
-  useCalendarEvents,
-  useClientEvent,
-} from "../../hooks";
+import { useCalendarEvents, useClientEvent } from "../../hooks";
 import { useDispatch } from "../../redux";
 import { CalendarSchedulingFormDialog } from "../calendar-scheduling-form-dialog";
 
@@ -18,7 +14,6 @@ export const GugalCalendar = (props: {
   const [selectedDate, setSelectedDate] = useState(startOfToday().valueOf());
   const { createClientEvent } = useClientEvent();
   const events = useCalendarEvents(selectedDate);
-  const colors = useCalendarColors();
   const dispatch = useDispatch();
 
   const onCellClick = useCallback(
@@ -32,7 +27,6 @@ export const GugalCalendar = (props: {
   return (
     <>
       <CalendarContainer
-        colors={colors}
         events={events}
         userViewId={1}
         selectedDate={selectedDate}

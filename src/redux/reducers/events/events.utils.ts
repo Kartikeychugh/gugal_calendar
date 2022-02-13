@@ -1,5 +1,4 @@
 import { startOfWeek } from "date-fns";
-import { ICalendarEventItem } from "../../../@core";
 import { IEventsState } from "./events.reducer";
 
 export const setBackendEvents = (
@@ -21,7 +20,7 @@ export const setClientEvent = (
 
 export const addBackendEvent = (
   state: IEventsState,
-  payload: ICalendarEventItem
+  payload: CalendarEventItem
 ): IEventsState => {
   const key = startOfWeek(new Date(payload.start.dateTime)).valueOf();
   return {
