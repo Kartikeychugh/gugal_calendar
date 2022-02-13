@@ -1,7 +1,7 @@
 import { Box, useTheme } from "@mui/material";
-import { eachDayOfInterval, isSameDay, startOfToday } from "date-fns";
-import { useContext, useRef } from "react";
-import { CalendarViewContext } from "../../../providers";
+import { isSameDay, startOfToday } from "date-fns";
+import { useRef } from "react";
+import { useCalendarViewManager } from "../../..";
 import { CalendarSurfaceEventColumn } from "../calendar-surface-event-column";
 import { CalendarSurfaceGridColumn } from "../calendar-surface-grid-column";
 import { CalendarSurfaceSizeWatcher } from "../calendar-surface-size-watcher";
@@ -9,12 +9,8 @@ import { CalendarSurfaceSizeWatcher } from "../calendar-surface-size-watcher";
 export const CalendarSurfaceColumns = (props: {
   onCellClick: (datetime: Date, hour: number) => void;
 }) => {
-  const { startDateOfView, endDateOfView } = useContext(CalendarViewContext);
+  const { viewDates } = useCalendarViewManager();
 
-  const currentDates = eachDayOfInterval({
-    start: startDateOfView,
-    end: endDateOfView,
-  });
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   return (
@@ -28,7 +24,7 @@ export const CalendarSurfaceColumns = (props: {
           display: "flex",
         }}
       >
-        {currentDates.map((day, i) => (
+        {viewDates.map((day, i) => (
           <CalendarSurfaceColumn
             key={i}
             date={day}
@@ -44,7 +40,6 @@ const CalendarSurfaceColumn = (props: {
   date: Date;
   onCellClick: (datetime: Date, hour: number) => void;
 }) => {
-  const { minColumnWidth } = useContext(CalendarViewContext);
   const theme = useTheme();
 
   //TODO
@@ -58,7 +53,6 @@ const CalendarSurfaceColumn = (props: {
         }`,
         height: "100%",
         width: "100%",
-        minWidth: `${minColumnWidth}px`,
       }}
     >
       <CalendarSurfaceEventColumn date={props.date} />

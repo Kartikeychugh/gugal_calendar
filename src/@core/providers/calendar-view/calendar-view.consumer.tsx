@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { CalendarViewContext } from "../../providers";
+import { CalendarViewContext } from "./calendar-view.context";
 
 export const useCalendarView = () => {
   return useContext(CalendarViewContext);

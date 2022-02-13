@@ -1,64 +1,45 @@
-import {
-  PropsWithChildren,
-  useEffect,
-  useState,
-  useMemo,
-  useContext,
-} from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useSizeWatcher } from "../../../hooks";
-import { CalendarViewContext } from "../../../providers";
+import { useCalendarViewManager } from "../../../providers";
+import { useCalendarAvailableViews } from "../../../providers/calendar-available-views";
 
 export const CalendarSurfaceSizeWatcher = (
   props: PropsWithChildren<{
     containerRef: React.MutableRefObject<HTMLDivElement | null>;
   }>
 ) => {
-  const {
-    getView,
-    updateResponsiveView,
-    allViews,
-    userViewId,
-    setAvailableViews,
-  } = useContext(CalendarViewContext);
+  const { userView, updateResponsiveView } = useCalendarViewManager();
+  const { updateViewsFromGridWidth } = useCalendarAvailableViews();
 
   const { containerRef } = props;
   const [lastBreakAt, setLastBreakAt] = useState<number | null>(null);
-  const [firstUnAvailableViewId, setFirstUnAvailableViewId] = useState<number>(
-    allViews.length
-  );
-  const width = useSizeWatcher(containerRef, true, "width");
-  const currentUserView = useMemo(
-    () => getView(userViewId),
-    [userViewId, getView]
-  );
 
-  useEffect(() => {
-    if (firstUnAvailableViewId === -1) {
-      setAvailableViews(allViews);
-    } else {
-      setAvailableViews(allViews.slice(0, firstUnAvailableViewId));
-    }
-  }, [firstUnAvailableViewId, allViews, setAvailableViews]);
+  const width = useSizeWatcher(containerRef, true, "width");
 
   useEffect(() => {
     if (width === null || width === 0) {
       return;
     }
 
-    const index = allViews.findIndex((view) => view.breakpoint > width);
-    setFirstUnAvailableViewId(index);
+    updateViewsFromGridWidth(width);
 
     if (
-      width <= currentUserView.breakpoint &&
-      (lastBreakAt === null || lastBreakAt !== currentUserView.breakpoint)
+      width <= userView.breakpoint &&
+      (lastBreakAt === null || lastBreakAt !== userView.breakpoint)
     ) {
       updateResponsiveView(0);
-      setLastBreakAt(currentUserView.breakpoint);
-    } else if (width > currentUserView.breakpoint && lastBreakAt !== null) {
+      setLastBreakAt(userView.breakpoint);
+    } else if (width > userView.breakpoint && lastBreakAt !== null) {
       updateResponsiveView(null);
       setLastBreakAt(null);
     }
-  }, [allViews, updateResponsiveView, currentUserView, lastBreakAt, width]);
+  }, [
+    updateResponsiveView,
+    userView,
+    lastBreakAt,
+    width,
+    updateViewsFromGridWidth,
+  ]);
 
   return <>{props.children}</>;
 };

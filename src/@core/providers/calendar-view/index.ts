@@ -1,4 +1,2 @@
-export {
-  CalendarViewContext,
-  CalendarViewProvider,
-} from "./calendar-view.context";
+export { useCalendarView } from "./calendar-view.consumer";
+export { CalendarViewProvider } from "./calendar-view.provider";

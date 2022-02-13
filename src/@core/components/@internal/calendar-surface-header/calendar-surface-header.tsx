@@ -1,19 +1,16 @@
 import { Box, useTheme } from "@mui/material";
-import { eachDayOfInterval, isSameDay, startOfToday } from "date-fns";
-import { useContext } from "react";
-import { CalendarViewContext } from "../../../providers";
+import { isSameDay, startOfToday } from "date-fns";
+import { useCalendarViewManager } from "../../../providers";
 
 export const CalendarSurfaceHeader = (props: {
   onHeaderClick: (date: number) => void;
 }) => {
   const { onHeaderClick } = props;
-  const { startDateOfView, endDateOfView, minColumnWidth } =
-    useContext(CalendarViewContext);
-  const currentDates = eachDayOfInterval({
-    start: startDateOfView,
-    end: endDateOfView,
-  });
-  const numberOfDays = currentDates.length;
+  const {
+    viewDates,
+    currentView: { numberOfDays },
+  } = useCalendarViewManager();
+
   const theme = useTheme();
 
   return (
@@ -33,16 +30,14 @@ export const CalendarSurfaceHeader = (props: {
           }, 1px 0px ${
             theme.palette.grey[theme.palette.mode === "dark" ? 700 : 300]
           }`,
-          // backgroundImage: theme.palette.backgroundImage?.light,
         }}
       ></Box>
-      {currentDates.map((date, i) => {
+      {viewDates.map((date, i) => {
         return (
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
-              minWidth: `${minColumnWidth}px`,
               padding: "4px 8px 4px 8px",
               flexDirection: "column",
               width: `calc(${100 / numberOfDays}%)`,

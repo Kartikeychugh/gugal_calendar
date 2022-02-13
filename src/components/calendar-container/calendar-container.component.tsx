@@ -18,6 +18,7 @@ export const CalendarContainer = (props: {
   minCellHeight: number;
   minColumnWidth: number;
   featureFlags?: ICalendarFeatureFlags;
+  onViewChange?: (newViewId: number) => void;
 }) => {
   return (
     <Box

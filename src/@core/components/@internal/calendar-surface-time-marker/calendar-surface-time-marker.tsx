@@ -1,20 +1,20 @@
 import { Box, useTheme } from "@mui/material";
-import { getDay, startOfToday } from "date-fns";
-import { useContext, useEffect, useLayoutEffect, useRef } from "react";
+import { startOfToday } from "date-fns";
+import { useLayoutEffect, useRef } from "react";
 import { useCurrentTime } from "../../../hooks";
 import {
-  CalendarViewContext,
   useCalendarDimensionCellHeightContext,
+  useCalendarViewManager,
 } from "../../../providers";
+import { useCalendarDate } from "../../../providers/calendar-date";
 
 export const CalendarSurfaceTimeMarker = (props: {}) => {
   const {
-    startDateOfView,
-    currentView: { numberOfDays },
-  } = useContext(CalendarViewContext);
+    currentView: { numberOfDays, getViewStartDay },
+  } = useCalendarViewManager();
   const { cellHeight } = useCalendarDimensionCellHeightContext();
-
-  const diff = startOfToday().getDay() - getDay(startDateOfView);
+  const { selectedDate } = useCalendarDate();
+  const diff = startOfToday().getDay() - getViewStartDay(selectedDate);
   const time = useCurrentTime();
   const ref = useRef<HTMLDivElement>(null);
   const theme = useTheme();

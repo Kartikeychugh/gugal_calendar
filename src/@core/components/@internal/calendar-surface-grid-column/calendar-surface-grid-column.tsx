@@ -1,7 +1,7 @@
 import { Box, useTheme } from "@mui/material";
 import React, { useContext } from "react";
 import {
-  CalendarViewContext,
+  useCalendarViewManager,
   useCalendarDimensionCellHeightContext,
 } from "../../../providers";
 
@@ -10,10 +10,12 @@ export const CalendarSurfaceGridColumn = React.memo(
     date: Date;
     onCellClick: (datetime: Date, hour: number) => void;
   }) => {
-    const { endDateOfView } = useContext(CalendarViewContext);
+    const { viewDates } = useCalendarViewManager();
     const cells = [];
     const { cellHeight } = useCalendarDimensionCellHeightContext();
     const theme = useTheme();
+    const endDateOfView = viewDates[viewDates.length - 1].valueOf();
+
     for (let i = 0; i < 24; i++) {
       cells.push(
         <Box

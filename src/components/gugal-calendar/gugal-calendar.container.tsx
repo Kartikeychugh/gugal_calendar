@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { CalendarContainer } from "..";
 import { ICalendarFeatureFlags } from "../../@core";
 import { useCalendarEvents, useClientEvent } from "../../hooks";
-import { useDispatch } from "../../redux";
+import { useDispatch, useSelector } from "../../redux";
 import { CalendarSchedulingFormDialog } from "../calendar-scheduling-form-dialog";
 
 export const GugalCalendar = (props: {
@@ -12,6 +12,7 @@ export const GugalCalendar = (props: {
   featureFlags?: ICalendarFeatureFlags;
 }) => {
   const [selectedDate, setSelectedDate] = useState(startOfToday().valueOf());
+  const { viewId } = useSelector((state) => state.view.userView);
   const { createClientEvent } = useClientEvent();
   const events = useCalendarEvents(selectedDate);
   const dispatch = useDispatch();
@@ -24,11 +25,18 @@ export const GugalCalendar = (props: {
     [createClientEvent, dispatch]
   );
 
+  const onViewChange = useCallback(
+    (newViewId: number) => {
+      dispatch({ type: "SET_USER_VIEW", payload: newViewId });
+    },
+    [dispatch]
+  );
   return (
     <>
       <CalendarContainer
+        onViewChange={onViewChange}
         events={events}
-        userViewId={1}
+        userViewId={viewId}
         selectedDate={selectedDate}
         onCellClick={onCellClick}
         setSelectedDate={setSelectedDate}
