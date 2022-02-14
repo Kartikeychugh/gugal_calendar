@@ -30,8 +30,6 @@ export const CalendarSurfaceTimeMarker = (props: {}) => {
     [viewDates]
   );
 
-  console.log({ numberOfColumnsOnLeft });
-
   useLayoutEffect(() => {
     ref.current &&
       ref.current.scrollIntoView({

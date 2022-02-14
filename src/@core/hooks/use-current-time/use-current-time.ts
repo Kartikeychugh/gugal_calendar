@@ -10,13 +10,11 @@ export const useCurrentTime = () => {
     let y: any;
     const x = setTimeout(() => {
       const now = new Date();
-      console.log(now.getSeconds());
 
       setTime(now);
 
       y = setInterval(() => {
         const now = new Date();
-        console.log(now.getSeconds());
 
         setTime(now);
       }, 1000 * 60);
