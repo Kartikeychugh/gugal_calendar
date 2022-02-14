@@ -1,10 +1,10 @@
 import { Box, Typography, CircularProgress } from "@mui/material";
-import { clientEventStatus, ICalendarEventItem } from "../../../models";
-import { FluidText } from "../fluid-text/fluid-text";
 import { EventCardIcons } from "./event-card-icons";
 import { EventCardTimings } from "./event-card-timings";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { useMemo } from "react";
+import { FluidText } from "../fluid-text/fluid-text";
+import { clientEventStatus, ICalendarEventItem } from "../../@core";
 
 export const colorShade = (col: string, amt: number) => {
   col = col.replace(/^#/, "");

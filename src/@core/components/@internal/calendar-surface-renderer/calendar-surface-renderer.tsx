@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { ICalendarEventItem } from "../../../models";
 import { useCalendarFeatureFlags } from "../../../providers";
 import { CalendarSurfaceScrollableGrid } from "../calendar-surface-grid";
 import { CalendarSurfaceHeader } from "../calendar-surface-header";
@@ -7,8 +8,9 @@ import { CalendarCommandBar } from "../calender-command-bar";
 export const CalendarSurfaceRenderer = (props: {
   onHeaderClick: (date: number) => void;
   onCellClick: (date: Date, hour: number) => void;
+  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
-  const { onHeaderClick, onCellClick } = props;
+  const { onHeaderClick, onCellClick, RenderEventCard } = props;
   const { hideCommandBar } = useCalendarFeatureFlags();
   return (
     <>
@@ -34,7 +36,10 @@ export const CalendarSurfaceRenderer = (props: {
         }}
       >
         <CalendarSurfaceHeader onHeaderClick={onHeaderClick} />
-        <CalendarSurfaceScrollableGrid onCellClick={onCellClick} />
+        <CalendarSurfaceScrollableGrid
+          onCellClick={onCellClick}
+          RenderEventCard={RenderEventCard}
+        />
       </Box>
     </>
   );

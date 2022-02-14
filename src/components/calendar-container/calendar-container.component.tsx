@@ -14,7 +14,7 @@ export const CalendarContainer = (props: {
   onCellClick: (date: Date, hour: number) => void;
   userViewId: number;
   selectedDate: number;
-  setSelectedDate: (newDate: number) => void;
+  onSelectedDateChange: (newDate: number) => void;
   minCellHeight: number;
   minColumnWidth: number;
   featureFlags?: ICalendarFeatureFlags;
@@ -33,7 +33,7 @@ export const CalendarContainer = (props: {
         <Box sx={{ height: "100%" }}>
           <CalendarDatePickerContainer
             selectedDate={props.selectedDate}
-            setSelectedDate={props.setSelectedDate}
+            onSelectedDateChange={props.onSelectedDateChange}
           />
         </Box>
         <Box sx={{ height: "100%", flexGrow: 1 }}>

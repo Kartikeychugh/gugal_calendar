@@ -4,20 +4,20 @@ import { useCalendarViewManager } from "../..";
 import { useCalendarDate } from "../../providers/calendar-date";
 
 export const useCalendarDateShifterCallbacks = () => {
-  const { selectedDate, setSelectedDate } = useCalendarDate();
+  const { selectedDate, onSelectedDateChange } = useCalendarDate();
   const { currentView } = useCalendarViewManager();
 
   const slideToToday = useCallback(() => {
-    setSelectedDate(startOfToday().valueOf());
-  }, [setSelectedDate]);
+    onSelectedDateChange(startOfToday().valueOf());
+  }, [onSelectedDateChange]);
 
   const slideView = useCallback(
     (direction: number) => {
-      setSelectedDate(
+      onSelectedDateChange(
         addDays(selectedDate, direction * currentView.change).valueOf()
       );
     },
-    [setSelectedDate, selectedDate, currentView.change]
+    [onSelectedDateChange, selectedDate, currentView.change]
   );
   return { slideToToday, slideView };
 };

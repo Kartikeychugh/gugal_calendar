@@ -6,17 +6,17 @@ export const useSlideView = () => {
   const {
     currentView: { change },
   } = useCalendarViewManager();
-  const { selectedDate, setSelectedDate } = useCalendarDate();
+  const { selectedDate, onSelectedDateChange } = useCalendarDate();
 
   return (direction: number) => {
-    setSelectedDate(addDays(selectedDate, direction * change).valueOf());
+    onSelectedDateChange(addDays(selectedDate, direction * change).valueOf());
   };
 };
 
 export const useSlideToToday = () => {
-  const { setSelectedDate } = useCalendarDate();
+  const { onSelectedDateChange } = useCalendarDate();
 
   return () => {
-    setSelectedDate(startOfToday().valueOf());
+    onSelectedDateChange(startOfToday().valueOf());
   };
 };

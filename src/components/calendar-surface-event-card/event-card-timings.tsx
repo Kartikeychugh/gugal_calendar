@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { ICalendarEventItem } from "../../../models";
+import { ICalendarEventItem } from "../../@core";
 import { FluidText } from "../fluid-text/fluid-text";
 
 export const EventCardTimings = (props: { event: ICalendarEventItem }) => {

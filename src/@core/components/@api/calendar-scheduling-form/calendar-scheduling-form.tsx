@@ -21,7 +21,7 @@ const useStyle = makeStyles<DefaultTheme, {}, string>({
 
 export const CalendarSchedulingForm = (props: {
   event: ICalendarClientEventItem;
-  setSelectedDate: (newDate: number) => void;
+  onSelectedDateChange: (newDate: number) => void;
   onCancel: () => void;
   onSubmit: () => void;
 }) => {
@@ -54,7 +54,7 @@ export const CalendarSchedulingForm = (props: {
           }
 
           updateDate(newValue);
-          props.setSelectedDate(newValue.valueOf());
+          props.onSelectedDateChange(newValue.valueOf());
         }}
         onStartTimeChange={(newValue) => {
           if (!newValue) {

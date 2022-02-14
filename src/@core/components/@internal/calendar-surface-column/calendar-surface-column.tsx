@@ -1,13 +1,14 @@
 import { Box, useTheme } from "@mui/material";
 import { isSameDay, startOfToday } from "date-fns";
 import { useRef } from "react";
-import { useCalendarViewManager } from "../../..";
+import { ICalendarEventItem, useCalendarViewManager } from "../../..";
 import { CalendarSurfaceEventColumn } from "../calendar-surface-event-column";
 import { CalendarSurfaceGridColumn } from "../calendar-surface-grid-column";
 import { CalendarSurfaceSizeWatcher } from "../calendar-surface-size-watcher";
 
 export const CalendarSurfaceColumns = (props: {
   onCellClick: (datetime: Date, hour: number) => void;
+  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   const { viewDates } = useCalendarViewManager();
 
@@ -29,6 +30,7 @@ export const CalendarSurfaceColumns = (props: {
             key={i}
             date={day}
             onCellClick={props.onCellClick}
+            RenderEventCard={props.RenderEventCard}
           />
         ))}
       </Box>
@@ -39,6 +41,7 @@ export const CalendarSurfaceColumns = (props: {
 const CalendarSurfaceColumn = (props: {
   date: Date;
   onCellClick: (datetime: Date, hour: number) => void;
+  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   const theme = useTheme();
 
@@ -55,7 +58,10 @@ const CalendarSurfaceColumn = (props: {
         width: "100%",
       }}
     >
-      <CalendarSurfaceEventColumn date={props.date} />
+      <CalendarSurfaceEventColumn
+        date={props.date}
+        RenderEventCard={props.RenderEventCard}
+      />
       <CalendarSurfaceGridColumn
         date={props.date}
         onCellClick={props.onCellClick}

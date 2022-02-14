@@ -28,7 +28,7 @@ const useStyle = makeStyles<DefaultTheme, {}, string>({
 });
 
 export const CalendarSchedulingFormDialog = (props: {
-  setSelectedDate: (newDate: number) => void;
+  onSelectedDateChange: (newDate: number) => void;
 }) => {
   const dispatch = useDispatch();
   const { client } = useSelector((state) => state.events);
@@ -65,7 +65,7 @@ export const CalendarSchedulingFormDialog = (props: {
                 dispatch({ type: "SET_FORM_OPEN", payload: false });
               }}
               event={client}
-              setSelectedDate={props.setSelectedDate}
+              onSelectedDateChange={props.onSelectedDateChange}
             />
           ) : null}
         </DialogContent>

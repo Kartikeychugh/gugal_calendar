@@ -3,7 +3,7 @@ import { CalendarDatePicker } from "../../@core";
 
 export const CalendarDatePickerContainer = (props: {
   selectedDate: number;
-  setSelectedDate: (newDate: number) => void;
+  onSelectedDateChange: (newDate: number) => void;
 }) => {
   return (
     <Paper
@@ -24,7 +24,7 @@ export const CalendarDatePickerContainer = (props: {
       <Box sx={{ height: "330px" }}>
         <CalendarDatePicker
           selectedDate={props.selectedDate}
-          setSelectedDate={props.setSelectedDate}
+          onSelectedDateChange={props.onSelectedDateChange}
         />
       </Box>
     </Paper>

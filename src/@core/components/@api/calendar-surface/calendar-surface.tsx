@@ -1,4 +1,8 @@
-import { ICalendarEvent, ICalendarFeatureFlags } from "../../../models";
+import {
+  ICalendarEvent,
+  ICalendarEventItem,
+  ICalendarFeatureFlags,
+} from "../../../models";
 import {
   CalendarEventsDetailsProvider,
   CalendarDimensionCellHeightProvider,
@@ -14,23 +18,25 @@ export const CalendarSurface = (props: {
   onCellClick: (date: Date, hour: number) => void;
   userViewId: number;
   selectedDate: number;
-  setSelectedDate: (newDate: number) => void;
+  onSelectedDateChange: (newDate: number) => void;
   minCellHeight: number;
   minColumnWidth: number;
   featureFlags?: ICalendarFeatureFlags;
   onViewChange?: (newViewId: number) => void;
+  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   const {
     events,
     userViewId,
     selectedDate,
-    setSelectedDate,
+    onSelectedDateChange,
     onHeaderClick,
     onCellClick,
     featureFlags,
     minColumnWidth,
     minCellHeight,
     onViewChange,
+    RenderEventCard,
   } = props;
 
   return (
@@ -38,7 +44,7 @@ export const CalendarSurface = (props: {
       <CalendarEventsDetailsProvider events={events}>
         <CalendarDateProvider
           selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
+          onSelectedDateChange={onSelectedDateChange}
         >
           <CalendarViewProvider
             minColumnWidth={minColumnWidth}
@@ -50,6 +56,7 @@ export const CalendarSurface = (props: {
                 <CalendarSurfaceRenderer
                   onCellClick={onCellClick}
                   onHeaderClick={onHeaderClick}
+                  RenderEventCard={RenderEventCard}
                 />
               </div>
             </CalendarDimensionCellHeightProvider>

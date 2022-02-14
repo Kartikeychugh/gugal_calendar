@@ -5,6 +5,7 @@ import {
   ICalendarClientEventItem,
   ICalendarEvent,
 } from "../../@core";
+import { EventCardDetailsHolders } from "../calendar-surface-event-card";
 
 export const CalendarSurfaceContainer = (props: {
   events: (ICalendarEvent | ICalendarClientEventItem)[];
@@ -12,7 +13,7 @@ export const CalendarSurfaceContainer = (props: {
   onCellClick: (date: Date, hour: number) => void;
   userViewId: number;
   selectedDate: number;
-  setSelectedDate: (newDate: number) => void;
+  onSelectedDateChange: (newDate: number) => void;
   minCellHeight: number;
   minColumnWidth: number;
   featureFlags?: ICalendarFeatureFlags;
@@ -29,7 +30,7 @@ export const CalendarSurfaceContainer = (props: {
         background: "background.default",
       }}
     >
-      <CalendarSurface {...props} />
+      <CalendarSurface {...props} RenderEventCard={EventCardDetailsHolders} />
     </Paper>
   );
 };

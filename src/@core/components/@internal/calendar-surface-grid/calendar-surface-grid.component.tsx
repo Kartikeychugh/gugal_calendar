@@ -1,6 +1,7 @@
 import { Box, Fade } from "@mui/material";
 import { useEffect, useRef } from "react";
 import {
+  ICalendarEventItem,
   useCalendarDimensionCellHeightContext,
   useCalendarFeatureFlags,
 } from "../../..";
@@ -12,6 +13,7 @@ import { CustomScrollbar } from "../custom-scrollbar/custom-scrollbar";
 
 export const CalendarSurfaceScrollableGrid = (props: {
   onCellClick: (datetime: Date, hour: number) => void;
+  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   useSurfaceGridHeightWatcher(ref);
@@ -32,7 +34,10 @@ export const CalendarSurfaceScrollableGrid = (props: {
         {cellHeight ? (
           <Fade in={!!cellHeight} timeout={500}>
             <Box>
-              <CalendarSurfaceGrid onCellClick={props.onCellClick} />
+              <CalendarSurfaceGrid
+                onCellClick={props.onCellClick}
+                RenderEventCard={props.RenderEventCard}
+              />
             </Box>
           </Fade>
         ) : null}
@@ -43,24 +48,32 @@ export const CalendarSurfaceScrollableGrid = (props: {
 
 const CalendarSurfaceGrid = (props: {
   onCellClick: (datetime: Date, hour: number) => void;
+  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   return (
     <Box sx={{ width: "100%", display: "flex" }}>
       <CalendarSurfaceTimeGrid />
-      <CalendarSurfaceGridRenderer onCellClick={props.onCellClick} />
+      <CalendarSurfaceGridRenderer
+        onCellClick={props.onCellClick}
+        RenderEventCard={props.RenderEventCard}
+      />
     </Box>
   );
 };
 
 const CalendarSurfaceGridRenderer = (props: {
   onCellClick: (datetime: Date, hour: number) => void;
+  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
-  const { onCellClick } = props;
+  const { onCellClick, RenderEventCard } = props;
 
   return (
     <Box sx={{ display: "flex", position: "relative", width: "100%" }}>
       <CalendarSurfaceTimeMarker />
-      <CalendarSurfaceColumns onCellClick={onCellClick} />
+      <CalendarSurfaceColumns
+        onCellClick={onCellClick}
+        RenderEventCard={RenderEventCard}
+      />
     </Box>
   );
 };

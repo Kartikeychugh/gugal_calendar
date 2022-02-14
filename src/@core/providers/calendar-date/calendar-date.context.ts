@@ -3,12 +3,12 @@ import { createContext } from "react";
 
 export interface CalendarDate {
   selectedDate: number;
-  setSelectedDate: (newDate: number) => void;
+  onSelectedDateChange: (newDate: number) => void;
 }
 
 export const CalendarDateContext = createContext<CalendarDate>({
   selectedDate: startOfToday().valueOf(),
-  setSelectedDate: () => {
-    throw Error("setSelectedDate prop missing");
+  onSelectedDateChange: () => {
+    throw Error("onSelectedDateChange prop missing");
   },
 });

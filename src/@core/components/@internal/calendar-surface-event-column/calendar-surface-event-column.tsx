@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { extractEventForDay, transformEvents } from "../../../../utils";
+import { ICalendarEventItem } from "../../../models";
 import {
   useCalendarViewManager,
   useCalendarEventDetails,
@@ -7,7 +8,10 @@ import {
 } from "../../../providers";
 import { CalendarSurfaceEventCard } from "../calendar-surface-event-card";
 
-export const CalendarSurfaceEventColumn = (props: { date: Date }) => {
+export const CalendarSurfaceEventColumn = (props: {
+  date: Date;
+  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
+}) => {
   const {
     currentView: { numberOfDays },
   } = useCalendarViewManager();
@@ -18,6 +22,7 @@ export const CalendarSurfaceEventColumn = (props: { date: Date }) => {
     cellHeight
   );
 
+  const { RenderEventCard } = props;
   return (
     //TODO
     <Box
@@ -29,7 +34,11 @@ export const CalendarSurfaceEventColumn = (props: { date: Date }) => {
       }}
     >
       {transformedEvents.map((event) => (
-        <CalendarSurfaceEventCard key={event.id} event={event} />
+        <CalendarSurfaceEventCard
+          key={event.id}
+          event={event}
+          RenderEventCard={RenderEventCard}
+        />
       ))}
     </Box>
   );

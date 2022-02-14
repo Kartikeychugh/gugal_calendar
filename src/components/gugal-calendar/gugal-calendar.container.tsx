@@ -39,7 +39,7 @@ export const GugalCalendar = (props: {
         userViewId={viewId}
         selectedDate={selectedDate}
         onCellClick={onCellClick}
-        setSelectedDate={setSelectedDate}
+        onSelectedDateChange={setSelectedDate}
         onHeaderClick={(date) => {
           console.log({ date });
         }}
@@ -47,7 +47,7 @@ export const GugalCalendar = (props: {
         minColumnWidth={props.minColumnWidth}
         featureFlags={props.featureFlags}
       />
-      <CalendarSchedulingFormDialog setSelectedDate={setSelectedDate} />
+      <CalendarSchedulingFormDialog onSelectedDateChange={setSelectedDate} />
     </>
   );
 };
