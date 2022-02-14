@@ -15,6 +15,7 @@ declare module "@mui/material/styles" {
       darker: string;
     };
     timeIndicator?: string;
+    timeIndicatorGridHighlighter?: string;
   }
 
   interface PaletteOptions {
@@ -28,5 +29,6 @@ declare module "@mui/material/styles" {
       darker: string;
     };
     timeIndicator?: string;
+    timeIndicatorGridHighlighter?: string;
   }
 }

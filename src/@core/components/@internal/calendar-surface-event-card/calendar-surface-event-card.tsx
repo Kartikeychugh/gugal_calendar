@@ -21,7 +21,6 @@ export const CalendarSurfaceEventCard = (props: {
           left: event.layout.left,
           overflow: "hidden",
           borderRadius: "0 5px 5px 0",
-          transition: "0s all ease-in-out",
           boxShadow: "0px 1px 4px 2px rgba(18,18,18,0.5)",
         }}
       >

@@ -17,7 +17,7 @@ export const getViews = (minColumnWidth: number) => [
         start: selectedDate,
         end: selectedDate,
       }),
-    breakpoint: 1 * (minColumnWidth + 1),
+    breakpoint: 1 * minColumnWidth,
   },
   {
     numberOfDays: 5,
@@ -30,14 +30,14 @@ export const getViews = (minColumnWidth: number) => [
         start: addDays(startOfWeek(selectedDate), 1),
         end: addDays(startOfWeek(selectedDate), 5),
       }),
-    breakpoint: 5 * (minColumnWidth + 1),
+    breakpoint: 5 * minColumnWidth,
   },
   {
     numberOfDays: 7,
     change: 7,
     title: "Week",
     viewId: 2,
-    breakpoint: 7 * (minColumnWidth + 1),
+    breakpoint: 7 * minColumnWidth,
     getViewStartDay: () => 0,
     getViewDates: (selectedDate: number) =>
       eachDayOfInterval({

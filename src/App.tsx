@@ -35,7 +35,8 @@ let darkTheme = createTheme({
       dark: "linear-gradient(rgba(178,150,255, 0.5), rgba(178,150,255, 0.5))",
       darker: "linear-gradient(rgba(178,150,255, 0.8), rgba(178,150,255, 0.8))",
     },
-    timeIndicator: `#B86800`,
+    timeIndicator: `#F6C288`,
+    timeIndicatorGridHighlighter: "rgba(246,194,136, 0.8)",
     action: {
       hover: "rgba(178,150,255, 0.1)",
       selected: "rgba(178,150,255, 0.2)",

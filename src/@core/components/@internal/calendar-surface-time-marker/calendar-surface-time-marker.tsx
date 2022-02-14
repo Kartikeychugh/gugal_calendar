@@ -1,23 +1,36 @@
 import { Box, useTheme } from "@mui/material";
-import { startOfToday } from "date-fns";
-import { useLayoutEffect, useRef } from "react";
+import {
+  isWithinInterval,
+  startOfToday,
+  differenceInCalendarDays,
+} from "date-fns";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import { useCurrentTime } from "../../../hooks";
 import {
   useCalendarDimensionCellHeightContext,
   useCalendarViewManager,
 } from "../../../providers";
-import { useCalendarDate } from "../../../providers/calendar-date";
 
 export const CalendarSurfaceTimeMarker = (props: {}) => {
   const {
-    currentView: { numberOfDays, getViewStartDay },
+    currentView: { numberOfDays },
+    viewDates,
   } = useCalendarViewManager();
-  const { cellHeight } = useCalendarDimensionCellHeightContext();
-  const { selectedDate } = useCalendarDate();
-  const diff = startOfToday().getDay() - getViewStartDay(selectedDate);
-  const time = useCurrentTime();
   const ref = useRef<HTMLDivElement>(null);
+  const time = useCurrentTime();
   const theme = useTheme();
+  const { cellHeight } = useCalendarDimensionCellHeightContext();
+
+  const isTodayWithinView = isWithinInterval(startOfToday(), {
+    start: viewDates[0],
+    end: viewDates[viewDates.length - 1],
+  });
+  const numberOfColumnsOnLeft = useMemo(
+    () => differenceInCalendarDays(startOfToday(), viewDates[0]),
+    [viewDates]
+  );
+
+  console.log({ numberOfColumnsOnLeft });
 
   useLayoutEffect(() => {
     ref.current &&
@@ -27,74 +40,40 @@ export const CalendarSurfaceTimeMarker = (props: {}) => {
       });
   }, []);
 
-  let totalMarkerLengthFraction;
-  let solidMarrkerLengthFraction;
-  let _diff = diff < 0 ? 6 : diff;
+  const timeMarkerHeight = cellHeight / 60;
 
-  if (_diff < 0) {
-    _diff = _diff + numberOfDays;
-    totalMarkerLengthFraction = (_diff + 1) / numberOfDays;
-    solidMarrkerLengthFraction = _diff / (_diff + 1);
-  } else if (_diff >= numberOfDays) {
-    totalMarkerLengthFraction = 1;
-    solidMarrkerLengthFraction = 1;
-  } else {
-    totalMarkerLengthFraction = (_diff + 1) / numberOfDays;
-    solidMarrkerLengthFraction = _diff / (_diff + 1);
-  }
-
-  let solidWidth = solidMarrkerLengthFraction * 100;
-  let dottedWiddth = 100 - solidWidth;
-
-  return (
+  return isTodayWithinView ? (
     <Box
+      ref={ref}
       sx={{
         position: "absolute",
         display: "flex",
         zIndex: 1,
-        top: `${(cellHeight / 60) * time}px`,
-        width: `calc(${100 * totalMarkerLengthFraction}%)`,
+        left: `calc(${(numberOfColumnsOnLeft * 100) / numberOfDays}%)`,
+        top: `${
+          timeMarkerHeight *
+          (time.getHours() * 60 + time.getMinutes() + time.getSeconds() / 60)
+        }px`,
+        width: `calc(${100 / numberOfDays}%)`,
       }}
-      ref={ref}
     >
       <Box
         sx={{
-          borderTop: "2px dotted",
-          width: `${solidWidth}%`,
-          borderColor: `${theme.palette.timeIndicator}`,
+          borderRadius: `${timeMarkerHeight * 4}px`,
+          width: `${timeMarkerHeight * 8}px`,
+          height: `${timeMarkerHeight * 8}px`,
+          top: `-${timeMarkerHeight * 3}px`,
+          background: `${theme.palette.timeIndicator}`,
+          position: "relative",
         }}
-      ></Box>
-      {dottedWiddth ? (
-        <>
-          <Box
-            sx={{
-              borderRadius: "5px",
-              width: "10px",
-              height: "10px",
-              top: "-4px",
-              background: `${theme.palette.timeIndicator}`,
-              position: "relative",
-            }}
-          ></Box>
-          <Box
-            sx={{
-              borderTop: "2px solid",
-              width: `calc(${dottedWiddth}% - 20px)`,
-              borderColor: `${theme.palette.timeIndicator}`,
-            }}
-          ></Box>
-          <Box
-            sx={{
-              borderRadius: "5px",
-              width: "10px",
-              height: "10px",
-              top: "-4px",
-              background: `${theme.palette.timeIndicator}`,
-              position: "relative",
-            }}
-          ></Box>
-        </>
-      ) : null}
+      />
+      <Box
+        sx={{
+          background: `${theme.palette.timeIndicator}`,
+          height: `${cellHeight / 60}px`,
+          width: `calc(100%)`,
+        }}
+      />
     </Box>
-  );
+  ) : null;
 };
