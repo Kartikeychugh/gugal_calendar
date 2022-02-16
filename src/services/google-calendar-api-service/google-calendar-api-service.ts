@@ -22,7 +22,6 @@ export class GoogleCalendarService implements IGoogleCalendarService {
 
   public async getEvents(start: number) {
     return this.googleAuthenticationService.ensureSignIn().then(async () => {
-      console.log("Ensured authentication");
       const s = startOfWeek(start);
       const e = endOfWeek(start);
 

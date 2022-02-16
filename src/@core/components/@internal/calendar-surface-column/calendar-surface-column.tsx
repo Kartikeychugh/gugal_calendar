@@ -7,8 +7,8 @@ import { CalendarSurfaceGridColumn } from "../calendar-surface-grid-column";
 import { CalendarSurfaceSizeWatcher } from "../calendar-surface-size-watcher";
 
 export const CalendarSurfaceColumns = (props: {
-  onCellClick: (datetime: Date, hour: number) => void;
-  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
+  onCellClick: (start: Date, end: Date) => void;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   const { viewDates } = useCalendarViewManager();
 
@@ -30,7 +30,7 @@ export const CalendarSurfaceColumns = (props: {
             key={i}
             date={day}
             onCellClick={props.onCellClick}
-            RenderEventCard={props.RenderEventCard}
+            CientEventCard={props.CientEventCard}
           />
         ))}
       </Box>
@@ -40,8 +40,8 @@ export const CalendarSurfaceColumns = (props: {
 
 const CalendarSurfaceColumn = (props: {
   date: Date;
-  onCellClick: (datetime: Date, hour: number) => void;
-  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
+  onCellClick: (start: Date, end: Date) => void;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   const theme = useTheme();
 
@@ -60,7 +60,7 @@ const CalendarSurfaceColumn = (props: {
     >
       <CalendarSurfaceEventColumn
         date={props.date}
-        RenderEventCard={props.RenderEventCard}
+        CientEventCard={props.CientEventCard}
       />
       <CalendarSurfaceGridColumn
         date={props.date}

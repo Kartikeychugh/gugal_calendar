@@ -1,9 +1,11 @@
 import { Typography } from "@mui/material";
-import { ICalendarEventItem } from "../../@core";
-import { FluidText } from "../fluid-text/fluid-text";
+import { FluidText } from "../../@api";
 
-export const EventCardTimings = (props: { event: ICalendarEventItem }) => {
-  const { event } = props;
+export const EventCardTimings = (props: {
+  start: string | number | Date;
+  end: string | number | Date;
+}) => {
+  const { start, end } = props;
   return (
     <Typography
       letterSpacing={0}
@@ -13,12 +15,12 @@ export const EventCardTimings = (props: { event: ICalendarEventItem }) => {
       width={`100%`}
     >
       <FluidText minFontPercentage={90}>
-        {new Date(event.start.dateTime).toLocaleTimeString([], {
+        {new Date(start).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         })}
         {" - "}
-        {new Date(event.end.dateTime).toLocaleTimeString([], {
+        {new Date(end).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         })}

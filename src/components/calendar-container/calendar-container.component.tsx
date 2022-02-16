@@ -11,7 +11,7 @@ import { CalendarSurfaceContainer } from "../calendar-surface-container";
 export const CalendarContainer = (props: {
   events: (ICalendarEvent | ICalendarClientEventItem)[];
   onHeaderClick: (date: number) => void;
-  onCellClick: (date: Date, hour: number) => void;
+  onCellClick: (start: Date, end: Date) => void;
   userViewId: number;
   selectedDate: number;
   onSelectedDateChange: (newDate: number) => void;

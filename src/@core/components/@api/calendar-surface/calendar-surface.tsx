@@ -15,7 +15,7 @@ import { CalendarSurfaceRenderer } from "../../@internal";
 export const CalendarSurface = (props: {
   events: ICalendarEvent[];
   onHeaderClick: (date: number) => void;
-  onCellClick: (date: Date, hour: number) => void;
+  onCellClick: (start: Date, end: Date) => void;
   userViewId: number;
   selectedDate: number;
   onSelectedDateChange: (newDate: number) => void;
@@ -23,7 +23,7 @@ export const CalendarSurface = (props: {
   minColumnWidth: number;
   featureFlags?: ICalendarFeatureFlags;
   onViewChange?: (newViewId: number) => void;
-  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   const {
     events,
@@ -36,7 +36,7 @@ export const CalendarSurface = (props: {
     minColumnWidth,
     minCellHeight,
     onViewChange,
-    RenderEventCard,
+    CientEventCard,
   } = props;
 
   return (
@@ -56,7 +56,7 @@ export const CalendarSurface = (props: {
                 <CalendarSurfaceRenderer
                   onCellClick={onCellClick}
                   onHeaderClick={onHeaderClick}
-                  RenderEventCard={RenderEventCard}
+                  CientEventCard={CientEventCard}
                 />
               </div>
             </CalendarDimensionCellHeightProvider>

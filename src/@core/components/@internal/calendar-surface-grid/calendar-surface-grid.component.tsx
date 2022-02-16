@@ -12,8 +12,8 @@ import { CalendarSurfaceTimeMarker } from "../calendar-surface-time-marker";
 import { CustomScrollbar } from "../custom-scrollbar/custom-scrollbar";
 
 export const CalendarSurfaceScrollableGrid = (props: {
-  onCellClick: (datetime: Date, hour: number) => void;
-  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
+  onCellClick: (start: Date, end: Date) => void;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   useSurfaceGridHeightWatcher(ref);
@@ -36,7 +36,7 @@ export const CalendarSurfaceScrollableGrid = (props: {
             <Box>
               <CalendarSurfaceGrid
                 onCellClick={props.onCellClick}
-                RenderEventCard={props.RenderEventCard}
+                CientEventCard={props.CientEventCard}
               />
             </Box>
           </Fade>
@@ -47,32 +47,32 @@ export const CalendarSurfaceScrollableGrid = (props: {
 };
 
 const CalendarSurfaceGrid = (props: {
-  onCellClick: (datetime: Date, hour: number) => void;
-  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
+  onCellClick: (start: Date, end: Date) => void;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   return (
     <Box sx={{ width: "100%", display: "flex" }}>
       <CalendarSurfaceTimeGrid />
       <CalendarSurfaceGridRenderer
         onCellClick={props.onCellClick}
-        RenderEventCard={props.RenderEventCard}
+        CientEventCard={props.CientEventCard}
       />
     </Box>
   );
 };
 
 const CalendarSurfaceGridRenderer = (props: {
-  onCellClick: (datetime: Date, hour: number) => void;
-  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
+  onCellClick: (start: Date, end: Date) => void;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
-  const { onCellClick, RenderEventCard } = props;
+  const { onCellClick, CientEventCard } = props;
 
   return (
     <Box sx={{ display: "flex", position: "relative", width: "100%" }}>
       <CalendarSurfaceTimeMarker />
       <CalendarSurfaceColumns
         onCellClick={onCellClick}
-        RenderEventCard={RenderEventCard}
+        CientEventCard={CientEventCard}
       />
     </Box>
   );

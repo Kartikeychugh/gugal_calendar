@@ -1,11 +1,12 @@
 import { Box, Zoom } from "@mui/material";
 import { ICalendarEventItem } from "../../../models";
+import { EventCardDetailsHolders } from "./event-card-details-holder";
 
 export const CalendarSurfaceEventCard = (props: {
   event: ICalendarEventItem;
-  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
-  const { event, RenderEventCard } = props;
+  const { event, CientEventCard } = props;
   return (
     <Zoom in={!!event} style={{ transitionDelay: "10ms" }} unmountOnExit>
       <Box
@@ -26,7 +27,11 @@ export const CalendarSurfaceEventCard = (props: {
           color: "inherit",
         }}
       >
-        {RenderEventCard ? <RenderEventCard event={event} /> : null}
+        {CientEventCard ? (
+          <CientEventCard event={event} />
+        ) : (
+          <EventCardDetailsHolders event={event} />
+        )}
       </Box>
     </Zoom>
   );

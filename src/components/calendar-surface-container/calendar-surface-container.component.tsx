@@ -5,12 +5,11 @@ import {
   ICalendarClientEventItem,
   ICalendarEvent,
 } from "../../@core";
-import { EventCardDetailsHolders } from "../calendar-surface-event-card";
 
 export const CalendarSurfaceContainer = (props: {
   events: (ICalendarEvent | ICalendarClientEventItem)[];
   onHeaderClick: (date: number) => void;
-  onCellClick: (date: Date, hour: number) => void;
+  onCellClick: (start: Date, end: Date) => void;
   userViewId: number;
   selectedDate: number;
   onSelectedDateChange: (newDate: number) => void;
@@ -30,7 +29,7 @@ export const CalendarSurfaceContainer = (props: {
         background: "background.default",
       }}
     >
-      <CalendarSurface {...props} RenderEventCard={EventCardDetailsHolders} />
+      <CalendarSurface {...props} />
     </Paper>
   );
 };

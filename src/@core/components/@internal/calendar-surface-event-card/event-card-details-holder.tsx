@@ -3,8 +3,8 @@ import { EventCardIcons } from "./event-card-icons";
 import { EventCardTimings } from "./event-card-timings";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { useMemo } from "react";
-import { FluidText } from "../fluid-text/fluid-text";
-import { clientEventStatus, ICalendarEventItem } from "../../@core";
+import { clientEventStatus, ICalendarEventItem } from "../../../models";
+import { FluidText } from "../../@api";
 
 export const colorShade = (col: string, amt: number) => {
   col = col.replace(/^#/, "");
@@ -67,7 +67,10 @@ const EventCardTopBar = (props: { event: ICalendarEventItem }) => {
       <Box
         sx={{ width: `calc(100% - ${icons.length ? icons.length * 20 : 0}px)` }}
       >
-        <EventCardTimings event={event} />
+        <EventCardTimings
+          start={event.start.dateTime}
+          end={event.end.dateTime}
+        />
       </Box>
       <Box>
         <EventCardIcons icons={icons} />

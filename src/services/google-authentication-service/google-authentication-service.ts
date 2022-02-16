@@ -25,13 +25,10 @@ export class GoogleAuthenticationService {
     const isSignedIn = await this.isSignedIn();
 
     if (!isSignedIn) {
-      console.log("Need to login");
       return this.signIn().then((user: any) => {
-        console.log("Logged in", user);
         return user;
       });
     } else {
-      console.log("Already logged in");
       return this.getCurrentUser();
     }
   }

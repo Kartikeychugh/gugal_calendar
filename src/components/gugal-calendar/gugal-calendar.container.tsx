@@ -1,4 +1,4 @@
-import { addHours, startOfToday } from "date-fns";
+import { startOfToday } from "date-fns";
 import { useCallback, useState } from "react";
 import { CalendarContainer } from "..";
 import { ICalendarFeatureFlags } from "../../@core";
@@ -18,9 +18,9 @@ export const GugalCalendar = (props: {
   const dispatch = useDispatch();
 
   const onCellClick = useCallback(
-    (date: Date, hour: number) => {
+    (start: Date, end: Date) => {
       dispatch({ type: "SET_FORM_OPEN", payload: true });
-      createClientEvent(addHours(date, hour), addHours(date, hour + 1));
+      createClientEvent(start, end);
     },
     [createClientEvent, dispatch]
   );
@@ -40,9 +40,7 @@ export const GugalCalendar = (props: {
         selectedDate={selectedDate}
         onCellClick={onCellClick}
         onSelectedDateChange={setSelectedDate}
-        onHeaderClick={(date) => {
-          console.log({ date });
-        }}
+        onHeaderClick={(date) => {}}
         minCellHeight={props.minCellHeight}
         minColumnWidth={props.minColumnWidth}
         featureFlags={props.featureFlags}

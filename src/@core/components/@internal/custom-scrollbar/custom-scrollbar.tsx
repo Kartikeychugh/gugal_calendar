@@ -5,9 +5,10 @@ import {
   useState,
   useCallback,
   useMemo,
+  useEffect,
 } from "react";
 
-import { useClickAndDragWatcher, useEventListener } from "../../../hooks";
+import { useDragWatcher, useEventListener } from "../../../hooks";
 import {
   useScrollBarStyles,
   useScrollHeadStyles,
@@ -141,16 +142,30 @@ const ScrollHead = (props: {
   const { scrollHeadHeight, travel, scrollByHeadTravel, visible } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  useClickAndDragWatcher(
-    containerRef,
-    "movementY",
-    useCallback(
-      (movementY: number) => {
-        scrollByHeadTravel(travel + movementY, "auto");
-      },
-      [scrollByHeadTravel, travel]
-    )
-  );
+  const response = useDragWatcher(containerRef, "clientY");
+  const fixedTravel = useMemo(() => travel, [response.dragging]);
+
+  useEffect(() => {
+    if (response.dragging) {
+      scrollByHeadTravel(fixedTravel + response.dragDistance, "auto");
+    }
+  }, [
+    response.dragDistance,
+    scrollByHeadTravel,
+    response.dragging,
+    fixedTravel,
+  ]);
+
+  // useDragWatcher(
+  //   containerRef,
+  //   "movementY",
+  //   useCallback(
+  //     (movementY: number) => {
+  //       scrollByHeadTravel(travel + movementY, "auto");
+  //     },
+  //     [scrollByHeadTravel, travel]
+  //   )
+  // );
 
   const classes = useScrollHeadStyles({
     scrollHeadHeight,

@@ -10,7 +10,7 @@ import { CalendarSurfaceEventCard } from "../calendar-surface-event-card";
 
 export const CalendarSurfaceEventColumn = (props: {
   date: Date;
-  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
   const {
     currentView: { numberOfDays },
@@ -22,7 +22,7 @@ export const CalendarSurfaceEventColumn = (props: {
     cellHeight
   );
 
-  const { RenderEventCard } = props;
+  const { CientEventCard } = props;
   return (
     //TODO
     <Box
@@ -37,7 +37,7 @@ export const CalendarSurfaceEventColumn = (props: {
         <CalendarSurfaceEventCard
           key={event.id}
           event={event}
-          RenderEventCard={RenderEventCard}
+          CientEventCard={CientEventCard}
         />
       ))}
     </Box>

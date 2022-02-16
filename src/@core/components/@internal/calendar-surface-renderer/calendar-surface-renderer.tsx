@@ -7,10 +7,10 @@ import { CalendarCommandBar } from "../calender-command-bar";
 
 export const CalendarSurfaceRenderer = (props: {
   onHeaderClick: (date: number) => void;
-  onCellClick: (date: Date, hour: number) => void;
-  RenderEventCard: (props: { event: ICalendarEventItem }) => JSX.Element;
+  onCellClick: (start: Date, end: Date) => void;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
-  const { onHeaderClick, onCellClick, RenderEventCard } = props;
+  const { onHeaderClick, onCellClick, CientEventCard } = props;
   const { hideCommandBar } = useCalendarFeatureFlags();
   return (
     <>
@@ -38,7 +38,7 @@ export const CalendarSurfaceRenderer = (props: {
         <CalendarSurfaceHeader onHeaderClick={onHeaderClick} />
         <CalendarSurfaceScrollableGrid
           onCellClick={onCellClick}
-          RenderEventCard={RenderEventCard}
+          CientEventCard={CientEventCard}
         />
       </Box>
     </>
