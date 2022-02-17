@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useEventListener } from "../use-event-listener";
 
-export const useDragWatcher = (direction: "clientY", threshold = 2) => {
+export const useDragWatcher = (
+  direction: "clientY",
+  threshold = 2,
+  dragStartCalculator?: (e: Event) => number
+) => {
   // Tells us about where mouseDown was pressed
   const [mouseDownPivot, setMouseDownPivot] = useState(-Infinity);
   // Whether dragging has begun. (and crossed the threshold)
@@ -19,7 +23,8 @@ export const useDragWatcher = (direction: "clientY", threshold = 2) => {
       setDragDistance,
       mouseDownPivot,
       setDragging,
-      threshold
+      threshold,
+      dragStartCalculator
     );
 
   useEventListener<MouseEvent>(document, "mouseup", mouseUpCallback);
@@ -57,20 +62,31 @@ function useGenerateEventCallbacks(
   setDragDistance: React.Dispatch<React.SetStateAction<number>>,
   mouseDownPivot: number,
   setDragging: React.Dispatch<React.SetStateAction<boolean>>,
-  threshold: number
+  threshold: number,
+  dragStartCalculator?: (e: Event) => number
 ) {
   const mouseDownCallback = useCallback(
     (e: MouseEvent) => {
+      console.log(e);
+
       /**
        * On mousedown record it to check that mousedown actually happened on this element.
        * Record where the drag started
        * Reset the drag distance to zero.
        */
       setMouseDownPivot(e[direction]);
-      setDragStart(e.offsetY);
+      setDragStart(
+        (dragStartCalculator && dragStartCalculator(e)) || e.offsetY
+      );
       setDragDistance(0);
     },
-    [setDragStart, direction, setDragDistance, setMouseDownPivot]
+    [
+      setDragStart,
+      direction,
+      setDragDistance,
+      setMouseDownPivot,
+      dragStartCalculator,
+    ]
   );
 
   const mouseUpCallback = useCallback(() => {

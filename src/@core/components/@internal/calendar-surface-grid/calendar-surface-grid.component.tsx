@@ -81,7 +81,6 @@ const CalendarSurfaceGridRenderer = (props: {
 const useSurfaceGridHeightWatcher = (ref: React.RefObject<HTMLDivElement>) => {
   const { responsiveCellHeight } = useCalendarFeatureFlags();
   const { setCellHeight } = useCalendarDimensionCellHeightContext();
-  const debounceRef = useRef<any>(null);
 
   useSizeWatcher(
     ref,
@@ -90,11 +89,6 @@ const useSurfaceGridHeightWatcher = (ref: React.RefObject<HTMLDivElement>) => {
     useCallback(
       (newDimension: number) => {
         setCellHeight(newDimension / 12);
-
-        // clearTimeout(debounceRef.current);
-        // debounceRef.current = setTimeout(() => {
-        //   setCellHeight(newDimension / 12);
-        // }, 250);
       },
       [setCellHeight]
     )

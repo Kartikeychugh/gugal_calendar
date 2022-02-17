@@ -17,6 +17,7 @@ export const CalendarSurfaceGridColumn = React.memo(
     const { date, onCellClick } = props;
     const ref = useRef<HTMLDivElement>(null);
     const [eventDragged, setEventDragged] = useState(false);
+
     const [response, setResponse] = useState<{
       dragging: boolean;
       dragStart: number;
@@ -33,39 +34,38 @@ export const CalendarSurfaceGridColumn = React.memo(
     const cells = [];
     const { cellHeight } = useCalendarDimensionCellHeightContext();
 
+    const dragger = useDragWatcher("clientY", 15, (e: Event) => {
+      if (e.target) {
+        return (e.target as any).dataset.key * cellHeight + (e as any).offsetY;
+      }
+    });
+
     useEffect(() => {
-      if (!response.dragging && eventDragged) {
-        const top = nearestToMultiple(response.dragStart, cellHeight / 4);
-        const height = nearestToMultiple(response.dragDistance, cellHeight / 4);
+      const stopListening = dragger.startListening(ref.current);
+      return () => {
+        stopListening();
+      };
+    }, [dragger.startListening]);
+
+    useEffect(() => {
+      if (!dragger.dragging && eventDragged) {
+        const top = nearestToMultiple(dragger.dragStart, cellHeight / 4);
+        const height = nearestToMultiple(dragger.dragDistance, cellHeight / 4);
         const { adjustedStartDate, adjustedEndDate } =
           calculatelankeEventTimings(height, top, date, cellHeight);
         onCellClick(adjustedStartDate, adjustedEndDate);
       }
 
-      setEventDragged(response.dragging);
-    }, [response, cellHeight, date, eventDragged, onCellClick]);
-
-    // useEffect(() => {
-    //   if (!response.dragging && eventDragged) {
-    //     const top = nearestToMultiple(response.dragStart, cellHeight / 4);
-    //     const height = nearestToMultiple(response.dragDistance, cellHeight / 4);
-
-    //     const { adjustedStartDate, adjustedEndDate } =
-    //       calculatelankeEventTimings(height, top, date);
-
-    //     onCellClick(adjustedStartDate, adjustedEndDate);
-    //   }
-
-    //   setEventDragged(response.dragging);
-    // }, [
-    //   response.dragging,
-    //   response.dragStart,
-    //   response.dragDistance,
-    //   cellHeight,
-    //   eventDragged,
-    //   date,
-    //   onCellClick,
-    // ]);
+      setEventDragged(dragger.dragging);
+    }, [
+      dragger.dragging,
+      dragger.dragDistance,
+      dragger.dragStart,
+      cellHeight,
+      date,
+      eventDragged,
+      onCellClick,
+    ]);
 
     for (let i = 0; i < 24; i++) {
       cells.push(
@@ -74,7 +74,7 @@ export const CalendarSurfaceGridColumn = React.memo(
           cellHeight={cellHeight}
           i={i}
           date={date}
-          setResponse={setResponse}
+          onCellClick={props.onCellClick}
         />
       );
     }
@@ -87,10 +87,10 @@ export const CalendarSurfaceGridColumn = React.memo(
             width: "100%",
           }}
         >
-          {response.dragging ? (
+          {dragger.dragging ? (
             <BlanketEvent
-              top={nearestToMultiple(response.dragStart, cellHeight / 4)}
-              height={nearestToMultiple(response.dragDistance, cellHeight / 4)}
+              top={nearestToMultiple(dragger.dragStart, cellHeight / 4)}
+              height={nearestToMultiple(dragger.dragDistance, cellHeight / 4)}
               width={100 / numberOfDays}
               date={props.date}
               onCellClick={props.onCellClick}
@@ -108,43 +108,24 @@ const GridCell = React.memo(
   (props: {
     cellHeight: number;
     date: Date;
-    setResponse: (res: any) => void;
     i: number;
+    onCellClick: (start: Date, end: Date) => void;
   }) => {
-    const { cellHeight, i, setResponse, date } = props;
+    const { cellHeight, i } = props;
     const theme = useTheme();
-    const {
-      viewDates,
-      currentView: { numberOfDays },
-    } = useCalendarViewManager();
+    const { viewDates } = useCalendarViewManager();
     const endDateOfView = viewDates[viewDates.length - 1].valueOf();
     const ref = useRef<HTMLDivElement>(null);
 
-    const response = useDragWatcher("clientY", 15);
-
-    useEffect(() => {
-      const stopListening = response.startListening(ref.current);
-      return () => {
-        stopListening();
-      };
-    }, [response.startListening]);
-
-    useEffect(() => {
-      setResponse({
-        ...response,
-        dragStart: i * cellHeight + response.dragStart,
-      });
-    }, [response, cellHeight]);
-
     return (
       <Box
+        data-key={i}
         ref={ref}
         key={i}
         sx={{
           height: `${cellHeight}px`,
           width: "100%",
           transition: "0.2s all ease-in-out",
-          // borderRadius: "2px",
           boxShadow:
             i === 23
               ? endDateOfView === props.date.valueOf()
@@ -165,13 +146,12 @@ const GridCell = React.memo(
             backgroundColor: `action.hover`,
           },
         }}
-        // onMouseUp={(e) => {
-        //   if (!dragging)
-        //     props.onCellClick(
-        //       setHours(props.date, i),
-        //       setHours(props.date, i + 1)
-        //     );
-        // }}
+        onMouseUp={(e) => {
+          props.onCellClick(
+            setHours(props.date, i),
+            setHours(props.date, i + 1)
+          );
+        }}
       />
     );
   }

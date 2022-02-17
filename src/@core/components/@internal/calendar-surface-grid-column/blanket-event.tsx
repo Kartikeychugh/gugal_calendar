@@ -25,6 +25,7 @@ export const BlanketEvent = (props: {
         width: `calc(${width}%)`,
         color: "white",
         boxShadow: "0px 1px 4px 2px rgba(18,18,18,0.5)",
+        transition: "0.05s all ease-in-out",
       }}
     >
       <EventCardTimings start={adjustedStartDate} end={adjustedEndDate} />
