@@ -1,4 +1,10 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useSizeWatcher } from "../../../hooks";
 import { useCalendarViewManager } from "../../../providers";
 import { useCalendarAvailableViews } from "../../../providers/calendar-available-views";
@@ -13,33 +19,38 @@ export const CalendarSurfaceSizeWatcher = (
 
   const { containerRef } = props;
   const [lastBreakAt, setLastBreakAt] = useState<number | null>(null);
+  const debounceRef = useRef<any>(null);
 
-  const width = useSizeWatcher(containerRef, true, "width");
+  useSizeWatcher(
+    containerRef,
+    true,
+    "width",
+    useCallback(
+      (newWidth: number) => {
+        clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => {
+          if (newWidth === null || newWidth === 0) {
+            return;
+          }
 
-  useEffect(() => {
-    if (width === null || width === 0) {
-      return;
-    }
+          if (
+            newWidth <= userView.breakpoint &&
+            (lastBreakAt === null || lastBreakAt !== userView.breakpoint)
+          ) {
+            updateResponsiveView(0);
+            updateViewsFromGridWidth(newWidth);
+            setLastBreakAt(userView.breakpoint);
+          } else if (newWidth > userView.breakpoint && lastBreakAt !== null) {
+            updateViewsFromGridWidth(newWidth);
 
-    updateViewsFromGridWidth(width);
-
-    if (
-      width <= userView.breakpoint &&
-      (lastBreakAt === null || lastBreakAt !== userView.breakpoint)
-    ) {
-      updateResponsiveView(0);
-      setLastBreakAt(userView.breakpoint);
-    } else if (width > userView.breakpoint && lastBreakAt !== null) {
-      updateResponsiveView(null);
-      setLastBreakAt(null);
-    }
-  }, [
-    updateResponsiveView,
-    userView,
-    lastBreakAt,
-    width,
-    updateViewsFromGridWidth,
-  ]);
+            updateResponsiveView(null);
+            setLastBreakAt(null);
+          }
+        }, 250);
+      },
+      [updateResponsiveView, userView, lastBreakAt, updateViewsFromGridWidth]
+    )
+  );
 
   return <>{props.children}</>;
 };

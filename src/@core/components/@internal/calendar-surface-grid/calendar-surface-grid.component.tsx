@@ -1,5 +1,5 @@
 import { Box, Fade } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   ICalendarEventItem,
   useCalendarDimensionCellHeightContext,
@@ -80,16 +80,23 @@ const CalendarSurfaceGridRenderer = (props: {
 
 const useSurfaceGridHeightWatcher = (ref: React.RefObject<HTMLDivElement>) => {
   const { responsiveCellHeight } = useCalendarFeatureFlags();
-
-  const height = useSizeWatcher(ref, !!responsiveCellHeight, "height");
   const { setCellHeight } = useCalendarDimensionCellHeightContext();
+  const debounceRef = useRef<any>(null);
 
-  useEffect(() => {
-    if (!height) {
-      return;
-    }
-    setCellHeight(height / 12);
-  }, [height, setCellHeight]);
+  useSizeWatcher(
+    ref,
+    !!responsiveCellHeight,
+    "height",
+    useCallback(
+      (newDimension: number) => {
+        setCellHeight(newDimension / 12);
 
-  return height;
+        // clearTimeout(debounceRef.current);
+        // debounceRef.current = setTimeout(() => {
+        //   setCellHeight(newDimension / 12);
+        // }, 250);
+      },
+      [setCellHeight]
+    )
+  );
 };

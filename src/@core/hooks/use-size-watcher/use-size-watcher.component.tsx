@@ -3,16 +3,15 @@ import { useEffect, useMemo, useState } from "react";
 export const useSizeWatcher = (
   containerRef: React.MutableRefObject<HTMLDivElement | null>,
   watchIfTrue: boolean,
-  param: "height" | "width"
+  param: "height" | "width",
+  callback: (newdimension: number) => void
 ) => {
-  const [width, setWidth] = useState(0);
-
   const observer = useMemo(() => {
     return new ResizeObserver((entries) => {
       const width = entries[0].contentRect[param];
-      setWidth(width);
+      callback(width);
     });
-  }, [param]);
+  }, [param, callback]);
 
   useEffect(() => {
     if (containerRef.current && watchIfTrue) {
@@ -23,6 +22,4 @@ export const useSizeWatcher = (
       observer.disconnect();
     };
   }, [observer, containerRef, watchIfTrue]);
-
-  return width;
 };

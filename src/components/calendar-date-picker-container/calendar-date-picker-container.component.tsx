@@ -1,7 +1,8 @@
 import { Box, Paper } from "@mui/material";
+import React from "react";
 import { CalendarDatePicker } from "../../@core";
 
-export const CalendarDatePickerContainer = (props: {
+export const CalendarDatePickerContainer = React.memo((props: {
   selectedDate: number;
   onSelectedDateChange: (newDate: number) => void;
 }) => {
@@ -29,4 +30,4 @@ export const CalendarDatePickerContainer = (props: {
       </Box>
     </Paper>
   );
-};
+});

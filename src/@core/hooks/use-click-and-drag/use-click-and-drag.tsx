@@ -7,7 +7,7 @@ export const useClickAndDrag = (
 ) => {
   const ref = useRef<number>(0);
 
-  const response = useDragWatcher(containerRef, direction);
+  // const response = useDragWatcher(containerRef, direction);
 
-  return response;
+  // return response;
 };

@@ -33,6 +33,8 @@ export class GoogleCalendarService implements IGoogleCalendarService {
         orderBy: "startTime",
       });
 
+      console.log("getEvents call completed");
+
       return response.result.items;
     });
   }
@@ -44,6 +46,9 @@ export class GoogleCalendarService implements IGoogleCalendarService {
         resource: event,
         conferenceDataVersion: 1,
       });
+
+      console.log("createEvent call completed");
+
       return response.result;
     });
   }
@@ -51,6 +56,9 @@ export class GoogleCalendarService implements IGoogleCalendarService {
   public async getColors() {
     return this.googleGapiService.ensureGAPIInitialised().then(async () => {
       const response = await gapi.client.calendar.colors.get();
+
+      console.log("getColors call completed");
+
       return response.result;
     });
   }

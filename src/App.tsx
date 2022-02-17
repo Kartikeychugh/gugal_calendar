@@ -30,7 +30,7 @@ let darkTheme = createTheme({
     },
     backgroundImage: {
       light:
-        "linear-gradient(rgba(178,150,255, 0.02), rgba(178,150,255, 0.02))",
+        "linear-gradient(rgba(178,150,255, 0.05), rgba(178,150,255, 0.05))",
       main: "linear-gradient(rgba(178,150,255, 0.1), rgba(178,150,255, 0.1))",
       dark: "linear-gradient(rgba(178,150,255, 0.5), rgba(178,150,255, 0.5))",
       darker: "linear-gradient(rgba(178,150,255, 0.8), rgba(178,150,255, 0.8))",
@@ -72,10 +72,10 @@ function App() {
         <ThemeProvider theme={darkTheme}>
           <GugalCalendar
             minColumnWidth={100}
-            minCellHeight={60}
+            minCellHeight={30}
             featureFlags={{
               hideCommandBar: false,
-              responsiveCellHeight: false,
+              responsiveCellHeight: true,
             }}
           />
         </ThemeProvider>

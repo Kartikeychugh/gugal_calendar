@@ -8,19 +8,19 @@ import {
 
 export const CalendarSurfaceContainer = (props: {
   events: (ICalendarEvent | ICalendarClientEventItem)[];
-  onHeaderClick: (date: number) => void;
-  onCellClick: (start: Date, end: Date) => void;
   userViewId: number;
   selectedDate: number;
-  onSelectedDateChange: (newDate: number) => void;
   minCellHeight: number;
   minColumnWidth: number;
   featureFlags?: ICalendarFeatureFlags;
+  onHeaderClick: (date: number) => void;
+  onCellClick: (start: Date, end: Date) => void;
+  onSelectedDateChange: (newDate: number) => void;
   onViewChange?: (newViewId: number) => void;
 }) => {
   return (
     <Paper
-      elevation={5}
+      elevation={4}
       sx={{
         borderRadius: "0px",
         width: "100%",
