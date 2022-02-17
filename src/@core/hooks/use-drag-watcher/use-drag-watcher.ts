@@ -1,11 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useEventListener } from "../use-event-listener";
 
-export const useDragWatcher = (
-  containerRef: React.MutableRefObject<HTMLDivElement | null>,
-  direction: "clientY",
-  threshold = 2
-) => {
+export const useDragWatcher = (direction: "clientY", threshold = 2) => {
   // Tells us about where mouseDown was pressed
   const [mouseDownPivot, setMouseDownPivot] = useState(-Infinity);
   // Whether dragging has begun. (and crossed the threshold)
@@ -15,7 +11,55 @@ export const useDragWatcher = (
   // Distance travelled from dragStart point
   const [dragDistance, setDragDistance] = useState(0);
 
-  const callback = useCallback(
+  const { mouseUpCallback, mouseMoveCallback, mouseDownCallback } =
+    useGenerateEventCallbacks(
+      setMouseDownPivot,
+      direction,
+      setDragStart,
+      setDragDistance,
+      mouseDownPivot,
+      setDragging,
+      threshold
+    );
+
+  useEventListener<MouseEvent>(document, "mouseup", mouseUpCallback);
+  useEventListener<MouseEvent>(document, "mousemove", mouseMoveCallback);
+
+  const startListening = useCallback(
+    (element: Node | null) => {
+      element?.addEventListener(
+        "mousedown",
+        mouseDownCallback as EventListener
+      );
+
+      return () => {
+        element?.removeEventListener(
+          "mousedown",
+          mouseDownCallback as EventListener
+        );
+      };
+    },
+    [mouseDownCallback]
+  );
+
+  return {
+    dragging,
+    dragStart,
+    dragDistance,
+    startListening,
+  };
+};
+
+function useGenerateEventCallbacks(
+  setMouseDownPivot: React.Dispatch<React.SetStateAction<number>>,
+  direction: "clientY",
+  setDragStart: React.Dispatch<React.SetStateAction<number>>,
+  setDragDistance: React.Dispatch<React.SetStateAction<number>>,
+  mouseDownPivot: number,
+  setDragging: React.Dispatch<React.SetStateAction<boolean>>,
+  threshold: number
+) {
+  const mouseDownCallback = useCallback(
     (e: MouseEvent) => {
       /**
        * On mousedown record it to check that mousedown actually happened on this element.
@@ -29,62 +73,31 @@ export const useDragWatcher = (
     [setDragStart, direction, setDragDistance, setMouseDownPivot]
   );
 
-  useEffect(() => {
-    const eventListener = (e: MouseEvent) => {
-      e.preventDefault();
-      callback(e);
-    };
+  const mouseUpCallback = useCallback(() => {
+    // Check if mousedown happened in the context of the element
+    if (mouseDownPivot !== -Infinity) {
+      /**
+       * Reset dragging and mousedown coordinate
+       * if a mouse down actually happened in the first place
+       */
+      setMouseDownPivot(-Infinity);
+      setDragging(false);
+    }
+  }, [setDragging, mouseDownPivot, setMouseDownPivot]);
 
-    containerRef.current?.addEventListener(
-      "mousedown",
-      eventListener as EventListener
-    );
-    return () => {
-      containerRef.current?.removeEventListener(
-        "mousedown",
-        eventListener as EventListener
-      );
-    };
-  }, [callback]);
-
-  useEventListener<MouseEvent>(
-    document,
-    "mouseup",
-    useCallback(() => {
+  const mouseMoveCallback = useCallback(
+    (e) => {
       // Check if mousedown happened in the context of the element
       if (mouseDownPivot !== -Infinity) {
-        /**
-         * Reset dragging and mousedown coordinate
-         * if a mouse down actually happened in the first place
-         */
-        setMouseDownPivot(-Infinity);
-        setDragging(false);
-      }
-    }, [setDragging, mouseDownPivot, setMouseDownPivot])
-  );
-
-  useEventListener<MouseEvent>(
-    document,
-    "mousemove",
-    useCallback(
-      (e) => {
-        // Check if mousedown happened in the context of the element
-        if (mouseDownPivot !== -Infinity) {
-          // If threshold exceeds mark it as dragging start
-          if (Math.abs(e[direction] - mouseDownPivot) > threshold) {
-            setDragging(true);
-          }
-
-          setDragDistance(e[direction] - mouseDownPivot);
+        // If threshold exceeds mark it as dragging start
+        if (Math.abs(e[direction] - mouseDownPivot) > threshold) {
+          setDragging(true);
         }
-      },
-      [setDragDistance, mouseDownPivot, threshold, direction, setDragging]
-    )
-  );
 
-  return {
-    dragging,
-    dragStart,
-    dragDistance,
-  };
-};
+        setDragDistance(e[direction] - mouseDownPivot);
+      }
+    },
+    [setDragDistance, mouseDownPivot, threshold, direction, setDragging]
+  );
+  return { mouseUpCallback, mouseMoveCallback, mouseDownCallback };
+}

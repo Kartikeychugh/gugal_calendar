@@ -142,8 +142,15 @@ const ScrollHead = (props: {
   const { scrollHeadHeight, travel, scrollByHeadTravel, visible } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const response = useDragWatcher(containerRef, "clientY");
+  const response = useDragWatcher("clientY", 15);
   const fixedTravel = useMemo(() => travel, [response.dragging]);
+
+  useEffect(() => {
+    const stopListening = response.startListening(containerRef.current);
+    return () => {
+      stopListening();
+    };
+  }, [response.startListening]);
 
   useEffect(() => {
     if (response.dragging) {
@@ -155,17 +162,6 @@ const ScrollHead = (props: {
     response.dragging,
     fixedTravel,
   ]);
-
-  // useDragWatcher(
-  //   containerRef,
-  //   "movementY",
-  //   useCallback(
-  //     (movementY: number) => {
-  //       scrollByHeadTravel(travel + movementY, "auto");
-  //     },
-  //     [scrollByHeadTravel, travel]
-  //   )
-  // );
 
   const classes = useScrollHeadStyles({
     scrollHeadHeight,

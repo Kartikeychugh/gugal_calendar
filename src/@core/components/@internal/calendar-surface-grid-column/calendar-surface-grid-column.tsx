@@ -43,7 +43,7 @@ export const CalendarSurfaceGridColumn = React.memo(
       }
 
       setEventDragged(response.dragging);
-    }, [response, cellHeight]);
+    }, [response, cellHeight, date, eventDragged, onCellClick]);
 
     // useEffect(() => {
     //   if (!response.dragging && eventDragged) {
@@ -120,11 +120,14 @@ const GridCell = React.memo(
     const endDateOfView = viewDates[viewDates.length - 1].valueOf();
     const ref = useRef<HTMLDivElement>(null);
 
-    const response = useDragWatcher(ref, "clientY", 15);
+    const response = useDragWatcher("clientY", 15);
 
     useEffect(() => {
-      console.log("in GridCell");
-    }, []);
+      const stopListening = response.startListening(ref.current);
+      return () => {
+        stopListening();
+      };
+    }, [response.startListening]);
 
     useEffect(() => {
       setResponse({
