@@ -33,7 +33,7 @@ export const CalendarSurfaceTimeMarker = (props: {}) => {
   useLayoutEffect(() => {
     ref.current &&
       ref.current.scrollIntoView({
-        behavior: "auto",
+        behavior: "smooth",
         block: "center",
       });
   }, []);

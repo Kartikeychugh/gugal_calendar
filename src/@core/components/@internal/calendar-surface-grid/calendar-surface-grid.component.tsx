@@ -19,6 +19,9 @@ export const CalendarSurfaceScrollableGrid = (props: {
   useSurfaceGridHeightWatcher(ref);
   const { cellHeight } = useCalendarDimensionCellHeightContext();
 
+  useEffect(() => {
+    console.log(ref.current);
+  }, []);
   return (
     <CustomScrollbar>
       <Box

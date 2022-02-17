@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 export const useSizeWatcher = (
   containerRef: React.MutableRefObject<HTMLDivElement | null>,

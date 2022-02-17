@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useEventListener } from "../use-event-listener";
 
 export const useDragWatcher = (
@@ -67,7 +67,7 @@ function useGenerateEventCallbacks(
 ) {
   const mouseDownCallback = useCallback(
     (e: MouseEvent) => {
-      console.log(e);
+      // console.log(e);
 
       /**
        * On mousedown record it to check that mousedown actually happened on this element.

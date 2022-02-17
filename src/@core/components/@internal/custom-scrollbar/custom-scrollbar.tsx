@@ -1,18 +1,15 @@
-import { Box, Fade } from "@mui/material";
+import { Box } from "@mui/material";
 import {
   PropsWithChildren,
   useRef,
   useState,
   useCallback,
   useMemo,
-  useEffect,
 } from "react";
 
-import { useDragWatcher, useEventListener } from "../../../hooks";
-import {
-  useScrollBarStyles,
-  useScrollHeadStyles,
-} from "./custom-scrollbar.styles";
+import { useEventListener } from "../../../hooks";
+import { Scrollbar } from "./scroll-bar";
+import { convertToHeadTravel, convertToPageScroll } from "./scroll-bar.utils";
 
 export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
   const [child, setChild] = useState<HTMLElement | null>(null);
@@ -32,7 +29,7 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
     [contentLength, windowLength, scrollHeadHeight]
   );
 
-  const scrollByHeadTravel = useScrollCallback(
+  const setScrollHeadTravel = useScrollByHeadTravelCallback(
     child,
     travel,
     scrollHeadHeight,
@@ -86,100 +83,39 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
           setScrollbarHover={setScrollbarHover}
           travel={travel}
           scrollHeadHeight={scrollHeadHeight}
-          scrollByHeadTravel={scrollByHeadTravel}
+          setScrollHeadTravel={setScrollHeadTravel}
         />
       </Box>
     </Box>
   );
 };
 
-const Scrollbar = (props: {
-  visible: boolean;
-  setScrollbarHover: (value: boolean) => void;
-  travel: number;
-  scrollHeadHeight: number;
-  scrollByHeadTravel: (newTravel: number, behavior: "auto" | "smooth") => void;
-}) => {
-  const classes = useScrollBarStyles();
-  const {
-    scrollHeadHeight,
-    travel,
-    scrollByHeadTravel,
-    setScrollbarHover,
-    visible,
-  } = props;
+const useScrollByHeadTravelCallback = (
+  child: HTMLElement | null,
+  travel: number,
+  scrollHeadHeight: number,
+  windowLength: number,
+  scrollFactor: number
+) =>
+  useCallback(
+    (newTravel: number, behavior: "auto" | "smooth") => {
+      if (child) {
+        const diff = newTravel - (travel + scrollHeadHeight);
+        const scroll = diff > 0 ? travel + diff : newTravel;
 
-  return (
-    <Box
-      className={classes.root}
-      onClick={(e) => {
-        const newTravel = (e.nativeEvent as any).layerY;
-        scrollByHeadTravel(newTravel, "smooth");
-      }}
-      onMouseEnter={(e) => {
-        setScrollbarHover(true);
-      }}
-      onMouseLeave={(e) => {
-        setScrollbarHover(false);
-      }}
-    >
-      <ScrollHead
-        visible={visible}
-        scrollHeadHeight={scrollHeadHeight}
-        travel={travel}
-        scrollByHeadTravel={scrollByHeadTravel}
-      />
-    </Box>
+        if (scroll <= windowLength - scrollHeadHeight && scroll >= 0) {
+          child.scrollTo({
+            top: convertToPageScroll(
+              Math.min(scroll, windowLength - scrollHeadHeight),
+              scrollFactor
+            ),
+            behavior,
+          });
+        }
+      }
+    },
+    [windowLength, child, scrollFactor, scrollHeadHeight, travel]
   );
-};
-
-const ScrollHead = (props: {
-  visible: boolean;
-  scrollHeadHeight: number;
-  travel: number;
-  scrollByHeadTravel: (newTravel: number, behavior: "auto" | "smooth") => void;
-}) => {
-  const { scrollHeadHeight, travel, scrollByHeadTravel, visible } = props;
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  const response = useDragWatcher("clientY", 15);
-  const fixedTravel = useMemo(() => travel, [response.dragging]);
-
-  useEffect(() => {
-    const stopListening = response.startListening(containerRef.current);
-    return () => {
-      stopListening();
-    };
-  }, [response.startListening]);
-
-  useEffect(() => {
-    if (response.dragging) {
-      scrollByHeadTravel(fixedTravel + response.dragDistance, "auto");
-    }
-  }, [
-    response.dragDistance,
-    scrollByHeadTravel,
-    response.dragging,
-    fixedTravel,
-  ]);
-
-  const classes = useScrollHeadStyles({
-    scrollHeadHeight,
-    top: travel,
-  });
-
-  return (
-    <Fade in={visible} timeout={500}>
-      <Box
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-        ref={containerRef}
-        className={classes.root}
-      />
-    </Fade>
-  );
-};
 
 const useScrollEventListenerCallback = (
   setTravel: (travel: number) => void,
@@ -202,37 +138,14 @@ const useScrollEventListenerCallback = (
       setVisible(true);
       setTravel(
         Math.min(
-          (ev.target as HTMLElement).scrollTop / scrollFactor,
-          maxScroll / scrollFactor
+          convertToHeadTravel(
+            (ev.target as HTMLElement).scrollTop,
+            scrollFactor
+          ),
+          convertToHeadTravel(maxScroll, scrollFactor)
         )
       );
     },
     [setVisible, setTravel, maxScroll, scrollFactor]
   );
 };
-
-const useScrollCallback = (
-  child: HTMLElement | null,
-  travel: number,
-  scrollHeadHeight: number,
-  windowLength: number,
-  scrollFactor: number
-) =>
-  useCallback(
-    (newTravel: number, behavior: "auto" | "smooth") => {
-      if (child) {
-        const diff = newTravel - (travel + scrollHeadHeight);
-        const scroll = diff > 0 ? travel + diff : newTravel;
-
-        if (scroll <= windowLength - scrollHeadHeight) {
-          child.scrollTo({
-            top: Math.min(
-              scrollFactor * Math.min(scroll, windowLength - scrollHeadHeight)
-            ),
-            behavior,
-          });
-        }
-      }
-    },
-    [windowLength, child, scrollFactor, scrollHeadHeight, travel]
-  );

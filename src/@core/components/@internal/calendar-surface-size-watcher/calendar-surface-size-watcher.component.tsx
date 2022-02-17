@@ -1,10 +1,4 @@
-import {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { PropsWithChildren, useCallback, useRef, useState } from "react";
 import { useSizeWatcher } from "../../../hooks";
 import { useCalendarViewManager } from "../../../providers";
 import { useCalendarAvailableViews } from "../../../providers/calendar-available-views";

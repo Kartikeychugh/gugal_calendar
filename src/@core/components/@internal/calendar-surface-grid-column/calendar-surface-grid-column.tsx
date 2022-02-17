@@ -1,4 +1,4 @@
-import { Box, Theme, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { setHours } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
 import { useDragWatcher } from "../../../hooks";
@@ -18,49 +18,43 @@ export const CalendarSurfaceGridColumn = React.memo(
     const ref = useRef<HTMLDivElement>(null);
     const [eventDragged, setEventDragged] = useState(false);
 
-    const [response, setResponse] = useState<{
-      dragging: boolean;
-      dragStart: number;
-      dragDistance: number;
-    }>({
-      dragging: false,
-      dragStart: -1,
-      dragDistance: 0,
-    });
-
     const {
       currentView: { numberOfDays },
     } = useCalendarViewManager();
     const cells = [];
     const { cellHeight } = useCalendarDimensionCellHeightContext();
 
-    const dragger = useDragWatcher("clientY", 15, (e: Event) => {
-      if (e.target) {
-        return (e.target as any).dataset.key * cellHeight + (e as any).offsetY;
-      }
-    });
+    const { startListening, dragStart, dragDistance, dragging } =
+      useDragWatcher("clientY", 15, (e: Event) => {
+        if (e.target) {
+          return (
+            (e.target as any).dataset.key * cellHeight + (e as any).offsetY
+          );
+        }
+      });
 
     useEffect(() => {
-      const stopListening = dragger.startListening(ref.current);
+      const stopListening = startListening(ref.current);
       return () => {
         stopListening();
       };
-    }, [dragger.startListening]);
+    }, [startListening]);
 
     useEffect(() => {
-      if (!dragger.dragging && eventDragged) {
-        const top = nearestToMultiple(dragger.dragStart, cellHeight / 4);
-        const height = nearestToMultiple(dragger.dragDistance, cellHeight / 4);
+      if (!dragging && eventDragged) {
+        const top = nearestToMultiple(dragStart, cellHeight / 4);
+        const height = nearestToMultiple(dragDistance, cellHeight / 4);
+
         const { adjustedStartDate, adjustedEndDate } =
           calculatelankeEventTimings(height, top, date, cellHeight);
         onCellClick(adjustedStartDate, adjustedEndDate);
       }
 
-      setEventDragged(dragger.dragging);
+      setEventDragged(dragging);
     }, [
-      dragger.dragging,
-      dragger.dragDistance,
-      dragger.dragStart,
+      dragging,
+      dragDistance,
+      dragStart,
       cellHeight,
       date,
       eventDragged,
@@ -87,10 +81,10 @@ export const CalendarSurfaceGridColumn = React.memo(
             width: "100%",
           }}
         >
-          {dragger.dragging ? (
+          {dragging ? (
             <BlanketEvent
-              top={nearestToMultiple(dragger.dragStart, cellHeight / 4)}
-              height={nearestToMultiple(dragger.dragDistance, cellHeight / 4)}
+              top={nearestToMultiple(dragStart, cellHeight / 4)}
+              height={nearestToMultiple(dragDistance, cellHeight / 4)}
               width={100 / numberOfDays}
               date={props.date}
               onCellClick={props.onCellClick}
@@ -146,7 +140,7 @@ const GridCell = React.memo(
             backgroundColor: `action.hover`,
           },
         }}
-        onMouseUp={(e) => {
+        onClick={(e) => {
           props.onCellClick(
             setHours(props.date, i),
             setHours(props.date, i + 1)

@@ -21,7 +21,7 @@ export const createReduxStore = (
   const saga = createSagaMiddleware();
   const store = createStore(
     persistReducer(config, rootReducer),
-    applyMiddleware(...[saga])
+    applyMiddleware(...[saga, logger])
   );
   const persistor = persistStore(store);
 
