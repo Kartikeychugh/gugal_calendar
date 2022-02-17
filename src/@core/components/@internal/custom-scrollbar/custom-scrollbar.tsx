@@ -5,11 +5,14 @@ import {
   useState,
   useCallback,
   useMemo,
+  useEffect,
 } from "react";
 
 import { useEventListener } from "../../../hooks";
+import { useScrollBarStyles } from "./custom-scrollbar.styles";
 import { Scrollbar } from "./scroll-bar";
 import { convertToHeadTravel, convertToPageScroll } from "./scroll-bar.utils";
+import { ScrollHead } from "./scroll-head";
 
 export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
   const [child, setChild] = useState<HTMLElement | null>(null);
@@ -47,23 +50,20 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
       scrollFactor
     )
   );
+  const classes = useScrollBarStyles();
 
   return (
     <Box
-      ref={(node: any) => {
+      ref={(node: HTMLDivElement) => {
         if (node && node.children[0]) {
-          setChild(node.children[0]);
-          setWindowLength(node.children[0].clientHeight); // The window
-
-          if (node.children[0].children[0]) {
-            setContentLength(node.children[0].children[0].clientHeight); // The content
-          }
+          setChild(node.children[0] as HTMLElement);
+          setWindowLength(node.clientHeight); // The window
+          setContentLength(node.children[0].scrollHeight); // The content
         }
       }}
       sx={{
         height: "100%",
         overflow: "hidden",
-        display: "flex",
         scrollbarWidth: "none",
         "& ::-webkit-scrollbar": {
           display: "none",
@@ -73,16 +73,37 @@ export const CustomScrollbar = (props: PropsWithChildren<{}>) => {
       {props.children}
       <Box
         sx={{
+          position: "absolute",
           width: "10px",
           display: "flex",
           justifyContent: "center",
+          top: `${child?.offsetTop}px`,
+          left: `${(child?.offsetLeft || 0) + (child?.offsetWidth || 0) - 5}px`,
+          height: `${child?.offsetHeight}px`,
+          "&:hover": {
+            left: `${
+              (child?.offsetLeft || 0) + (child?.offsetWidth || 0) - 10
+            }px`,
+          },
         }}
+        onClick={(e) => {
+          setScrollHeadTravel(
+            e.clientY - (e.target as HTMLElement).offsetTop,
+            "smooth"
+          );
+        }}
+        onMouseEnter={(e) => {
+          setScrollbarHover(true);
+        }}
+        onMouseLeave={(e) => {
+          setScrollbarHover(false);
+        }}
+        className={classes.root}
       >
-        <Scrollbar
+        <ScrollHead
           visible={scrolling || scrollbarHover}
-          setScrollbarHover={setScrollbarHover}
-          travel={travel}
           scrollHeadHeight={scrollHeadHeight}
+          travel={travel}
           setScrollHeadTravel={setScrollHeadTravel}
         />
       </Box>

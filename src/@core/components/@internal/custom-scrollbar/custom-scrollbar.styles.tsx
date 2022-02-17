@@ -5,12 +5,12 @@ export const useScrollBarStyles = makeStyles<Theme>((theme) => ({
   root: {
     background: "transparent",
     width: "3px",
-    height: "100%",
+    // height: "100%",
     cursor: "pointer",
     borderRadius: "5px",
     "&:hover": {
       background: `${theme.palette?.action.focus}`,
-      width: "15px",
+      width: "10px",
     },
     transition: "0.1s all ease-in-out",
   },

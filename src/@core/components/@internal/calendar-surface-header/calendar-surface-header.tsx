@@ -14,7 +14,7 @@ export const CalendarSurfaceHeader = (props: {
   const theme = useTheme();
 
   return (
-    <Box sx={{ width: "100%", height: "60px", display: "flex", pr: "10px" }}>
+    <Box sx={{ width: "100%", height: "60px", display: "flex" }}>
       <Box
         sx={{
           display: "flex",

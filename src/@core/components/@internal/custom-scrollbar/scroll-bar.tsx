@@ -22,10 +22,7 @@ export const Scrollbar = (props: {
     <Box
       className={classes.root}
       onClick={(e) => {
-        setScrollHeadTravel(
-          e.clientY - (e.target as HTMLElement).offsetTop,
-          "smooth"
-        );
+        setScrollHeadTravel((e.nativeEvent as any).layerY, "smooth");
       }}
       onMouseEnter={(e) => {
         setScrollbarHover(true);
