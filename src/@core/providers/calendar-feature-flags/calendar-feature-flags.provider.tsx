@@ -3,11 +3,13 @@ import { ICalendarFeatureFlags } from "../../models";
 import { CalendarFeatureFlagsContext } from "./calendar-feature-flags.context";
 
 export const CalendarFeatureFlagsProvider = (
-  props: PropsWithChildren<{ flags: ICalendarFeatureFlags }>
+  props: PropsWithChildren<{
+    hideCommandBar?: boolean;
+    responsiveCellHeight?: boolean;
+  }>
 ) => {
-  const { flags } = props;
   return (
-    <CalendarFeatureFlagsContext.Provider value={{ ...flags }}>
+    <CalendarFeatureFlagsContext.Provider value={{ ...props }}>
       {props.children}
     </CalendarFeatureFlagsContext.Provider>
   );

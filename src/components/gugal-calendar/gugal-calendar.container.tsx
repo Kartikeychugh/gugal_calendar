@@ -9,7 +9,8 @@ import { CalendarSchedulingFormDialog } from "../calendar-scheduling-form-dialog
 export const GugalCalendar = (props: {
   minColumnWidth: number;
   minCellHeight: number;
-  featureFlags?: ICalendarFeatureFlags;
+  hideCommandBar?: boolean;
+  responsiveCellHeight?: boolean;
 }) => {
   const [selectedDate, setSelectedDate] = useState(startOfToday().valueOf());
   const { viewId } = useSelector((state) => state.view.userView);
@@ -43,7 +44,8 @@ export const GugalCalendar = (props: {
         onHeaderClick={(date) => {}}
         minCellHeight={props.minCellHeight}
         minColumnWidth={props.minColumnWidth}
-        featureFlags={props.featureFlags}
+        hideCommandBar={props.hideCommandBar}
+        responsiveCellHeight={props.responsiveCellHeight}
       />
       <CalendarSchedulingFormDialog onSelectedDateChange={setSelectedDate} />
     </>

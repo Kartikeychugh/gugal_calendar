@@ -14,19 +14,19 @@ const useSyncCalendarEvents = (startOfWeekForSelectedDate: number) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch({
-    //   type: "FETCH_CALENDAR_EVENTS",
-    //   payload: { start: startOfWeekForSelectedDate },
-    // });
-    // const intervalID = setInterval(() => {
-    //   dispatch({
-    //     type: "FETCH_CALENDAR_EVENTS",
-    //     payload: { start: startOfWeekForSelectedDate },
-    //   });
-    // }, 60000);
-    // return () => {
-    //   clearInterval(intervalID);
-    // };
+    dispatch({
+      type: "FETCH_CALENDAR_EVENTS",
+      payload: { start: startOfWeekForSelectedDate },
+    });
+    const intervalID = setInterval(() => {
+      dispatch({
+        type: "FETCH_CALENDAR_EVENTS",
+        payload: { start: startOfWeekForSelectedDate },
+      });
+    }, 60000);
+    return () => {
+      clearInterval(intervalID);
+    };
   }, [dispatch, startOfWeekForSelectedDate]);
 };
 

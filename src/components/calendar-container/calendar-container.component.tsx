@@ -14,11 +14,12 @@ export const CalendarContainer = (props: {
   selectedDate: number;
   minCellHeight: number;
   minColumnWidth: number;
-  featureFlags?: ICalendarFeatureFlags;
   onHeaderClick?: (date: number) => void;
   onCellClick: (start: Date, end: Date) => void;
   onSelectedDateChange: (newDate: number) => void;
   onViewChange?: (newViewId: number) => void;
+  hideCommandBar?: boolean;
+  responsiveCellHeight?: boolean;
 }) => {
   return (
     <Box
