@@ -10,6 +10,8 @@ export const CalendarSurfaceRenderer = (props: {
   onCellClick: (start: Date, end: Date) => void;
   CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
+  console.log("CalendarSurfaceRenderer");
+
   const { onHeaderClick, onCellClick, CientEventCard } = props;
   const { hideCommandBar } = useCalendarFeatureFlags();
   return (

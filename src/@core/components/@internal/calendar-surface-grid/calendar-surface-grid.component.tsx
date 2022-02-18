@@ -17,6 +17,8 @@ export const CalendarSurfaceScrollableGrid = React.memo(
     onCellClick: (start: Date, end: Date) => void;
     CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
   }) => {
+    console.log("CalendarSurfaceScrollableGrid");
+
     const ref = useRef<HTMLDivElement>(null);
     useSurfaceGridHeightWatcher(ref);
     const { cellHeight } = useCalendarDimensionCellHeightContext();

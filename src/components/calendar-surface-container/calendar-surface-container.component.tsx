@@ -19,6 +19,8 @@ export const CalendarSurfaceContainer = (props: {
   hideCommandBar?: boolean;
   responsiveCellHeight?: boolean;
 }) => {
+  console.log("CalendarSurfaceContainer");
+
   return (
     <Paper
       elevation={4}

@@ -103,6 +103,7 @@ const useScrollEventListenerCallback = (
       if (!ev || !ev.target) {
         return;
       }
+      console.log("scrolling");
 
       clearTimeout(setVisibleDebouncer.current);
       setVisibleDebouncer.current = setTimeout(() => {

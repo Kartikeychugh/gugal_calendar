@@ -40,7 +40,7 @@ export const CalendarSurfaceSizeWatcher = (
             updateResponsiveView(null);
             setLastBreakAt(null);
           }
-        }, 250);
+        }, 0);
       },
       [updateResponsiveView, userView, lastBreakAt, updateViewsFromGridWidth]
     )

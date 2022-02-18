@@ -21,6 +21,8 @@ export const CalendarContainer = (props: {
   hideCommandBar?: boolean;
   responsiveCellHeight?: boolean;
 }) => {
+  console.log("CalendarContainer");
+
   return (
     <Box
       sx={{
