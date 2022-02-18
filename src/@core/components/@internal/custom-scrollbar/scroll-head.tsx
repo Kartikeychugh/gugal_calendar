@@ -13,12 +13,12 @@ export const ScrollHead = (props: {
   const [dragPivot, setDragPivot] = useState(travel);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const { startListening, dragDistance, dragging } = useDragWatcher(
+  const { startDragListening, dragDistance, dragging } = useDragWatcher(
     "clientY",
-    15
+    0
   );
 
-  useDragListener(startListening, containerRef);
+  useDragListener(startDragListening, containerRef);
   useSetDragPivot(dragging, setDragPivot, travel);
   useSetScrollHeadTravel(
     dragging,

@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import { addMinutes, startOfDay, isBefore } from "date-fns";
 import { EventCardTimings } from "../calendar-surface-event-card/event-card-timings";
+import { calculateBlankeEventTimings } from "./utils";
 
 export const BlanketEvent = (props: {
   top: number;
@@ -13,7 +13,7 @@ export const BlanketEvent = (props: {
   const { top, height, width, date, cellHeight } = props;
 
   const { adjustedTop, adjustedHeight, adjustedStartDate, adjustedEndDate } =
-    calculatelankeEventTimings(height, top, date, cellHeight);
+    calculateBlankeEventTimings(height, top, date, cellHeight);
 
   return (
     <Box
@@ -32,30 +32,3 @@ export const BlanketEvent = (props: {
     </Box>
   );
 };
-
-export const nearestToMultiple = (value: number, multipleOf: number) => {
-  return Math.floor(value / multipleOf) * multipleOf;
-};
-
-export function calculatelankeEventTimings(
-  height: number,
-  top: number,
-  date: Date,
-  cellHeight: number
-) {
-  const adjustedTop = height < 0 ? Math.max(top + height, 0) : top;
-  const adjustedHeight = Math.abs(height);
-
-  const startDate = addMinutes(
-    startOfDay(date),
-    adjustedTop * (60 / cellHeight)
-  );
-  const endDate = addMinutes(
-    startOfDay(date),
-    (adjustedTop + adjustedHeight) * (60 / cellHeight)
-  );
-
-  const adjustedStartDate = isBefore(startDate, endDate) ? startDate : endDate;
-  const adjustedEndDate = isBefore(startDate, endDate) ? endDate : startDate;
-  return { adjustedTop, adjustedHeight, adjustedStartDate, adjustedEndDate };
-}

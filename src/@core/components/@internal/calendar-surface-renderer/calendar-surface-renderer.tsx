@@ -6,7 +6,7 @@ import { CalendarSurfaceHeader } from "../calendar-surface-header";
 import { CalendarCommandBar } from "../calender-command-bar";
 
 export const CalendarSurfaceRenderer = (props: {
-  onHeaderClick: (date: number) => void;
+  onHeaderClick?: (date: number) => void;
   onCellClick: (start: Date, end: Date) => void;
   CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {

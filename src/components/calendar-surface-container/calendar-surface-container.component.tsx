@@ -13,7 +13,7 @@ export const CalendarSurfaceContainer = (props: {
   minCellHeight: number;
   minColumnWidth: number;
   featureFlags?: ICalendarFeatureFlags;
-  onHeaderClick: (date: number) => void;
+  onHeaderClick?: (date: number) => void;
   onCellClick: (start: Date, end: Date) => void;
   onSelectedDateChange: (newDate: number) => void;
   onViewChange?: (newViewId: number) => void;

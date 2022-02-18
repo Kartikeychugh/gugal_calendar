@@ -3,7 +3,7 @@ import { isSameDay, startOfToday } from "date-fns";
 import { useCalendarViewManager } from "../../../providers";
 
 export const CalendarSurfaceHeader = (props: {
-  onHeaderClick: (date: number) => void;
+  onHeaderClick?: (date: number) => void;
 }) => {
   const { onHeaderClick } = props;
   const {
@@ -58,7 +58,9 @@ export const CalendarSurfaceHeader = (props: {
                       ]
                     }`,
             }}
-            onClick={() => onHeaderClick(date.valueOf())}
+            onClick={() => {
+              onHeaderClick && onHeaderClick(date.valueOf());
+            }}
             key={i}
           >
             <Box

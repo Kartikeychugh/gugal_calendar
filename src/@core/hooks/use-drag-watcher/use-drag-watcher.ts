@@ -4,6 +4,7 @@ import { useEventListener } from "../use-event-listener";
 export const useDragWatcher = (
   direction: "clientY",
   threshold = 2,
+  onClick?: (e: MouseEvent) => void,
   dragStartCalculator?: (e: Event) => number
 ) => {
   // Tells us about where mouseDown was pressed
@@ -24,13 +25,16 @@ export const useDragWatcher = (
       mouseDownPivot,
       setDragging,
       threshold,
-      dragStartCalculator
+      dragDistance,
+      dragging,
+      dragStartCalculator,
+      onClick
     );
 
   useEventListener<MouseEvent>(document, "mouseup", mouseUpCallback);
   useEventListener<MouseEvent>(document, "mousemove", mouseMoveCallback);
 
-  const startListening = useCallback(
+  const startDragListening = useCallback(
     (element: Node | null) => {
       element?.addEventListener(
         "mousedown",
@@ -51,7 +55,7 @@ export const useDragWatcher = (
     dragging,
     dragStart,
     dragDistance,
-    startListening,
+    startDragListening,
   };
 };
 
@@ -63,11 +67,16 @@ function useGenerateEventCallbacks(
   mouseDownPivot: number,
   setDragging: React.Dispatch<React.SetStateAction<boolean>>,
   threshold: number,
-  dragStartCalculator?: (e: Event) => number
+  dragDistance: number,
+  dragging: boolean,
+  dragStartCalculator?: (e: Event) => number,
+  onClick?: (e: MouseEvent) => void
 ) {
   const mouseDownCallback = useCallback(
     (e: MouseEvent) => {
-      // console.log(e);
+      // console.log("setMouseDownPivot");
+      // console.log("setDragStart");
+      // console.log("setDragDistance");
 
       /**
        * On mousedown record it to check that mousedown actually happened on this element.
@@ -89,31 +98,61 @@ function useGenerateEventCallbacks(
     ]
   );
 
-  const mouseUpCallback = useCallback(() => {
-    // Check if mousedown happened in the context of the element
-    if (mouseDownPivot !== -Infinity) {
-      /**
-       * Reset dragging and mousedown coordinate
-       * if a mouse down actually happened in the first place
-       */
-      setMouseDownPivot(-Infinity);
-      setDragging(false);
-    }
-  }, [setDragging, mouseDownPivot, setMouseDownPivot]);
+  const mouseUpCallback = useCallback(
+    (e: MouseEvent) => {
+      // Check if mousedown happened in the context of the element
+      if (mouseDownPivot !== -Infinity) {
+        // console.log("setMouseDownPivot");
+        // console.log("setDragStart");
+        // console.log("setDragDistance");
+
+        if (!dragging && dragDistance < threshold && onClick) {
+          onClick(e);
+        }
+        /**
+         * Reset dragging and mousedown coordinate
+         * if a mouse down actually happened in the first place
+         */
+        setMouseDownPivot(-Infinity);
+        setDragging(false);
+        setDragDistance(0);
+      }
+    },
+    [
+      dragging,
+      setDragging,
+      mouseDownPivot,
+      setMouseDownPivot,
+      setDragDistance,
+      dragDistance,
+      threshold,
+      onClick,
+    ]
+  );
 
   const mouseMoveCallback = useCallback(
     (e) => {
       // Check if mousedown happened in the context of the element
       if (mouseDownPivot !== -Infinity) {
+        // console.log("setDragDistance");
+
         // If threshold exceeds mark it as dragging start
-        if (Math.abs(e[direction] - mouseDownPivot) > threshold) {
+        if (Math.abs(e[direction] - mouseDownPivot) > threshold && !dragging) {
+          console.log("setDragging");
           setDragging(true);
         }
 
         setDragDistance(e[direction] - mouseDownPivot);
       }
     },
-    [setDragDistance, mouseDownPivot, threshold, direction, setDragging]
+    [
+      setDragDistance,
+      mouseDownPivot,
+      threshold,
+      direction,
+      setDragging,
+      dragging,
+    ]
   );
   return { mouseUpCallback, mouseMoveCallback, mouseDownCallback };
 }

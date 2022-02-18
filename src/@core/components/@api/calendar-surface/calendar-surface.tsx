@@ -14,7 +14,7 @@ import { CalendarSurfaceRenderer } from "../../@internal";
 
 export const CalendarSurface = (props: {
   events: ICalendarEvent[];
-  onHeaderClick: (date: number) => void;
+  onHeaderClick?: (date: number) => void;
   onCellClick: (start: Date, end: Date) => void;
   userViewId: number;
   selectedDate: number;
@@ -40,18 +40,18 @@ export const CalendarSurface = (props: {
   } = props;
 
   return (
-    <CalendarFeatureFlagsProvider flags={featureFlags || {}}>
+    <CalendarFeatureFlagsProvider flags={{}}>
       <CalendarEventsDetailsProvider events={events}>
         <CalendarDateProvider
           selectedDate={selectedDate}
           onSelectedDateChange={onSelectedDateChange}
         >
           <CalendarViewProvider
-            minColumnWidth={minColumnWidth}
-            userViewId={userViewId}
-            onViewChange={onViewChange}
+            minColumnWidth={60}
+            userViewId={1}
+            // onViewChange={onViewChange}
           >
-            <CalendarDimensionCellHeightProvider minCellHeight={minCellHeight}>
+            <CalendarDimensionCellHeightProvider minCellHeight={60}>
               <div style={{ width: "100%", height: "100%" }}>
                 <CalendarSurfaceRenderer
                   onCellClick={onCellClick}

@@ -43,7 +43,7 @@ export const CalendarViewManagerProvider = React.memo(
           viewDates,
         }}
       >
-        {true ? props.children : null}
+        {props.children}
       </CalendarViewManagerContext.Provider>
     );
   }
