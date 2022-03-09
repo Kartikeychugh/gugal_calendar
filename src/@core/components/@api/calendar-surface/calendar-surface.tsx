@@ -26,8 +26,6 @@ export const CalendarSurface = (props: {
   hideCommandBar?: boolean;
   responsiveCellHeight?: boolean;
 }) => {
-  console.log("CalendarSurface");
-
   const {
     events,
     userViewId,

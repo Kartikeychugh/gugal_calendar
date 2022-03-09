@@ -12,8 +12,6 @@ export const GugalCalendar = (props: {
   hideCommandBar?: boolean;
   responsiveCellHeight?: boolean;
 }) => {
-  console.log("GugalCalendar");
-
   const [selectedDate, setSelectedDate] = useState(startOfToday().valueOf());
   const { viewId } = useSelector((state) => state.view.userView);
   const { createClientEvent } = useClientEvent();

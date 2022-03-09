@@ -1,24 +1,58 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDragWatcher } from "../../../hooks";
-
 import "./scrollbar.css";
 import {
   convertHeadTravelToScrollTravel,
   convertScrollTravelToHeadTravel,
 } from "./utils";
+import { Theme } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
+export const useScrollBarStyles = makeStyles<Theme>((theme) => ({
+  root: {
+    background: "transparent",
+    width: "3px",
+    // height: "100%",
+    cursor: "pointer",
+    borderRadius: "5px",
+    "&:hover": {
+      background: `${theme.palette?.action.focus}`,
+      width: "10px",
+    },
+    transition: "0.1s all ease-in-out",
+  },
+}));
+
+export const useScrollHeadStyles = makeStyles<
+  Theme,
+  { top: number; scrollHeadHeight: number },
+  string
+>((theme) => ({
+  root: {
+    position: "relative",
+    top: (props) => `${props.top}px`,
+    transition: "0s all ease-in-out",
+    width: "100%",
+    height: (props) => `${props.scrollHeadHeight}px`,
+    background: `${theme.palette.primary.light}`,
+    borderRadius: "5px",
+    "&:hover": {
+      opacity: `0.8`,
+    },
+  },
+}));
 
 export const ScrollbarRenderer = React.forwardRef<
   React.MutableRefObject<HTMLElement | null | undefined>,
   {
     top: number;
-    left: number;
-    width: number;
+    right: number;
     height: number;
     contentHeight: number;
     scrollbarWidth: number;
   }
 >((props, scrollableContentRef) => {
-  const { top, left, height, contentHeight, scrollbarWidth } = props;
+  const { top, right, height, contentHeight, scrollbarWidth } = props;
   const [scrollTravel, setScrollTravel] = useState(0);
   const scrollHeadRef = useRef<HTMLElement | null>();
 
@@ -40,10 +74,16 @@ export const ScrollbarRenderer = React.forwardRef<
   );
 
   useScrollEffect(scrollableContentRef, setScrollTravel);
+  const classesScrollbar = useScrollBarStyles();
+  const classesHead = useScrollHeadStyles({
+    scrollHeadHeight: scrollHeadLength,
+    top,
+  });
+  console.log({ contentHeight, height });
 
   return (
     <div
-      className="scrollbar"
+      className={`scrollbar ${classesScrollbar.root}`}
       onClick={onScrollbarClick(
         top,
         scrollTravel,
@@ -55,15 +95,14 @@ export const ScrollbarRenderer = React.forwardRef<
       style={{
         position: "absolute",
         top: `${top}px`,
-        left: `${left - scrollbarWidth}px`,
-
+        right: `${right}px`,
         width: `${scrollbarWidth}px`,
         height: `${height}px`,
-
         visibility: contentHeight > height ? "visible" : "hidden",
       }}
     >
       <div
+        className={classesHead.root}
         ref={scrollHeadRef as any}
         style={{
           position: "relative",
@@ -73,7 +112,6 @@ export const ScrollbarRenderer = React.forwardRef<
           )}px`,
           height: `${scrollHeadLength}px`,
           width: "inherit",
-          background: "green",
         }}
       ></div>
     </div>
@@ -141,6 +179,8 @@ const useScrollEffect = (
     >;
 
     current?.addEventListener("scroll", (e) => {
+      console.log("scrolling");
+
       setScrollTravel((e.target as HTMLElement).scrollTop);
     });
   }, [scrollableContentRef, setScrollTravel]);

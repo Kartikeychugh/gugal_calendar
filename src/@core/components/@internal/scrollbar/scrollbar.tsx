@@ -8,50 +8,49 @@ import React, {
 import { ContentRenderer } from "./content-renderer";
 import { ScrollbarRenderer } from "./scrollbar.renderer";
 
-export const Scrollbar = (
+export const MyScrollbar = (
   props: PropsWithChildren<{
     scrollbarWidth?: number;
     overlay?: boolean;
+    style?: React.CSSProperties | undefined;
   }>
 ) => {
-  const { children, scrollbarWidth = 10, overlay = false } = props;
+  const { children, scrollbarWidth = 10, overlay = false, style = {} } = props;
 
   validations(children);
 
-  const [{ height, top, left }, setPosition] = useState(initialState());
+  const [{ height, top, clientLeft }, setPosition] = useState(initialState());
   const [contentHeight, setContentHeight] = useState(0);
-  const containerRef = useRef<HTMLElement | null>();
   const contentRef = useRef<HTMLElement | null>();
 
   useContentHeightEffect(contentRef, setContentHeight);
-  useScrollbarPositionEffect(containerRef, setPosition);
+  useScrollbarPositionEffect(contentRef, setPosition);
 
   return (
-    <>
-      <ContentRenderer
-        ref={contentRef as any}
-        containerRef={containerRef as any}
-        scrollbarWidth={scrollbarWidth}
-        content={children}
-        overlay={overlay}
-      />
+    <div
+      style={{
+        overflow: "hidden",
+        position: "relative",
+        ...style,
+      }}
+    >
+      <ContentRenderer ref={contentRef as any}>{children}</ContentRenderer>
       <ScrollbarRenderer
         ref={contentRef as any}
         top={top}
-        left={left}
-        width={scrollbarWidth}
         height={height}
+        right={clientLeft}
         contentHeight={contentHeight}
         scrollbarWidth={scrollbarWidth}
       />
-    </>
+    </div>
   );
 };
 
 const initialState = () => ({
   height: 0,
   top: 0,
-  left: 0,
+  clientLeft: 0,
 });
 
 const useSetScrollbarPositionCallback = (
@@ -59,25 +58,18 @@ const useSetScrollbarPositionCallback = (
     React.SetStateAction<{
       height: number;
       top: number;
-      left: number;
+      clientLeft: number;
     }>
   >
 ) =>
   useCallback(
     (element: HTMLElement) => {
-      const {
-        offsetTop,
-        offsetLeft,
-        clientLeft,
-        clientHeight,
-        clientWidth,
-        clientTop,
-      } = element;
+      const { offsetTop, clientLeft, clientHeight, clientTop } = element;
 
       setPosition({
         height: Math.floor(clientHeight),
         top: Math.floor(offsetTop + clientTop),
-        left: Math.floor(offsetLeft + clientLeft + clientWidth),
+        clientLeft: Math.floor(clientLeft),
       });
     },
     [setPosition]
@@ -89,7 +81,7 @@ const useScrollbarPositionEffect = (
     React.SetStateAction<{
       height: number;
       top: number;
-      left: number;
+      clientLeft: number;
     }>
   >
 ) => {
@@ -158,10 +150,14 @@ const useContentHeightEffect = (
 
     const mutationObserver = new MutationObserver((entries) => {
       // Update custom scrollbar position
+
       setContentHeight((entries[0].target as HTMLElement).scrollHeight);
     });
 
     resizeObserver.observe(contentRef.current);
-    mutationObserver.observe(contentRef.current, { attributes: true });
+    mutationObserver.observe(contentRef.current, {
+      // attributes: true,
+      attributeOldValue: true,
+    });
   }, [contentRef, setContentHeight]);
 };

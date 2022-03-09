@@ -11,42 +11,25 @@ import { CalendarSurfaceColumns } from "../calendar-surface-column";
 import { CalendarSurfaceTimeGrid } from "../calendar-surface-time-grid";
 import { CalendarSurfaceTimeMarker } from "../calendar-surface-time-marker";
 import { CustomScrollbar } from "../custom-scrollbar/custom-scrollbar";
+import { MyScrollbar } from "../scrollbar/scrollbar";
 
 export const CalendarSurfaceScrollableGrid = React.memo(
   (props: {
     onCellClick: (start: Date, end: Date) => void;
     CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
   }) => {
-    console.log("CalendarSurfaceScrollableGrid");
-
     const ref = useRef<HTMLDivElement>(null);
     useSurfaceGridHeightWatcher(ref);
-    const { cellHeight } = useCalendarDimensionCellHeightContext();
 
     return (
-      <CustomScrollbar>
-        <Box
-          ref={ref}
-          sx={
-            {
-              overflowY: "overlay",
-              width: "100%",
-              height: "100%",
-            } as any
-          }
-        >
-          {cellHeight ? (
-            <Fade in={!!cellHeight} timeout={500}>
-              <Box>
-                <CalendarSurfaceGrid
-                  onCellClick={props.onCellClick}
-                  CientEventCard={props.CientEventCard}
-                />
-              </Box>
-            </Fade>
-          ) : null}
+      <MyScrollbar overlay style={{ height: "100%" }}>
+        <Box ref={ref} sx={{ height: "100%" }}>
+          <CalendarSurfaceGrid
+            onCellClick={props.onCellClick}
+            CientEventCard={props.CientEventCard}
+          />
         </Box>
-      </CustomScrollbar>
+      </MyScrollbar>
     );
   }
 );

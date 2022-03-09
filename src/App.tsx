@@ -72,9 +72,9 @@ function App() {
         <ThemeProvider theme={darkTheme}>
           <GugalCalendar
             minColumnWidth={100}
-            minCellHeight={60}
+            minCellHeight={30}
             hideCommandBar={false}
-            responsiveCellHeight={false}
+            responsiveCellHeight={true}
           />
         </ThemeProvider>
       </CalendarReduxProvider>
