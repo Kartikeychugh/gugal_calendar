@@ -66,7 +66,7 @@ export const CalendarSurfaceGridColumn = React.memo(
             <BlanketEvent
               top={nearestToMultiple(dragStart, cellHeight / 4)}
               height={nearestToMultiple(dragDistance, cellHeight / 4)}
-              width={100 / numberOfDays}
+              width={100}
               date={props.date}
               onCellClick={props.onCellClick}
               cellHeight={cellHeight}

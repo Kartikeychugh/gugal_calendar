@@ -30,7 +30,8 @@ export const CalendarSurfaceEventColumn = (props: {
         height: "100%",
         position: "absolute",
         pointerEvents: "none",
-        width: `calc(${100 / numberOfDays}% - 15px)`,
+        inset: 0,
+        right: 10,
       }}
     >
       {transformedEvents.map((event) => (

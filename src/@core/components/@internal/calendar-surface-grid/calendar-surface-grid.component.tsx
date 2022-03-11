@@ -17,17 +17,15 @@ export const CalendarSurfaceScrollableGrid = React.memo(
     onCellClick: (start: Date, end: Date) => void;
     CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
   }) => {
-    const ref = useRef<HTMLDivElement>(null);
-    useSurfaceGridHeightWatcher(ref);
+    // const ref = useRef<HTMLDivElement>(null);
+    // useSurfaceGridHeightWatcher(ref);
 
     return (
       <MyScrollbar scrollbarWidth={10} style={{ height: "100%" }}>
-        <Box ref={ref} sx={{ height: "100%" }}>
-          <CalendarSurfaceGrid
-            onCellClick={props.onCellClick}
-            CientEventCard={props.CientEventCard}
-          />
-        </Box>
+        <CalendarSurfaceGrid
+          onCellClick={props.onCellClick}
+          CientEventCard={props.CientEventCard}
+        />
       </MyScrollbar>
     );
   }
