@@ -1,64 +1,50 @@
-import {
-  PropsWithChildren,
-  useEffect,
-  useState,
-  useMemo,
-  useContext,
-} from "react";
+import { PropsWithChildren, useCallback, useRef, useState } from "react";
 import { useSizeWatcher } from "../../../hooks";
-import { CalendarViewContext } from "../../../providers";
+import { useCalendarViewManager } from "../../../providers";
+import { useCalendarAvailableViews } from "../../../providers/calendar-available-views";
 
 export const CalendarSurfaceSizeWatcher = (
   props: PropsWithChildren<{
     containerRef: React.MutableRefObject<HTMLDivElement | null>;
   }>
 ) => {
-  const {
-    getView,
-    updateResponsiveView,
-    allViews,
-    userViewId,
-    setAvailableViews,
-  } = useContext(CalendarViewContext);
+  const { userView, updateResponsiveView } = useCalendarViewManager();
+  const { updateViewsFromGridWidth } = useCalendarAvailableViews();
 
   const { containerRef } = props;
   const [lastBreakAt, setLastBreakAt] = useState<number | null>(null);
-  const [firstUnAvailableViewId, setFirstUnAvailableViewId] = useState<number>(
-    allViews.length
+  const debounceRef = useRef<any>(null);
+
+  useSizeWatcher(
+    containerRef,
+    true,
+    "width",
+    useCallback(
+      (newWidth: number) => {
+        clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => {
+          if (newWidth === null || newWidth === 0) {
+            return;
+          }
+
+          if (
+            newWidth <= userView.breakpoint &&
+            (lastBreakAt === null || lastBreakAt !== userView.breakpoint)
+          ) {
+            updateResponsiveView(0);
+            updateViewsFromGridWidth(newWidth);
+            setLastBreakAt(userView.breakpoint);
+          } else if (newWidth > userView.breakpoint && lastBreakAt !== null) {
+            updateViewsFromGridWidth(newWidth);
+
+            updateResponsiveView(null);
+            setLastBreakAt(null);
+          }
+        }, 0);
+      },
+      [updateResponsiveView, userView, lastBreakAt, updateViewsFromGridWidth]
+    )
   );
-  const width = useSizeWatcher(containerRef, true, "width");
-  const currentUserView = useMemo(
-    () => getView(userViewId),
-    [userViewId, getView]
-  );
-
-  useEffect(() => {
-    if (firstUnAvailableViewId === -1) {
-      setAvailableViews(allViews);
-    } else {
-      setAvailableViews(allViews.slice(0, firstUnAvailableViewId));
-    }
-  }, [firstUnAvailableViewId, allViews, setAvailableViews]);
-
-  useEffect(() => {
-    if (width === null) {
-      return;
-    }
-
-    const index = allViews.findIndex((view) => view.breakpoint > width);
-    setFirstUnAvailableViewId(index);
-
-    if (
-      width <= currentUserView.breakpoint &&
-      (lastBreakAt === null || lastBreakAt !== currentUserView.breakpoint)
-    ) {
-      updateResponsiveView(0);
-      setLastBreakAt(currentUserView.breakpoint);
-    } else if (width > currentUserView.breakpoint && lastBreakAt !== null) {
-      updateResponsiveView(null);
-      setLastBreakAt(null);
-    }
-  }, [allViews, updateResponsiveView, currentUserView, lastBreakAt, width]);
 
   return <>{props.children}</>;
 };

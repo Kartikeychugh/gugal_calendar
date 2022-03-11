@@ -13,16 +13,19 @@ import { ICalendarClientEventItem } from "../../..";
 const useStyle = makeStyles<DefaultTheme, {}, string>({
   root: {
     padding: "8px",
-    "& .MuiSvgIcon-root": { fill: "#1976d2" },
+    "& .MuiSvgIcon-root": {
+      // fill: "#1976d2"
+    },
   },
 });
 
 export const CalendarSchedulingForm = (props: {
   event: ICalendarClientEventItem;
-  setSelectedDate: (newDate: number) => void;
+  onSelectedDateChange: (newDate: number) => void;
   onCancel: () => void;
   onSubmit: () => void;
 }) => {
+  const { event } = props;
   const classes = useStyle();
 
   const [onlineMeeting, setOnlineMeeting] = useState(false);
@@ -41,7 +44,7 @@ export const CalendarSchedulingForm = (props: {
     <Box className={classes.root}>
       <MeetingTitle
         meetingTitle={props.event.summary || ""}
-        setMeetingTitle={updateMeetingTitle}
+        setMeetingTitle={(title: string) => updateMeetingTitle(event, title)}
       />
       <DateTimeSelector
         startTime={props.event.start.dateTime}
@@ -51,26 +54,26 @@ export const CalendarSchedulingForm = (props: {
             return;
           }
 
-          updateDate(newValue);
-          props.setSelectedDate(newValue.valueOf());
+          updateDate(event, newValue);
+          props.onSelectedDateChange(newValue.valueOf());
         }}
         onStartTimeChange={(newValue) => {
           if (!newValue) {
             return;
           }
-          updateStartTime(newValue);
+          updateStartTime(event, newValue);
         }}
         onEndTimeChange={(newValue) => {
           if (!newValue) {
             return;
           }
-          updateEndTime(newValue);
+          updateEndTime(event, newValue);
         }}
       />
       <OnlineMeetingToggle
         onlineMeeting={onlineMeeting}
         toggleOnlineMeeting={() => {
-          updateOnlineMeeting(!onlineMeeting);
+          updateOnlineMeeting(event, !onlineMeeting);
           setOnlineMeeting(!onlineMeeting);
         }}
       />
@@ -82,7 +85,7 @@ export const CalendarSchedulingForm = (props: {
           props.onCancel();
         }}
         onSubmit={() => {
-          syncClientEvent();
+          syncClientEvent(event);
           props.onSubmit();
         }}
       />

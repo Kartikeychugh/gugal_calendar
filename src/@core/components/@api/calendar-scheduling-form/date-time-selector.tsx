@@ -13,8 +13,8 @@ const useStyle = makeStyles<DefaultTheme, {}, string>({
     alignItems: "center",
   },
   accessTimeIcon: {
-    color: "#5f6368",
-    fill: "#5f6368",
+    // color: "#5f6368",
+    // fill: "#5f6368",
   },
 });
 

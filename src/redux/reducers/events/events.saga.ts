@@ -10,17 +10,21 @@ export const initFirebaseGAPISaga = (
     type: string;
     payload: { start: number };
   }) {
-    yield put({ type: "GOOGLE_SYNC_START" });
-    const result: CalendarEventItem[] = yield googleCalendarService.getEvents(
-      action.payload.start
-    );
+    try {
+      yield put({ type: "GOOGLE_SYNC_START" });
+      const result: CalendarEventItem[] = yield googleCalendarService.getEvents(
+        action.payload.start
+      );
 
-    yield put({
-      type: "SET_BACKEND_EVENTS",
-      payload: { [getViewKey(action.payload.start)]: result },
-    });
+      yield put({
+        type: "SET_BACKEND_EVENTS",
+        payload: { [getViewKey(action.payload.start)]: result },
+      });
 
-    yield put({ type: "GOOGLE_SYNC_SUCCESS" });
+      yield put({ type: "GOOGLE_SYNC_SUCCESS" });
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function* watchFetchCalendarEvents() {
@@ -31,15 +35,18 @@ export const initFirebaseGAPISaga = (
     type: string;
     payload: ICalendarClientEventItem;
   }) {
-    const result: ICalendarEventItem = yield googleCalendarService.createEvent(
-      action.payload
-    );
+    try {
+      const result: ICalendarEventItem =
+        yield googleCalendarService.createEvent(action.payload);
 
-    yield put({ type: "ADD_BACKEND_EVENT", payload: result });
+      yield put({ type: "ADD_BACKEND_EVENT", payload: result });
 
-    yield put({
-      type: "REMOVE_CLIENT_EVENT",
-    });
+      yield put({
+        type: "REMOVE_CLIENT_EVENT",
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function* watchInsertCalendarEvents() {
@@ -49,10 +56,14 @@ export const initFirebaseGAPISaga = (
   function* fetchCalendarColors() {
     const result: CalendarColors = yield googleCalendarService.getColors();
 
-    yield put({
-      type: "SET_COLORS",
-      payload: result,
-    });
+    try {
+      yield put({
+        type: "SET_COLORS",
+        payload: result,
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function* watchFetchCalendarColors() {

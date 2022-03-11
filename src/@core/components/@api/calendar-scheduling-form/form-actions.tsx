@@ -24,7 +24,7 @@ export const FormActions = (props: {
   const classes = useStyle();
   return (
     <Box className={classes.root}>
-      <Button variant="outlined" onClick={onCancel}>
+      <Button color="secondary" variant="outlined" onClick={onCancel}>
         Cancel
       </Button>
       <Button variant="contained" onClick={onSubmit}>

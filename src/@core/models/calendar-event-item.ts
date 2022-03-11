@@ -7,15 +7,6 @@ export type ICalendarEventItem = {
     left: string;
     width: string;
   };
-  colors: {
-    calendar: {
-      backgroundColor: string;
-    };
-    event: {
-      backgroundColor: string;
-      foregroundColor: string;
-    };
-  };
 } & ICalendarEvent &
   Partial<ICalendarClientEventItem>;
 
@@ -40,21 +31,30 @@ export interface ICalendarClientEventItem extends ICalendarEvent {
 
 export interface ICalendarEvent {
   id: CalendarEventItem["id"];
-  colorId: number;
+  colorId?: string;
   hangoutLink?: CalendarEventItem["hangoutLink"];
   summary?: CalendarEventItem["summary"];
   description?: CalendarEventItem["description"];
   start: Omit<CalendarEventItem["start"], "timeZone" | "date">;
   end: Omit<CalendarEventItem["end"], "timeZone" | "date">;
+  colors: {
+    calendar: {
+      backgroundColor: string;
+    };
+    event: {
+      backgroundColor: string;
+      foregroundColor: string;
+    };
+  };
 }
 
 export const GetCalendarClientEvent = (
   start: Date,
   end: Date,
-  defaultColorId = 1
+  defaultColorId = "1"
 ): ICalendarClientEventItem => {
   return {
-    colorId: defaultColorId,
+    // colorId: defaultColorId,
     id: uuidv4().replaceAll("-", ""),
     summary: "",
     description: "",
@@ -62,6 +62,15 @@ export const GetCalendarClientEvent = (
     end: { dateTime: end.toISOString() },
     client: {
       status: clientEventStatus.draft,
+    },
+    colors: {
+      calendar: {
+        backgroundColor: "red",
+      },
+      event: {
+        backgroundColor: "red",
+        foregroundColor: "white",
+      },
     },
   };
 };

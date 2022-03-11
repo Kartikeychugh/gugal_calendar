@@ -14,7 +14,7 @@ import { DefaultTheme, makeStyles } from "@mui/styles";
 const useStyle = makeStyles<DefaultTheme, {}, string>({
   root: {
     "& .MuiBackdrop-root": {
-      backgroundColor: "transparent",
+      // backgroundColor: "transparent",
     },
     "& .MuiPaper-root": {
       pointerEvents: "all",
@@ -23,12 +23,12 @@ const useStyle = makeStyles<DefaultTheme, {}, string>({
     },
   },
   title: {
-    backgroundColor: "rgb(25, 118, 210, 0.07)",
+    // backgroundColor: "rgb(25, 118, 210, 0.07)",
   },
 });
 
 export const CalendarSchedulingFormDialog = (props: {
-  setSelectedDate: (newDate: number) => void;
+  onSelectedDateChange: (newDate: number) => void;
 }) => {
   const dispatch = useDispatch();
   const { client } = useSelector((state) => state.events);
@@ -65,7 +65,7 @@ export const CalendarSchedulingFormDialog = (props: {
                 dispatch({ type: "SET_FORM_OPEN", payload: false });
               }}
               event={client}
-              setSelectedDate={props.setSelectedDate}
+              onSelectedDateChange={props.onSelectedDateChange}
             />
           ) : null}
         </DialogContent>

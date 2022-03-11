@@ -1,0 +1,7 @@
+.scrollbar {
+  opacity: 0.3;
+  background: blue;
+}
+.scrollbar:hover {
+  opacity: 0.5;
+}

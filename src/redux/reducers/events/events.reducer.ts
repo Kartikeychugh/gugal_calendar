@@ -1,6 +1,6 @@
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { ICalendarClientEventItem, ICalendarEventItem } from "../../../@core";
+import { ICalendarClientEventItem } from "../../../@core";
 import {
   addBackendEvent,
   setBackendEvents,
@@ -8,7 +8,7 @@ import {
 } from "./events.utils";
 
 export type IEventsState = {
-  backend: { [key: string]: ICalendarEventItem[] };
+  backend: { [key: string]: CalendarEventItem[] };
   client: ICalendarClientEventItem | null;
 };
 
@@ -24,7 +24,7 @@ const _CalendarEventsReducer = (
     payload:
       | IEventsState["client"]
       | IEventsState["backend"]
-      | ICalendarEventItem;
+      | CalendarEventItem;
   }
 ): IEventsState => {
   switch (action.type) {
@@ -33,7 +33,7 @@ const _CalendarEventsReducer = (
     case "SET_CLIENT_EVENTS":
       return setClientEvent(state, action.payload as IEventsState["client"]);
     case "ADD_BACKEND_EVENT":
-      return addBackendEvent(state, action.payload as ICalendarEventItem);
+      return addBackendEvent(state, action.payload as CalendarEventItem);
     case "REMOVE_CLIENT_EVENT":
       return setClientEvent(state, null);
 

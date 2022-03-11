@@ -1,63 +1,77 @@
-import { Box } from "@mui/material";
-import { getDay, startOfToday } from "date-fns";
-import { useContext, useEffect, useRef } from "react";
+import { Box, useTheme } from "@mui/material";
+import {
+  isWithinInterval,
+  startOfToday,
+  differenceInCalendarDays,
+} from "date-fns";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import { useCurrentTime } from "../../../hooks";
 import {
-  CalendarViewContext,
   useCalendarDimensionCellHeightContext,
+  useCalendarViewManager,
 } from "../../../providers";
 
 export const CalendarSurfaceTimeMarker = (props: {}) => {
   const {
-    startDateOfView,
     currentView: { numberOfDays },
-  } = useContext(CalendarViewContext);
+    viewDates,
+  } = useCalendarViewManager();
+  const ref = useRef<HTMLDivElement>(null);
+  const time = useCurrentTime();
+  const theme = useTheme();
   const { cellHeight } = useCalendarDimensionCellHeightContext();
 
-  const diff = startOfToday().getDay() - getDay(startDateOfView);
-  const time = useCurrentTime();
-  const ref = useRef<HTMLDivElement>(null);
+  const isTodayWithinView = isWithinInterval(startOfToday(), {
+    start: viewDates[0],
+    end: viewDates[viewDates.length - 1],
+  });
+  const numberOfColumnsOnLeft = useMemo(
+    () => differenceInCalendarDays(startOfToday(), viewDates[0]),
+    [viewDates]
+  );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     ref.current &&
       ref.current.scrollIntoView({
         behavior: "smooth",
         block: "center",
       });
-  }, [ref]);
+  }, []);
 
-  let totalMarkerLengthFraction;
-  let solidMarrkerLengthFraction;
-  let _diff = diff < 0 ? 6 : diff;
+  const timeMarkerHeight = cellHeight / 60;
 
-  if (_diff < 0) {
-    _diff = _diff + numberOfDays;
-    totalMarkerLengthFraction = (_diff + 1) / numberOfDays;
-    solidMarrkerLengthFraction = _diff / (_diff + 1);
-  } else if (_diff >= numberOfDays) {
-    totalMarkerLengthFraction = 1;
-    solidMarrkerLengthFraction = 1;
-  } else {
-    totalMarkerLengthFraction = (_diff + 1) / numberOfDays;
-    solidMarrkerLengthFraction = _diff / (_diff + 1);
-  }
-
-  let solidWidth = solidMarrkerLengthFraction * 100;
-  let dottedWiddth = 100 - solidWidth;
-
-  return (
+  return isTodayWithinView ? (
     <Box
+      ref={ref}
       sx={{
         position: "absolute",
         display: "flex",
         zIndex: 1,
-        top: `${(cellHeight / 60) * time}px`,
-        width: `calc(${100 * totalMarkerLengthFraction}%)`,
+        left: `calc(${(numberOfColumnsOnLeft * 100) / numberOfDays}%)`,
+        top: `${
+          timeMarkerHeight *
+          (time.getHours() * 60 + time.getMinutes() + time.getSeconds() / 60)
+        }px`,
+        width: `calc(${100 / numberOfDays}%)`,
       }}
-      ref={ref}
     >
-      <Box sx={{ borderTop: "2px red dotted", width: `${solidWidth}%` }}></Box>
-      <Box sx={{ borderTop: "2px red solid", width: `${dottedWiddth}%` }}></Box>
+      <Box
+        sx={{
+          borderRadius: `${timeMarkerHeight * 4}px`,
+          width: `${timeMarkerHeight * 8}px`,
+          height: `${timeMarkerHeight * 8}px`,
+          top: `-${timeMarkerHeight * 3}px`,
+          background: `${theme.palette.timeIndicator}`,
+          position: "relative",
+        }}
+      />
+      <Box
+        sx={{
+          background: `${theme.palette.timeIndicator}`,
+          height: `${cellHeight / 60}px`,
+          width: `calc(100%)`,
+        }}
+      />
     </Box>
-  );
+  ) : null;
 };

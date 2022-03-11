@@ -1,14 +1,13 @@
 import { Box } from "@mui/material";
-import { useContext } from "react";
-import { CalendarViewContext } from "../../../providers";
+import { useCalendarViewManager } from "../../../providers";
 import { CalendarCommandViewSelector } from "../calendar-command-view-selector";
 import { CalendarCommandViewSlider } from "../calendar-command-view-slider";
 
 export const CalendarCommandBar = () => {
-  const { startDateOfView, endDateOfView } = useContext(CalendarViewContext);
+  const { viewDates } = useCalendarViewManager();
 
-  const viewStart = new Date(startDateOfView);
-  const viewEnd = new Date(endDateOfView);
+  const viewStart = new Date(viewDates[0]);
+  const viewEnd = new Date(viewDates[viewDates.length - 1]);
   const viewSpansAcrossMonth = viewStart.getMonth() !== viewEnd.getMonth();
 
   return (
@@ -24,7 +23,7 @@ export const CalendarCommandBar = () => {
           display: "flex",
           flexGrow: 1,
           alignItems: "center",
-          color: "black",
+          // color: "black",
           letterSpacing: "1px",
         }}
       >

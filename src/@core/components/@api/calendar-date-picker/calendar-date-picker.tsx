@@ -5,9 +5,9 @@ import React from "react";
 export const CalendarDatePicker = React.memo(
   (props: {
     selectedDate: number;
-    setSelectedDate: (newSelectedDate: number) => void;
+    onSelectedDateChange: (newSelectedDate: number) => void;
   }) => {
-    const { selectedDate, setSelectedDate } = props;
+    const { selectedDate, onSelectedDateChange } = props;
 
     return (
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -17,7 +17,7 @@ export const CalendarDatePicker = React.memo(
             if (!newValue) {
               return;
             }
-            setSelectedDate(newValue.valueOf());
+            onSelectedDateChange(newValue.valueOf());
           }}
         />
       </LocalizationProvider>

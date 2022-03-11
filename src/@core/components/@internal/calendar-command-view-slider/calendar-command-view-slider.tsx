@@ -1,11 +1,10 @@
 import { Box, Button } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useContext } from "react";
-import { CalendarViewContext } from "../../../providers";
+import { useCalendarDateShifterCallbacks } from "../../../hooks/use-calendar-view-shifters/use-calendar-view-shifters";
 
 export const CalendarCommandViewSlider = () => {
-  const { slideView, slideToToday } = useContext(CalendarViewContext);
+  const { slideView, slideToToday } = useCalendarDateShifterCallbacks();
   return (
     <Box
       sx={{
@@ -15,6 +14,7 @@ export const CalendarCommandViewSlider = () => {
       }}
     >
       <Button
+        variant="contained"
         onClick={() => {
           slideView(-1);
         }}
@@ -24,9 +24,9 @@ export const CalendarCommandViewSlider = () => {
           alignItems: "center",
           minWidth: "30px",
           height: "30px",
-          backgroundColor: "rgb(25, 118, 210, 0.07)",
+          // backgroundColor: "rgb(25, 118, 210, 0.07)",
           "& .MuiSvgIcon-root": {
-            fill: "black",
+            // fill: "black",
             width: "14px",
           },
         }}
@@ -34,15 +34,16 @@ export const CalendarCommandViewSlider = () => {
         <ArrowBackIosIcon />
       </Button>
       <Button
+        variant="contained"
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           height: "30px",
           width: "70px",
-          backgroundColor: "rgb(25, 118, 210, 0.07)",
+          // backgroundColor: "rgb(25, 118, 210, 0.07)",
           fontSize: "12px",
-          color: "#18181B",
+          // color: "#18181B",
           ml: "2px",
           mr: "2px",
           fontWeight: "700",
@@ -52,6 +53,7 @@ export const CalendarCommandViewSlider = () => {
         Today
       </Button>
       <Button
+        variant="contained"
         onClick={() => {
           slideView(1);
         }}
@@ -61,9 +63,9 @@ export const CalendarCommandViewSlider = () => {
           alignItems: "center",
           minWidth: "30px",
           height: "30px",
-          backgroundColor: "rgb(25, 118, 210, 0.07)",
+          // backgroundColor: "rgb(25, 118, 210, 0.07)",
           "& .MuiSvgIcon-root": {
-            fill: "black",
+            // fill: "black",
             width: "14px",
           },
         }}

@@ -3,31 +3,24 @@ import storage from "redux-persist/lib/storage";
 
 export interface ICalendarSurfaceViewState {
   userView: { viewId: number };
-  responsiveView: { viewId: number | null };
 }
 
 const INITIAL_STATE: ICalendarSurfaceViewState = {
-  userView: { viewId: 1 },
-  responsiveView: { viewId: null },
+  userView: { viewId: 0 },
 };
 
 const _CalendarViewReducer = (
   state = INITIAL_STATE,
   action: {
     type: string;
-    payload: number | number[];
+    payload: number;
   }
 ): ICalendarSurfaceViewState => {
   switch (action.type) {
     case "SET_USER_VIEW":
       return {
         ...state,
-        userView: { viewId: action.payload as number },
-      };
-    case "SET_RESPONSIVE_VIEW":
-      return {
-        ...state,
-        responsiveView: { viewId: action.payload as number },
+        userView: { viewId: action.payload },
       };
     default:
       return state;

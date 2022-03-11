@@ -1,6 +1,8 @@
 import { Box } from "@mui/material";
-import { useEffect, useRef } from "react";
+import React from "react";
+import { useCallback, useRef } from "react";
 import {
+  ICalendarEventItem,
   useCalendarDimensionCellHeightContext,
   useCalendarFeatureFlags,
 } from "../../..";
@@ -8,64 +10,74 @@ import { useSizeWatcher } from "../../../hooks";
 import { CalendarSurfaceColumns } from "../calendar-surface-column";
 import { CalendarSurfaceTimeGrid } from "../calendar-surface-time-grid";
 import { CalendarSurfaceTimeMarker } from "../calendar-surface-time-marker";
-import { CustomScrollbar } from "../custom-scrollbar/custom-scrollbar";
+import { MyScrollbar } from "../scrollbar/scrollbar";
 
-export const CalendarSurfaceScrollableGrid = (props: {
-  onCellClick: (datetime: Date, hour: number) => void;
-}) => {
-  const ref = useRef<HTMLDivElement>(null);
+export const CalendarSurfaceScrollableGrid = React.memo(
+  (props: {
+    onCellClick: (start: Date, end: Date) => void;
+    CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
+  }) => {
+    // const ref = useRef<HTMLDivElement>(null);
+    // useSurfaceGridHeightWatcher(ref);
 
-  useSurfaceGridHeightWatcher(ref);
+    return (
+      <MyScrollbar scrollbarWidth={10} style={{ height: "100%" }}>
+        <CalendarSurfaceGrid
+          onCellClick={props.onCellClick}
+          CientEventCard={props.CientEventCard}
+        />
+      </MyScrollbar>
+    );
+  }
+);
 
-  return (
-    <CustomScrollbar>
-      <Box
-        ref={ref}
-        sx={
-          {
-            overflowY: "overlay",
-            width: "100%",
-            height: "100%",
-          } as any
-        }
-      >
-        <CalendarSurfaceGrid onCellClick={props.onCellClick} />
+const CalendarSurfaceGrid = React.memo(
+  (props: {
+    onCellClick: (start: Date, end: Date) => void;
+    CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
+  }) => {
+    return (
+      <Box sx={{ width: "100%", display: "flex" }}>
+        <CalendarSurfaceTimeGrid />
+        <CalendarSurfaceGridRenderer
+          onCellClick={props.onCellClick}
+          CientEventCard={props.CientEventCard}
+        />
       </Box>
-    </CustomScrollbar>
-  );
-};
-
-const CalendarSurfaceGrid = (props: {
-  onCellClick: (datetime: Date, hour: number) => void;
-}) => {
-  return (
-    <Box sx={{ width: "100%", display: "flex" }}>
-      <CalendarSurfaceTimeGrid />
-      <CalendarSurfaceGridRenderer onCellClick={props.onCellClick} />
-    </Box>
-  );
-};
+    );
+  }
+);
 
 const CalendarSurfaceGridRenderer = (props: {
-  onCellClick: (datetime: Date, hour: number) => void;
+  onCellClick: (start: Date, end: Date) => void;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
 }) => {
-  const { onCellClick } = props;
+  const { onCellClick, CientEventCard } = props;
 
   return (
     <Box sx={{ display: "flex", position: "relative", width: "100%" }}>
       <CalendarSurfaceTimeMarker />
-      <CalendarSurfaceColumns onCellClick={onCellClick} />
+      <CalendarSurfaceColumns
+        onCellClick={onCellClick}
+        CientEventCard={CientEventCard}
+      />
     </Box>
   );
 };
 
 const useSurfaceGridHeightWatcher = (ref: React.RefObject<HTMLDivElement>) => {
   const { responsiveCellHeight } = useCalendarFeatureFlags();
-
-  const height = useSizeWatcher(ref, !!responsiveCellHeight, "height");
   const { setCellHeight } = useCalendarDimensionCellHeightContext();
 
-  useEffect(() => {
-    setCellHeight(height / 12);
-  }, [height, setCellHeight]);
+  useSizeWatcher(
+    ref,
+    !!responsiveCellHeight,
+    "height",
+    useCallback(
+      (newDimension: number) => {
+        setCellHeight(newDimension / 12);
+      },
+      [setCellHeight]
+    )
+  );
 };

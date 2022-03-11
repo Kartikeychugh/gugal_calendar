@@ -1,51 +1,52 @@
-import { addHours, startOfToday } from "date-fns";
+import { startOfToday } from "date-fns";
 import { useCallback, useState } from "react";
 import { CalendarContainer } from "..";
-import { ICalendarFeatureFlags } from "../../@core";
-import {
-  useCalendarColors,
-  useCalendarEvents,
-  useClientEvent,
-} from "../../hooks";
-import { useDispatch } from "../../redux";
+import { useCalendarEvents, useClientEvent } from "../../hooks";
+import { useDispatch, useSelector } from "../../redux";
 import { CalendarSchedulingFormDialog } from "../calendar-scheduling-form-dialog";
 
 export const GugalCalendar = (props: {
   minColumnWidth: number;
   minCellHeight: number;
-  featureFlags?: ICalendarFeatureFlags;
+  hideCommandBar?: boolean;
+  responsiveCellHeight?: boolean;
 }) => {
   const [selectedDate, setSelectedDate] = useState(startOfToday().valueOf());
+  const { viewId } = useSelector((state) => state.view.userView);
   const { createClientEvent } = useClientEvent();
   const events = useCalendarEvents(selectedDate);
-  const colors = useCalendarColors();
   const dispatch = useDispatch();
 
   const onCellClick = useCallback(
-    (date: Date, hour: number) => {
+    (start: Date, end: Date) => {
       dispatch({ type: "SET_FORM_OPEN", payload: true });
-      createClientEvent(addHours(date, hour), addHours(date, hour + 1));
+      createClientEvent(start, end);
     },
     [createClientEvent, dispatch]
   );
 
+  const onViewChange = useCallback(
+    (newViewId: number) => {
+      dispatch({ type: "SET_USER_VIEW", payload: newViewId });
+    },
+    [dispatch]
+  );
   return (
     <>
       <CalendarContainer
-        colors={colors}
+        onViewChange={onViewChange}
         events={events}
-        userViewId={1}
+        userViewId={viewId}
         selectedDate={selectedDate}
         onCellClick={onCellClick}
-        setSelectedDate={setSelectedDate}
-        onHeaderClick={(date) => {
-          console.log({ date });
-        }}
+        onSelectedDateChange={setSelectedDate}
+        onHeaderClick={(date) => {}}
         minCellHeight={props.minCellHeight}
         minColumnWidth={props.minColumnWidth}
-        featureFlags={props.featureFlags}
+        hideCommandBar={props.hideCommandBar}
+        responsiveCellHeight={props.responsiveCellHeight}
       />
-      <CalendarSchedulingFormDialog setSelectedDate={setSelectedDate} />
+      <CalendarSchedulingFormDialog onSelectedDateChange={setSelectedDate} />
     </>
   );
 };

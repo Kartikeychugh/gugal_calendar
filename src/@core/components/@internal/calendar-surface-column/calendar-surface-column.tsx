@@ -1,70 +1,76 @@
-import { Box } from "@mui/material";
-import { eachDayOfInterval, isSameDay, startOfToday } from "date-fns";
-import { useContext, useRef } from "react";
-import { CalendarViewContext } from "../../../providers";
+import { Box, useTheme } from "@mui/material";
+import { isSameDay, startOfToday } from "date-fns";
+import React from "react";
+import { useRef } from "react";
+import { ICalendarEventItem, useCalendarViewManager } from "../../..";
 import { CalendarSurfaceEventColumn } from "../calendar-surface-event-column";
 import { CalendarSurfaceGridColumn } from "../calendar-surface-grid-column";
 import { CalendarSurfaceSizeWatcher } from "../calendar-surface-size-watcher";
 
-export const CalendarSurfaceColumns = (props: {
-  onCellClick: (datetime: Date, hour: number) => void;
-}) => {
-  const { startDateOfView, endDateOfView } = useContext(CalendarViewContext);
+export const CalendarSurfaceColumns = React.memo(
+  (props: {
+    onCellClick: (start: Date, end: Date) => void;
+    CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
+  }) => {
+    const { viewDates } = useCalendarViewManager();
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const currentDates = eachDayOfInterval({
-    start: startDateOfView,
-    end: endDateOfView,
-  });
-  const containerRef = useRef<HTMLDivElement | null>(null);
+    return (
+      <CalendarSurfaceSizeWatcher containerRef={containerRef}>
+        <Box
+          ref={containerRef}
+          sx={{
+            position: "relative",
+            height: "100%",
+            width: "100%",
+            display: "flex",
+          }}
+        >
+          {viewDates.map((day, i) => (
+            <CalendarSurfaceColumn
+              key={i}
+              date={day}
+              onCellClick={props.onCellClick}
+              CientEventCard={props.CientEventCard}
+            />
+          ))}
+        </Box>
+      </CalendarSurfaceSizeWatcher>
+    );
+  }
+);
 
-  return (
-    <CalendarSurfaceSizeWatcher containerRef={containerRef}>
+const CalendarSurfaceColumn = React.memo(
+  (props: {
+    date: Date;
+    onCellClick: (start: Date, end: Date) => void;
+    CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
+  }) => {
+    const theme = useTheme();
+
+    //TODO
+    return (
       <Box
-        ref={containerRef}
         sx={{
-          position: "relative",
+          backgroundImage: `${
+            isSameDay(props.date, startOfToday())
+              ? theme.palette.backgroundImage?.main
+              : "inherit"
+          }`,
           height: "100%",
           width: "100%",
-          display: "flex",
+          position: "relative",
         }}
       >
-        {currentDates.map((day, i) => (
-          <CalendarSurfaceColumn
-            key={i}
-            date={day}
-            onCellClick={props.onCellClick}
-          />
-        ))}
+        <CalendarSurfaceEventColumn
+          date={props.date}
+          CientEventCard={props.CientEventCard}
+        />
+        <CalendarSurfaceGridColumn
+          date={props.date}
+          onCellClick={props.onCellClick}
+        />
       </Box>
-    </CalendarSurfaceSizeWatcher>
-  );
-};
-
-const CalendarSurfaceColumn = (props: {
-  date: Date;
-  onCellClick: (datetime: Date, hour: number) => void;
-}) => {
-  const { minColumnWidth } = useContext(CalendarViewContext);
-
-  //TODO
-  return (
-    <Box
-      sx={{
-        backgroundColor: `${
-          isSameDay(props.date, startOfToday())
-            ? "rgb(25, 118, 210, 0.07)"
-            : "#ffffff"
-        }`,
-        height: "100%",
-        width: "100%",
-        minWidth: `${minColumnWidth}px`,
-      }}
-    >
-      <CalendarSurfaceEventColumn date={props.date} />
-      <CalendarSurfaceGridColumn
-        date={props.date}
-        onCellClick={props.onCellClick}
-      />
-    </Box>
-  );
-};
+    );
+  }
+);

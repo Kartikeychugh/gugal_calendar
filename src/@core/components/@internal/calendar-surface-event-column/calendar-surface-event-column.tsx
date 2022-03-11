@@ -1,26 +1,28 @@
 import { Box } from "@mui/material";
-import { useContext } from "react";
 import { extractEventForDay, transformEvents } from "../../../../utils";
+import { ICalendarEventItem } from "../../../models";
 import {
-  CalendarViewContext,
+  useCalendarViewManager,
   useCalendarEventDetails,
   useCalendarDimensionCellHeightContext,
 } from "../../../providers";
 import { CalendarSurfaceEventCard } from "../calendar-surface-event-card";
 
-export const CalendarSurfaceEventColumn = (props: { date: Date }) => {
+export const CalendarSurfaceEventColumn = (props: {
+  date: Date;
+  CientEventCard?: (props: { event: ICalendarEventItem }) => JSX.Element;
+}) => {
   const {
     currentView: { numberOfDays },
-  } = useContext(CalendarViewContext);
+  } = useCalendarViewManager();
   const { cellHeight } = useCalendarDimensionCellHeightContext();
-  const { colors, events, defaultColorId } = useCalendarEventDetails();
+  const { events } = useCalendarEventDetails();
   let transformedEvents = transformEvents(
     extractEventForDay(events, props.date) || [],
-    cellHeight,
-    colors,
-    defaultColorId
+    cellHeight
   );
 
+  const { CientEventCard } = props;
   return (
     //TODO
     <Box
@@ -28,11 +30,16 @@ export const CalendarSurfaceEventColumn = (props: { date: Date }) => {
         height: "100%",
         position: "absolute",
         pointerEvents: "none",
-        width: `calc(${100 / numberOfDays}% - 15px)`,
+        inset: 0,
+        right: 10,
       }}
     >
       {transformedEvents.map((event) => (
-        <CalendarSurfaceEventCard key={event.id} event={event} />
+        <CalendarSurfaceEventCard
+          key={event.id}
+          event={event}
+          CientEventCard={CientEventCard}
+        />
       ))}
     </Box>
   );

@@ -3,9 +3,7 @@ import { ICalendarEvent, ICalendarEventItem } from "../@core";
 
 export const transformEvents = (
   events: ICalendarEvent[],
-  cellHeight: number,
-  colors: CalendarColors | null,
-  defaultColorId: number
+  cellHeight: number
 ) => {
   events.sort((_a, _b) => {
     const aStart = new Date(_a.start.dateTime);
@@ -34,8 +32,6 @@ export const transformEvents = (
 
     columnsWiseEvents.forEach((columnWiseEvents, index) => {
       columnWiseEvents.forEach((event) => {
-        const colorId = event.colorId ? event.colorId : defaultColorId;
-
         /**
          * totalColumns: Number of sub-columns containing events within a single day column.
          * Width left after subtractng the margins is equally distributed between these sub columns.
@@ -69,24 +65,19 @@ export const transformEvents = (
             top: `${
               cellHeight * startTime.getHours() +
               (cellHeight / 60) * startTime.getMinutes() +
-              (cellHeight / 3600) * startTime.getSeconds()
+              (cellHeight / 3600) * startTime.getSeconds() +
+              1
             }px`,
             height: `${
               cellHeight * (endTime.getHours() - startTime.getHours()) +
               (cellHeight / 60) *
                 (endTime.getMinutes() - startTime.getMinutes()) +
               (cellHeight / 3600) *
-                (endTime.getSeconds() - startTime.getSeconds())
+                (endTime.getSeconds() - startTime.getSeconds()) -
+              2
             }px`,
             left: `calc(${left})`,
             width: `calc(${width})`,
-          },
-          colors: {
-            calendar: { backgroundColor: colors!.calendar[colorId].background },
-            event: {
-              backgroundColor: colors!.event[colorId].background,
-              foregroundColor: colors!.event[colorId].foreground,
-            },
           },
         };
 
@@ -192,5 +183,5 @@ const isConflictingEvent = (a: ICalendarEvent, b: ICalendarEvent) => {
   const endTime = new Date(a.end.dateTime);
   const startTime = new Date(b.start.dateTime);
 
-  return compareAsc(startTime, endTime) !== 1;
+  return compareAsc(startTime, endTime) === -1;
 };

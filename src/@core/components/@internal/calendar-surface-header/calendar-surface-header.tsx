@@ -1,54 +1,78 @@
-import { Box, Button } from "@mui/material";
-import { eachDayOfInterval, isSameDay, startOfToday } from "date-fns";
-import { useContext } from "react";
-import { CalendarViewContext } from "../../../providers";
+import { Box, useTheme } from "@mui/material";
+import { isSameDay, startOfToday } from "date-fns";
+import { useCalendarViewManager } from "../../../providers";
+import { useCalendarDate } from "../../../providers/calendar-date";
 
 export const CalendarSurfaceHeader = (props: {
-  onHeaderClick: (date: number) => void;
+  onHeaderClick?: (date: number) => void;
 }) => {
   const { onHeaderClick } = props;
-  const { startDateOfView, endDateOfView, minColumnWidth } =
-    useContext(CalendarViewContext);
-  const currentDates = eachDayOfInterval({
-    start: startDateOfView,
-    end: endDateOfView,
-  });
-  const numberOfDays = currentDates.length;
-  const today = startOfToday();
+  const {
+    viewDates,
+    currentView: { numberOfDays },
+    updateUserView,
+  } = useCalendarViewManager();
+  const { onSelectedDateChange } = useCalendarDate();
+
+  const theme = useTheme();
 
   return (
-    <Box sx={{ width: "100%", height: "60px", display: "flex", pr: "10px" }}>
+    <Box sx={{ width: "100%", height: "60px", display: "flex" }}>
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          padding: "4px 8px 4px 8px",
           fontSize: "15px",
           fontWeight: 700,
-          padding: "4px",
           flexDirection: "column",
-          minWidth: `50px`,
+          minWidth: `60px`,
+          boxShadow: `inset 0px -1px ${
+            theme.palette.grey[theme.palette.mode === "dark" ? 700 : 300]
+          }, 1px 0px ${
+            theme.palette.grey[theme.palette.mode === "dark" ? 700 : 300]
+          }`,
         }}
       ></Box>
-      {currentDates.map((date, i) => {
+      {viewDates.map((date, i) => {
         return (
-          <Button
-            variant="text"
+          <Box
             sx={{
-              minWidth: `${minColumnWidth}px`,
-              height: "100%",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
               padding: "4px 8px 4px 8px",
               flexDirection: "column",
               width: `calc(${100 / numberOfDays}%)`,
-              backgroundColor: isSameDay(new Date(date), today)
-                ? "#EFF6FF"
-                : "white",
+              backgroundImage: isSameDay(new Date(date), startOfToday())
+                ? theme.palette.backgroundImage?.main
+                : theme.palette.backgroundImage?.light,
+              color: "primary.light",
+              "&:hover": {
+                backgroundImage: theme.palette.backgroundImage?.dark,
+              },
               boxShadow:
                 i + 1 === numberOfDays
-                  ? "inset 0px -1px 0px #e0e0e0"
-                  : "inset -1px -1px 0px #e0e0e0",
+                  ? `inset 0px -1px 1px ${
+                      theme.palette.grey[
+                        theme.palette.mode === "dark" ? 700 : 300
+                      ]
+                    }`
+                  : `inset -1px -1px 1px ${
+                      theme.palette.grey[
+                        theme.palette.mode === "dark" ? 700 : 300
+                      ]
+                    }`,
             }}
-            onClick={() => onHeaderClick(date.valueOf())}
+            onClick={() => {
+              onSelectedDateChange(date.valueOf());
+              updateUserView(0);
+
+              if (onHeaderClick) {
+                onHeaderClick(date.valueOf());
+              }
+            }}
             key={i}
           >
             <Box
@@ -57,7 +81,6 @@ export const CalendarSurfaceHeader = (props: {
                 fontWeight: "bold",
                 fontSize: "10px",
                 lineHeight: "12px",
-                color: "#71717a",
               }}
             >
               {new Date(date).toLocaleDateString("en-GB", { weekday: "short" })}
@@ -68,13 +91,12 @@ export const CalendarSurfaceHeader = (props: {
                 fontWeight: 500,
                 fontSize: "22px",
                 lineHeight: "32px",
-                color: "#000000",
                 display: "flex",
               }}
             >
               <Box> {new Date(date).getDate()}</Box>
             </Box>
-          </Button>
+          </Box>
         );
       })}
     </Box>

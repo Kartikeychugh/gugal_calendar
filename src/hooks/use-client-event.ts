@@ -1,40 +1,45 @@
 import { useDispatch, useSelector } from "../redux";
 import { startOfWeek } from "date-fns";
-import { clientEventStatus, GetCalendarClientEvent } from "../@core";
+import {
+  clientEventStatus,
+  GetCalendarClientEvent,
+  ICalendarClientEventItem,
+} from "../@core";
 import { combineDateAndTime } from "../utils";
 import { v4 as uuidv4 } from "uuid";
 import { useCallback } from "react";
 
 const useSyncClientEventCallback = () => {
   const dispatch = useDispatch();
-  const client = useSelector((state) => state.events.client);
 
-  return useCallback(() => {
-    if (!client) {
-      throw Error("Client event doesn't exist");
-    }
+  return useCallback(
+    (client: ICalendarClientEventItem | null) => {
+      if (!client) {
+        throw Error("Client event doesn't exist");
+      }
 
-    dispatch({
-      type: "SET_CLIENT_EVENTS",
-      payload: {
-        ...client,
-        client: { ...client.client, status: clientEventStatus.syncing },
-      },
-    });
+      dispatch({
+        type: "SET_CLIENT_EVENTS",
+        payload: {
+          ...client,
+          client: { ...client.client, status: clientEventStatus.syncing },
+        },
+      });
 
-    dispatch({
-      type: "CREATE_CALENDAR_EVENTS",
-      payload: client,
-    });
-  }, [client, dispatch]);
+      dispatch({
+        type: "CREATE_CALENDAR_EVENTS",
+        payload: client,
+      });
+    },
+    [dispatch]
+  );
 };
 
 const useUpdateOnlineMeetingCallback = () => {
   const dispatch = useDispatch();
-  const client = useSelector((state) => state.events.client);
 
   return useCallback(
-    (onlineMeeting: boolean) => {
+    (client: ICalendarClientEventItem | null, onlineMeeting: boolean) => {
       if (!client) {
         throw Error("Client event doesn't exist");
       }
@@ -56,16 +61,15 @@ const useUpdateOnlineMeetingCallback = () => {
         },
       });
     },
-    [client, dispatch]
+    [dispatch]
   );
 };
 
 const useUpdateDateCallback = () => {
   const dispatch = useDispatch();
-  const client = useSelector((state) => state.events.client);
 
   return useCallback(
-    (date: Date) => {
+    (client: ICalendarClientEventItem | null, date: Date) => {
       if (!client) {
         throw Error("Client event doesn't exist");
       }
@@ -96,16 +100,15 @@ const useUpdateDateCallback = () => {
         payload: startOfWeek(date).valueOf(),
       });
     },
-    [client, dispatch]
+    [dispatch]
   );
 };
 
 const useUpdateEndTimeCallback = () => {
   const dispatch = useDispatch();
-  const client = useSelector((state) => state.events.client);
 
   return useCallback(
-    (time: Date) => {
+    (client: ICalendarClientEventItem | null, time: Date) => {
       if (!client) {
         throw Error("Client event doesn't exist");
       }
@@ -118,16 +121,15 @@ const useUpdateEndTimeCallback = () => {
         },
       });
     },
-    [client, dispatch]
+    [dispatch]
   );
 };
 
 const useUpdateStartTimeCallback = () => {
   const dispatch = useDispatch();
-  const client = useSelector((state) => state.events.client);
 
   return useCallback(
-    (time: Date) => {
+    (client: ICalendarClientEventItem | null, time: Date) => {
       if (!client) {
         throw Error("Client event doesn't exist");
       }
@@ -140,16 +142,15 @@ const useUpdateStartTimeCallback = () => {
         },
       });
     },
-    [client, dispatch]
+    [dispatch]
   );
 };
 
 const useUpdateMeetingTitleCallback = () => {
   const dispatch = useDispatch();
-  const client = useSelector((state) => state.events.client);
 
   return useCallback(
-    (summary: string) => {
+    (client: ICalendarClientEventItem | null, summary: string) => {
       if (!client) {
         throw Error("Client event doesn't exist");
       }
@@ -159,7 +160,7 @@ const useUpdateMeetingTitleCallback = () => {
         payload: { ...client, summary },
       });
     },
-    [client, dispatch]
+    [dispatch]
   );
 };
 
