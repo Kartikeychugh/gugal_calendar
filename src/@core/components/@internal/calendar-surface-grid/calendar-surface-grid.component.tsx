@@ -1,4 +1,4 @@
-import { Box, Fade, Zoom } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 import { useCallback, useRef } from "react";
 import {
@@ -21,7 +21,7 @@ export const CalendarSurfaceScrollableGrid = React.memo(
     useSurfaceGridHeightWatcher(ref);
 
     return (
-      <MyScrollbar style={{ height: "100%" }}>
+      <MyScrollbar scrollbarWidth={10} style={{ height: "100%" }}>
         <Box ref={ref} sx={{ height: "100%" }}>
           <CalendarSurfaceGrid
             onCellClick={props.onCellClick}

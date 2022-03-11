@@ -1,4 +1,10 @@
-import { addDays, eachDayOfInterval, getDay, startOfWeek } from "date-fns";
+import {
+  addDays,
+  eachDayOfInterval,
+  getDay,
+  startOfToday,
+  startOfWeek,
+} from "date-fns";
 import { PropsWithChildren } from "react";
 import { CalendarAvailableViewsProvider } from "../calendar-available-views";
 import { CalendarViewManagerProvider } from "../calendar-view-manager";
@@ -43,6 +49,19 @@ export const getViews = (minColumnWidth: number) => [
       eachDayOfInterval({
         start: startOfWeek(selectedDate),
         end: addDays(startOfWeek(selectedDate), 6),
+      }),
+  },
+  {
+    numberOfDays: 4,
+    change: 4,
+    title: "4 days",
+    viewId: 3,
+    breakpoint: 4 * minColumnWidth,
+    getViewStartDay: () => startOfToday().getDay(),
+    getViewDates: (selectedDate: number) =>
+      eachDayOfInterval({
+        start: selectedDate,
+        end: addDays(selectedDate, 3),
       }),
   },
 ];

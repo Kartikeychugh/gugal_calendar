@@ -1,6 +1,7 @@
 import { Box, useTheme } from "@mui/material";
 import { isSameDay, startOfToday } from "date-fns";
 import { useCalendarViewManager } from "../../../providers";
+import { useCalendarDate } from "../../../providers/calendar-date";
 
 export const CalendarSurfaceHeader = (props: {
   onHeaderClick?: (date: number) => void;
@@ -9,7 +10,9 @@ export const CalendarSurfaceHeader = (props: {
   const {
     viewDates,
     currentView: { numberOfDays },
+    updateUserView,
   } = useCalendarViewManager();
+  const { onSelectedDateChange } = useCalendarDate();
 
   const theme = useTheme();
 
@@ -36,6 +39,7 @@ export const CalendarSurfaceHeader = (props: {
         return (
           <Box
             sx={{
+              cursor: "pointer",
               display: "flex",
               alignItems: "center",
               padding: "4px 8px 4px 8px",
@@ -45,6 +49,9 @@ export const CalendarSurfaceHeader = (props: {
                 ? theme.palette.backgroundImage?.main
                 : theme.palette.backgroundImage?.light,
               color: "primary.light",
+              "&:hover": {
+                backgroundImage: theme.palette.backgroundImage?.dark,
+              },
               boxShadow:
                 i + 1 === numberOfDays
                   ? `inset 0px -1px 1px ${
@@ -59,7 +66,12 @@ export const CalendarSurfaceHeader = (props: {
                     }`,
             }}
             onClick={() => {
-              onHeaderClick && onHeaderClick(date.valueOf());
+              onSelectedDateChange(date.valueOf());
+              updateUserView(0);
+
+              if (onHeaderClick) {
+                onHeaderClick(date.valueOf());
+              }
             }}
             key={i}
           >

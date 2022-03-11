@@ -101,14 +101,28 @@ const useScrollbarPositionEffect = (
       setScrollbarPosition(entries[0].target as HTMLElement);
     });
 
-    const mutationObserver = new MutationObserver((entries) => {
+    resizeObserver.observe(ref.current);
+  }, [setScrollbarPosition, ref]);
+};
+
+const useContentHeightEffect = (
+  contentRef: React.MutableRefObject<HTMLElement | null | undefined>,
+  setContentHeight: React.Dispatch<React.SetStateAction<number>>
+) => {
+  useEffect(() => {
+    if (!contentRef.current) {
+      return;
+    }
+
+    setContentHeight((contentRef.current as HTMLElement).scrollHeight);
+
+    const resizeObserver = new ResizeObserver((entries) => {
       // Update custom scrollbar position
-      setScrollbarPosition(entries[0].target as HTMLElement);
+      setContentHeight((entries[0].target as HTMLElement).scrollHeight);
     });
 
-    resizeObserver.observe(ref.current);
-    mutationObserver.observe(ref.current, { attributes: true });
-  }, [setScrollbarPosition, ref]);
+    resizeObserver.observe(contentRef.current);
+  }, [contentRef, setContentHeight]);
 };
 
 const validations = (
@@ -131,34 +145,4 @@ const validations = (
   } catch (e) {
     throw Error("Please add a valid child under Scrollbar component");
   }
-};
-
-const useContentHeightEffect = (
-  contentRef: React.MutableRefObject<HTMLElement | null | undefined>,
-  setContentHeight: React.Dispatch<React.SetStateAction<number>>
-) => {
-  useEffect(() => {
-    if (!contentRef.current) {
-      return;
-    }
-
-    setContentHeight((contentRef.current as HTMLElement).scrollHeight);
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      // Update custom scrollbar position
-      setContentHeight((entries[0].target as HTMLElement).scrollHeight);
-    });
-
-    const mutationObserver = new MutationObserver((entries) => {
-      // Update custom scrollbar position
-
-      setContentHeight((entries[0].target as HTMLElement).scrollHeight);
-    });
-
-    resizeObserver.observe(contentRef.current);
-    mutationObserver.observe(contentRef.current, {
-      // attributes: true,
-      attributeOldValue: true,
-    });
-  }, [contentRef, setContentHeight]);
 };

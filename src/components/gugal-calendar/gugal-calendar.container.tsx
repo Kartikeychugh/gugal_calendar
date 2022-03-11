@@ -1,7 +1,6 @@
 import { startOfToday } from "date-fns";
 import { useCallback, useState } from "react";
 import { CalendarContainer } from "..";
-import { ICalendarFeatureFlags } from "../../@core";
 import { useCalendarEvents, useClientEvent } from "../../hooks";
 import { useDispatch, useSelector } from "../../redux";
 import { CalendarSchedulingFormDialog } from "../calendar-scheduling-form-dialog";

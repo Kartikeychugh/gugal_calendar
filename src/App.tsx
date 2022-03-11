@@ -32,8 +32,8 @@ let darkTheme = createTheme({
       light:
         "linear-gradient(rgba(178,150,255, 0.05), rgba(178,150,255, 0.05))",
       main: "linear-gradient(rgba(178,150,255, 0.1), rgba(178,150,255, 0.1))",
-      dark: "linear-gradient(rgba(178,150,255, 0.5), rgba(178,150,255, 0.5))",
-      darker: "linear-gradient(rgba(178,150,255, 0.8), rgba(178,150,255, 0.8))",
+      dark: "linear-gradient(rgba(178,150,255, 0.2), rgba(178,150,255, 0.2))",
+      darker: "linear-gradient(rgba(178,150,255, 0.7), rgba(178,150,255, 0.7))",
     },
     timeIndicator: `#F6C288`,
     timeIndicatorGridHighlighter: "rgba(246,194,136, 0.8)",
@@ -71,7 +71,7 @@ function App() {
       <CalendarReduxProvider>
         <ThemeProvider theme={darkTheme}>
           <GugalCalendar
-            minColumnWidth={100}
+            minColumnWidth={10}
             minCellHeight={60}
             hideCommandBar={false}
             responsiveCellHeight={false}
