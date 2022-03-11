@@ -74,9 +74,9 @@ function useGenerateEventCallbacks(
 ) {
   const mouseDownCallback = useCallback(
     (e: MouseEvent) => {
-      // console.log("setMouseDownPivot");
-      // console.log("setDragStart");
-      // console.log("setDragDistance");
+      //
+      //
+      //
 
       /**
        * On mousedown record it to check that mousedown actually happened on this element.
@@ -102,9 +102,9 @@ function useGenerateEventCallbacks(
     (e: MouseEvent) => {
       // Check if mousedown happened in the context of the element
       if (mouseDownPivot !== -Infinity) {
-        // console.log("setMouseDownPivot");
-        // console.log("setDragStart");
-        // console.log("setDragDistance");
+        //
+        //
+        //
 
         if (!dragging && dragDistance < threshold && onClick) {
           onClick(e);
@@ -134,11 +134,10 @@ function useGenerateEventCallbacks(
     (e) => {
       // Check if mousedown happened in the context of the element
       if (mouseDownPivot !== -Infinity) {
-        // console.log("setDragDistance");
+        //
 
         // If threshold exceeds mark it as dragging start
         if (Math.abs(e[direction] - mouseDownPivot) > threshold && !dragging) {
-          console.log("setDragging");
           setDragging(true);
         }
 

@@ -1,4 +1,4 @@
-import { Box, Fade } from "@mui/material";
+import { Box, Fade, Zoom } from "@mui/material";
 import React from "react";
 import { useCallback, useRef } from "react";
 import {
@@ -10,7 +10,6 @@ import { useSizeWatcher } from "../../../hooks";
 import { CalendarSurfaceColumns } from "../calendar-surface-column";
 import { CalendarSurfaceTimeGrid } from "../calendar-surface-time-grid";
 import { CalendarSurfaceTimeMarker } from "../calendar-surface-time-marker";
-import { CustomScrollbar } from "../custom-scrollbar/custom-scrollbar";
 import { MyScrollbar } from "../scrollbar/scrollbar";
 
 export const CalendarSurfaceScrollableGrid = React.memo(
@@ -22,7 +21,7 @@ export const CalendarSurfaceScrollableGrid = React.memo(
     useSurfaceGridHeightWatcher(ref);
 
     return (
-      <MyScrollbar overlay style={{ height: "100%" }}>
+      <MyScrollbar style={{ height: "100%" }}>
         <Box ref={ref} sx={{ height: "100%" }}>
           <CalendarSurfaceGrid
             onCellClick={props.onCellClick}

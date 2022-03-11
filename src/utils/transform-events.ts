@@ -183,5 +183,5 @@ const isConflictingEvent = (a: ICalendarEvent, b: ICalendarEvent) => {
   const endTime = new Date(a.end.dateTime);
   const startTime = new Date(b.start.dateTime);
 
-  return compareAsc(startTime, endTime) !== 1;
+  return compareAsc(startTime, endTime) === -1;
 };

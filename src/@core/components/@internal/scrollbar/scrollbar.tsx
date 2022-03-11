@@ -29,17 +29,18 @@ export const MyScrollbar = (
   return (
     <div
       style={{
-        overflow: "hidden",
         position: "relative",
-        ...style,
+        height: "100%",
       }}
     >
-      <ContentRenderer ref={contentRef as any}>{children}</ContentRenderer>
+      <ContentRenderer style={style} ref={contentRef as any}>
+        {children}
+      </ContentRenderer>
       <ScrollbarRenderer
         ref={contentRef as any}
         top={top}
         height={height}
-        right={clientLeft}
+        right={overlay ? clientLeft : -scrollbarWidth}
         contentHeight={contentHeight}
         scrollbarWidth={scrollbarWidth}
       />

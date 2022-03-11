@@ -54,6 +54,7 @@ export const ScrollbarRenderer = React.forwardRef<
 >((props, scrollableContentRef) => {
   const { top, right, height, contentHeight, scrollbarWidth } = props;
   const [scrollTravel, setScrollTravel] = useState(0);
+
   const scrollHeadRef = useRef<HTMLElement | null>();
 
   const scrollHeadLength = useMemo(
@@ -79,7 +80,6 @@ export const ScrollbarRenderer = React.forwardRef<
     scrollHeadHeight: scrollHeadLength,
     top,
   });
-  console.log({ contentHeight, height });
 
   return (
     <div
@@ -95,9 +95,9 @@ export const ScrollbarRenderer = React.forwardRef<
       style={{
         position: "absolute",
         top: `${top}px`,
+        bottom: 0,
         right: `${right}px`,
         width: `${scrollbarWidth}px`,
-        height: `${height}px`,
         visibility: contentHeight > height ? "visible" : "hidden",
       }}
     >
@@ -179,8 +179,6 @@ const useScrollEffect = (
     >;
 
     current?.addEventListener("scroll", (e) => {
-      console.log("scrolling");
-
       setScrollTravel((e.target as HTMLElement).scrollTop);
     });
   }, [scrollableContentRef, setScrollTravel]);
